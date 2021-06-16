@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json.Node;
 using System.Threading.Tasks;
 
-
-namespace BotReborn {
-    public class Utils {
+namespace BotReborn.Protocol.Crypto {
+    public class Crypto {
         public async Task GetPubKeyAsync(Uin uin) {
             try {
                 using var httpClient = new HttpClient();
@@ -30,12 +26,13 @@ namespace BotReborn {
             }
         }
 
-        protected void GenerateKey(string str) {
-            var ecParameters = new ECDiffieHellmanCng();
-            
-            ECDsa.Create(ecParameters);
+        public static EncryptEcdh GenerateKey(string str) {
+            var ecParameters = new ECParameters();
+            var client = ECDsa.Create("ECDsaP256");
+            var a = new ECCurve();
+            return new EncryptEcdh();
         }
 
-        private byte[] DecodeHexString(string hex) => Enumerable.Range(0, hex.Length / 2).Select(x => Convert.ToByte(hex.Substring(x * 2, 2), 16)).ToArray();
+        public byte[] DecodeHexString(string hex) => Enumerable.Range(0, hex.Length / 2).Select(x => Convert.ToByte(hex.Substring(x * 2, 2), 16)).ToArray();
     }
 }
