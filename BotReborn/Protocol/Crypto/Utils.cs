@@ -27,9 +27,10 @@ namespace BotReborn.Protocol.Crypto {
         }
 
         public static EncryptEcdh GenerateKey(string str) {
-            var ecParameters = new ECParameters();
-            var client = ECDsa.Create("ECDsaP256");
-            var a = new ECCurve();
+            var curve = ECCurve.CreateFromFriendlyName("ECDSA_P256");
+            var ecDsa = ECDsa.Create();
+            ecDsa?.GenerateKey(curve);
+
             return new EncryptEcdh();
         }
 
