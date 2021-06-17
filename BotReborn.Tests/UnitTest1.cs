@@ -1,5 +1,4 @@
 using System;
-using BotReborn.Protocol.Crypto;
 using Xunit;
 
 namespace BotReborn.Tests
@@ -9,7 +8,7 @@ namespace BotReborn.Tests
         [Fact]
         public void Test1() {
             
-            Crypto.GenerateKey("114");
+            MyECDiffieHellman.GenerateKey("114");
         }
     }
 }
