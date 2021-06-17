@@ -17,24 +17,29 @@ namespace BotReborn
         public List<Device> Devices { get; set; }
         public bool IsOnline { get; set; }
 
-        public Client()
+        private Client()
         {
             
         }
 
-        public Client(UserId userId,string password)
+        public Client(Uin uin,string password)
         {
-            var client = new Client();
+            
         }
 
-        public Client(UserId userId, byte[] passwordMd5)
+        public Client(Uin uin, byte[] passwordMd5)
         {
 
         }
 
-        public Client(UserId userId, Span<byte> passwordMd5)
+        public Client(Uin uin, Span<byte> passwordMd5)
         {
             //TODO FetchPubKey
+            var client = new Client
+            {
+                Uin = uin,
+                PasswordMd5 = passwordMd5.ToArray()
+            };
 
         }
     }
