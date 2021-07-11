@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text.Json.Node;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace BotReborn {
+namespace BotReborn
+{
     public class Utils {
         public async Task GetPubKeyAsync(Uin uin)
         {
