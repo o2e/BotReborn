@@ -1,35 +1,27 @@
-﻿using Xunit;
-using BotReborn;
-using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Moq;
+using Xunit;
 
 namespace BotReborn.Tests
 {
     public class ECDHTests
     {
         [Fact]
-        public void ConvertStringToByteArrayTest()
+        public void FetchPublicKeyTest()
         {
-            var expected = new byte[] {4,64,234,243,37,185,198,98,37,20,58,167,243,150,28,149,60,61,90,128,72,194,183,50,147,205,199,220,186,183,243,92,76,102,170,137,23,168,253,81,31,157,150,157,2,200,80,27,202,163,227,177,23,70,240,5,103,227,174,163,3,172,95,45,37};
-            var actual =ECDH.ConvertStringToByteArray(
-            "0440eaf325b9c66225143aa7f3961c953c3d5a8048c2b73293cdc7dcbab7f35c4c66aa8917a8fd511f9d969d02c8501bcaa3e3b11746f00567e3aea303ac5f2d25");
-            Assert.Equal(expected, actual);
+            var ecdh = new EncryptECDH(); 
+            ecdh.FetchPubKey(1507180359);
+            Assert.Equal(65,ecdh.PublicKey.Length);
         }
 
         [Fact]
-        public void FetchPublicKeyTest()
+        public void GenerateKeyTest()
         {
-            byte[] pubkey = new byte[1];
-            var expected = new byte[] { 4, 64, 234, 243, 37, 185, 198, 98, 37, 20, 58, 167, 243, 150, 28, 149, 60, 61, 90, 128, 72, 194, 183, 50, 147, 205, 199, 220, 186, 183, 243, 92, 76, 102, 170, 137, 23, 168, 253, 81, 31, 157, 150, 157, 2, 200, 80, 27, 202, 163, 227, 177, 23, 70, 240, 5, 103, 227, 174, 163, 3, 172, 95, 45, 37 };
-            var mock = new Mock<ECDH>();
-            mock.SetupProperty(_ => _.PublicKey);
-            mock.Object.FetchPubKeyAsync(1507180359).Wait();
-            var actual = mock.Object.PublicKey;
-            Assert.Equal(expected,actual);
+            var ecdh = new EncryptECDH();
+            ecdh.GenerateKey("0440eaf325b9c66225143aa7f3961c953c3d5a8048c2b73293cdc7dcbab7f35c4c66aa8917a8fd511f9d969d02c8501bcaa3e3b11746f00567e3aea303ac5f2d25");
+            Debug.WriteLine("ShareKey: "+Utils.ConvertByteArrayToHexString(ecdh.InitialShareKey));
+            Debug.WriteLine("PublicKey: "+Utils.ConvertByteArrayToHexString(ecdh.PublicKey));
         }
     }
 }
