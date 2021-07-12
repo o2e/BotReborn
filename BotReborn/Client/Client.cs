@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using BotReborn.Model.Group;
 
 [assembly: InternalsVisibleTo("BotReborn.Tests")]
 namespace BotReborn.Client
