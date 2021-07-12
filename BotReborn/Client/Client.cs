@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("BotReborn.Tests")]
-namespace BotReborn
+namespace BotReborn.Client
 {
     public class Client
     {
