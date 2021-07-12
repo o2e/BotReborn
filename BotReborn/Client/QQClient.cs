@@ -12,7 +12,7 @@ using BotReborn.Model.Group;
 [assembly: InternalsVisibleTo("BotReborn.Tests")]
 namespace BotReborn.Client
 {
-    public class Client
+    public class QqClient
     {
         private EncryptECDH _ecdh;
         private Random _random;
@@ -26,7 +26,7 @@ namespace BotReborn.Client
         public ushort Age { get; set; }
         public ushort Gender { get; set; }
         public List<Friend> Friends { get; set; }
-        public List<Group> Groups { get; set; }
+        public List<GroupInfo> Groups { get; set; }
         public List<Device> Devices { get; set; }
         public bool IsOnline { get; set; }
         //public QiDianAccountInfo QiDianAccountInfo { get; set; }
@@ -87,8 +87,8 @@ namespace BotReborn.Client
         //    eventHandlers          *eventHandlers
         //    stat                   *Statistics
 
-        //    groupListLock sync.Mutex
-        private Client(Uin uin)
+        //TODO    groupListLock sync.Mutex
+        private QqClient(Uin uin)
         {
             _ecdh = new();
             _random = new(DateTime.Now.Second);
@@ -103,13 +103,13 @@ namespace BotReborn.Client
         
         }
 
-        public Client(Uin uin, string password): this(uin)
+        public QqClient(Uin uin, string password): this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public Client(Uin uin, byte[] passwordMd5): this(uin)
+        public QqClient(Uin uin, byte[] passwordMd5): this(uin)
         {
             PasswordMd5 = passwordMd5;
         }
