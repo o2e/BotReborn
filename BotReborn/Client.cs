@@ -6,6 +6,8 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+
+using BotReborn.Model.Exception;
 using BotReborn.Model.Group;
 
 namespace BotReborn
@@ -95,27 +97,47 @@ namespace BotReborn
             Uin = uin;
             AllowSlider = true;
             RandomKey = new byte[16];
-            OutGoingPacketSessionId = new byte[] {0x02, 0xB0, 0x5B, 0x8B};
-        //TCP: &utils.TCPListener{ },
-        //sigInfo: &loginSigInfo{ },
-        
+            OutGoingPacketSessionId = new byte[] { 0x02, 0xB0, 0x5B, 0x8B };
+            //TCP: &utils.TCPListener{ },
+            //sigInfo: &loginSigInfo{ },
+
         }
 
-        public Client(Uin uin, string password): this(uin)
+        public Client(Uin uin, string password) : this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public Client(Uin uin, byte[] passwordMd5): this(uin)
+        public Client(Uin uin, byte[] passwordMd5) : this(uin)
         {
             PasswordMd5 = passwordMd5;
         }
 
-        public bool TryLogin(out LoginResponse resp) {
-            resp = null;
-            if (IsOnline) return false;
-            return false;
+        public bool TryLogin(out LoginResponse resp)
+        {
+            try
+            {
+                resp = Login();
+                return true;
+            }
+            catch
+            {
+                resp = null;
+                return false;
+            }
+        }
+
+        public LoginResponse Login()
+        {
+            if (IsOnline) throw new LoginException("Already online.");
+
+            throw new LoginException("Unknown exception!");
+        }
+
+        public void Connect()
+        {
+
         }
     }
 }
