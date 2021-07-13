@@ -55,6 +55,17 @@ namespace BotReborn
         public LoginResponse Login()
         {
             if (IsOnline) throw new LoginException("Already online.");
+            try
+            {
+                Connect();
+            }
+            catch (Exception e)
+            {
+                _logger.LogTrace(e, e.Message);
+                _logger.LogError("Login failed.");
+                return null;
+            }
+
 
             throw new LoginException("Unknown exception!");
         }
@@ -74,7 +85,8 @@ namespace BotReborn
                 }
                 catch (Exception e)
                 {
-                    _logger.LogTrace(e,e.Message);
+                    _logger.LogTrace(e, e.Message);
+                    _logger.LogError("Connect failed.");
                     RetryTimes++;
                     CurrentServerIndex++;
                 }
@@ -102,7 +114,7 @@ namespace BotReborn
             }
             catch (Exception e)
             {
-                _logger.LogTrace(e,e.Message);
+                _logger.LogTrace(e, e.Message);
                 _logger.LogError("Quick reconnect failed.");
             }
         }
@@ -111,5 +123,12 @@ namespace BotReborn
         {
             //TODO 注册客户端
         }
+
+        public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
+        public int NextPacketSeq() => Interlocked.Add(ref _requestPacketRequestId, 2);
+        public int NextGroupSeq() => Interlocked.Add(ref _groupSeq, 2);
+        public int NextFriendSeq() => Interlocked.Add(ref _friendSeq, 2);
+        public int NextGroupDataTransSeq() => Interlocked.Add(ref _groupDataTransSeq, 2);
+        public int NextHighwayApplySeq() => Interlocked.Add(ref HighwayApplyUpSeq, 2);
     }
 }

@@ -31,7 +31,7 @@ namespace BotReborn
         //public QiDianAccountInfo QiDianAccountInfo { get; set; }
         //public bool NetLooping { get; set; }
 
-        public int SequenceId { get; set; }
+        private int _sequenceId;
         public byte[] OutGoingPacketSessionId { get; set; }
         public byte[] RandomKey { get; set; }
         public TcpListener TcpListener { get; set; }
@@ -81,12 +81,13 @@ namespace BotReborn
         //    groupSysMsgCache       *GroupSystemMessages
         //    groupMsgBuilders       sync.Map
         //    onlinePushCache        *utils.Cache
-        //    requestPacketRequestID int32
-        //    groupSeq               int32
-        //    friendSeq              int32
-        //    heartbeatEnabled       bool
-        //    groupDataTransSeq      int32
-        //    highwayApplyUpSeq      int32
+        private int _requestPacketRequestId;
+        private int _groupSeq;
+        private int _friendSeq;
+        public bool HeartbeatEnabled;
+        private int _groupDataTransSeq;
+
+        public int HighwayApplyUpSeq;
         //    eventHandlers          *eventHandlers
         //    stat                   *Statistics
 
