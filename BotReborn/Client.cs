@@ -6,6 +6,8 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+
+using BotReborn.Model.Exception;
 using BotReborn.Model.Group;
 
 namespace BotReborn
@@ -112,12 +114,29 @@ namespace BotReborn
             PasswordMd5 = passwordMd5;
         }
 
+        public bool TryLogin(out LoginResponse resp)
+        {
+            try
+            {
+                resp = Login();
+                return true;
+            }
+            catch
+            {
+                resp = null;
+                return false;
+            }
+        }
+
         public LoginResponse Login()
         {
-            if (this.IsOnline)
-            {
-                throw new Exception("already online");
-            }
+            if (IsOnline) throw new LoginException("Already online.");
+
+            throw new LoginException("Unknown exception!");
+        }
+
+        public void Connect()
+        {
 
         }
     }
