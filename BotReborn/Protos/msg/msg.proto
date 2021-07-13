@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-package msg";
+package msg;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message GetMessageRequest {
   optional SyncFlag syncFlag = 1;

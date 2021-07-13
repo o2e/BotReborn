@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-package exciting";
+package exciting;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message GroupFileUploadExt {
   optional int32 unknown1 = 1;

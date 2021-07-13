@@ -1,5 +1,8 @@
 syntax = "proto2";
-package cmd0x6ff";
+
+package cmd0x6ff;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message C519CRMMsgHead {
   optional uint32 crmSubCmd = 1;

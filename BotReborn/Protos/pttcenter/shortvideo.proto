@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package pttcenter";
+package pttcenter;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message ShortVideoReqBody {
   int32 cmd = 1;

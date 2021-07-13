@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-package msgtype0x210";
+package msgtype0x210;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message AddGroup {
   optional uint32 groupid = 1;

@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package notify";
+package notify;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message NotifyMsgBody {
   AIOGrayTipsInfo optMsgGrayTips = 5;

@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package longmsg";
+package longmsg;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message LongMsgDeleteReq {
   bytes msgResid = 1;
@@ -50,4 +52,3 @@ message LongRspBody {
   repeated LongMsgDownRsp msgDownRsp = 3;
   repeated LongMsgDeleteRsp msgDelRsp = 4;
 }
-   

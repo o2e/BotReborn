@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package msg";
+package msg;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message MsgPic {
   bytes smallPicUrl = 1;
@@ -29,4 +31,3 @@ message MsgFile {
   bytes fileSha1 = 6;
   bytes ext = 7;
 }
-   

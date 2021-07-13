@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package oidb";
+package oidb;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message OIDBSSOPkg {
   int32 command = 1;

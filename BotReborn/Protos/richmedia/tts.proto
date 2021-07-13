@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package richmedia";
+package richmedia;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message TtsRspBody {
   uint32 ret_code = 1;

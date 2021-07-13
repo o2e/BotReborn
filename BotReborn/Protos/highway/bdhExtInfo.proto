@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-package highway";
+package highway;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message CommFileExtReq {
   optional uint32 actionType = 1;

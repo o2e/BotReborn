@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-package oidb";
+package oidb;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message D8A7ReqBody {
   optional uint32 subCmd = 1;

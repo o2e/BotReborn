@@ -1,5 +1,8 @@
 syntax = "proto2";
-package msg";
+
+package msg;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message C2CHead {
   optional uint64 toUin = 1;

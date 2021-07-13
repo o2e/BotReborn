@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package multimsg";
+package multimsg;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message ExternMsg {
   int32 channelType = 1;

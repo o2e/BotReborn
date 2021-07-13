@@ -23,7 +23,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Model\Exception\" />
-	  <Folder Include="Proto\" />
+	  <Folder Include="Protos\" />
 	</ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-package oidb";
+package oidb;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message LifeAchievementItem {
   optional uint32 achievementId = 1;

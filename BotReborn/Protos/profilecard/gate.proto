@@ -1,5 +1,8 @@
 syntax = "proto2";
-package profilecard";
+
+package profilecard;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message GateCommTaskInfo {
   optional int32 appid = 1;

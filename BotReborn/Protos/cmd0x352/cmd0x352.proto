@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-package cmd0x352";
+package cmd0x352;
+option csharp_namespace = "BotReborn.Protos";
+
 /*
 message DelImgReq {
   optional uint64 srcUin = 1;
