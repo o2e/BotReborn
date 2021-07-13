@@ -64,7 +64,7 @@ namespace BotReborn
             var p256 = NistNamedCurves.GetByName("P-256");
             var pubKeyPoint = p256.Curve.DecodePoint(pubKeyBytes);
             var domainParameters = new ECDomainParameters(p256);
-            var keyGenerationParameters = new ECKeyGenerationParameters(domainParameters, new());
+            var keyGenerationParameters = new ECKeyGenerationParameters(domainParameters, new SecureRandom());
             generator.Init(keyGenerationParameters);
             var keyPair = generator.GenerateKeyPair();
             var privateKey = (ECPrivateKeyParameters)keyPair.Private;

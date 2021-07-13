@@ -95,6 +95,8 @@ namespace BotReborn
             _logger = logger;
             _ecdh = new();
             _random = new(DateTime.Now.Second);
+            _ecdh = new EncryptECDH();
+            _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
 
             Uin = uin;
