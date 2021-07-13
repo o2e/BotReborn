@@ -3,20 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
 using BotReborn.Model.Exception;
 using BotReborn.Model.Group;
 
+using Microsoft.Extensions.Logging;
+
 namespace BotReborn
 {
-    public class Client
+    public partial class Client
     {
         private EncryptECDH _ecdh;
         private Random _random;
         private MD5 _md5;
+        private ILogger _logger;
 
         public Uin Uin { get; set; }
         public byte[] PasswordMd5 { get; set; }
@@ -88,8 +90,9 @@ namespace BotReborn
         //    stat                   *Statistics
 
         //TODO    groupListLock sync.Mutex
-        private Client(Uin uin)
+        private Client(Uin uin, ILogger logger)
         {
+            _logger = logger;
             _ecdh = new();
             _random = new(DateTime.Now.Second);
             _md5 = MD5.Create();
@@ -103,13 +106,13 @@ namespace BotReborn
 
         }
 
-        public Client(Uin uin, string password) : this(uin)
+        public Client(Uin uin, ILogger logger, string password) : this(uin, logger)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public Client(Uin uin, byte[] passwordMd5) : this(uin)
+        public Client(Uin uin, ILogger logger, byte[] passwordMd5) : this(uin, logger)
         {
             PasswordMd5 = passwordMd5;
         }
@@ -137,7 +140,8 @@ namespace BotReborn
 
         public void Connect()
         {
-
+            var ip = Servers[CurrentServerIndex].ToString();
+            _logger.LogInformation("Connect to server: {0}",ip);
         }
     }
 }
