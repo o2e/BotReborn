@@ -31,7 +31,7 @@ namespace BotReborn
         public TcpListener TcpListener { get; set; }
         public DateTimeOffset ConnectTime { get; set; }
         public Hashtable Waiters { get; set; }
-        public IPEndPoint[] Servers { get; set; }
+        public List<IPEndPoint> Servers { get; set; }
         public int CurrentServerIndex { get; set; }
         public int RetryTimes { get; set; }
         public bool CanRetry

@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 
@@ -34,7 +36,17 @@ namespace BotReborn
             //transCache: utils.NewCache(time.Second * 15),
             //onlinePushCache: utils.NewCache(time.Second * 15),
             //version:                 genVersionInfo(SystemDeviceInfo.Protocol),
-            Servers = Array.Empty<IPEndPoint>();
+            Servers = new List<IPEndPoint>();
+            //sso, err:= getSSOAddress()
+            //if err == nil && len(sso) > 0 {
+            //    cli.servers = append(sso, cli.servers...)
+
+            //}
+            var addresses = Dns.GetHostAddresses("msfwifi.3g.qq.com");
+            if (addresses.Length > 0)
+            {
+                Servers.AddRange(addresses.Select(_ => new IPEndPoint(_, 8080)));
+            }
         }
 
         public Client(Uin uin, ILogger logger, string password) : this(uin, logger)
@@ -83,7 +95,7 @@ namespace BotReborn
 
         public void Connect()
         {
-            if (CurrentServerIndex == Servers.Length) CurrentServerIndex = 0;
+            if (CurrentServerIndex == Servers.Count) CurrentServerIndex = 0;
             while (CanRetry)
             {
                 var ip = Servers[CurrentServerIndex];
