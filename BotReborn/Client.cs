@@ -1,95 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
+﻿using BotReborn.Model.Exception;
+using Microsoft.Extensions.Logging;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-
-using BotReborn.Model.Exception;
-using BotReborn.Model.Group;
+using System;
+using System.Net;
+using System.Threading;
 
 namespace BotReborn
 {
-    public class Client
+    public partial class Client
     {
-        private EncryptECDH _ecdh;
-        private Random _random;
-        private MD5 _md5;
-
-        public Uin Uin { get; set; }
-        public byte[] PasswordMd5 { get; set; }
-        public bool AllowSlider { get; set; }
-
-        public string NickName { get; set; }
-        public ushort Age { get; set; }
-        public ushort Gender { get; set; }
-        public List<Friend> Friends { get; set; }
-        public List<GroupInfo> Groups { get; set; }
-        public List<Device> Devices { get; set; }
-        public bool IsOnline { get; set; }
-        //public QiDianAccountInfo QiDianAccountInfo { get; set; }
-        //public bool NetLooping { get; set; }
-
-        public int SequenceId { get; set; }
-        public byte[] OutGoingPacketSessionId { get; set; }
-        public byte[] RandomKey { get; set; }
-        public TcpListener TcpListener { get; set; }
-        public DateTime Time { get; set; }
-        public Hashtable Waiters { get; set; }
-        public IPAddress[] Servers { get; set; }
-        public int CurrentServerIndex { get; set; }
-        public int RetryTimes { get; set; }
-        public Version Version { get; set; }
-
-        public byte[] Dpwd { get; set; }
-        public byte[] SyncCookie { get; set; }
-        public byte[] PubAccountCookie { get; set; }
-        public byte[] MsgCtrlBuf { get; set; }
-        public byte[] Ksid { get; set; }
-        public byte[] T104 { get; set; }
-        public byte[] T174 { get; set; }
-        public byte[] G { get; set; }
-        public byte[] T402 { get; set; }
-        public byte[] T150 { get; set; }
-        public byte[] T149 { get; set; }
-        public byte[] T528 { get; set; }
-        public byte[] T530 { get; set; }
-        public byte[] RollbackSig { get; set; }
-        public byte[] RandSeed { get; set; }
-        public long TimeDiff { get; set; }
-        public LogInSigInfo SigInfo { get; set; }
-        public BigDataSessionInfo BigDataSession { get; set; }
-        public string[] SrvSsoAddresses { get; set; }
-        public string[] OtherSrvAddresses { get; set; }
-        //fileStorageInfo  *jce.FileStoragePushFSSvcList
-        public bool PwdFlag { get; set; }
-        public int LastMessageSeq { get; set; }
-
-        //lastMessageSeq int32
-        //// lastMessageSeqTmp      sync.Map
-        //msgSvcCache* utils.Cache
-
-        //lastC2CMsgTime int64
-
-        //transCache* utils.Cache
-        //lastLostMsg            string
-        //    groupSysMsgCache       *GroupSystemMessages
-        //    groupMsgBuilders       sync.Map
-        //    onlinePushCache        *utils.Cache
-        //    requestPacketRequestID int32
-        //    groupSeq               int32
-        //    friendSeq              int32
-        //    heartbeatEnabled       bool
-        //    groupDataTransSeq      int32
-        //    highwayApplyUpSeq      int32
-        //    eventHandlers          *eventHandlers
-        //    stat                   *Statistics
-
-        //TODO    groupListLock sync.Mutex
-        private Client(Uin uin)
+        private Client(Uin uin, ILogger logger)
         {
+            _logger = logger;
             _ecdh = new EncryptECDH();
             _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
@@ -103,13 +27,13 @@ namespace BotReborn
 
         }
 
-        public Client(Uin uin, string password) : this(uin)
+        public Client(Uin uin, ILogger logger, string password) : this(uin, logger)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public Client(Uin uin, byte[] passwordMd5) : this(uin)
+        public Client(Uin uin, ILogger logger, byte[] passwordMd5) : this(uin, logger)
         {
             PasswordMd5 = passwordMd5;
         }
@@ -131,13 +55,80 @@ namespace BotReborn
         public LoginResponse Login()
         {
             if (IsOnline) throw new LoginException("Already online.");
+            try
+            {
+                Connect();
+            }
+            catch (Exception e)
+            {
+                _logger.LogTrace(e, e.Message);
+                _logger.LogError("Login failed.");
+                return null;
+            }
+
 
             throw new LoginException("Unknown exception!");
         }
 
         public void Connect()
         {
+            if (CurrentServerIndex == Servers.Length) CurrentServerIndex = 0;
+            while (CanRetry)
+            {
+                var ip = Servers[CurrentServerIndex];
+                _logger.LogInformation("Connect to server: {0}", ip);
+                try
+                {
+                    TcpListener = new TcpListener(ip);
+                    TcpListener.Start();
+                    ConnectTime = DateTime.Now;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogTrace(e, e.Message);
+                    _logger.LogError("Connect failed.");
+                    RetryTimes++;
+                    CurrentServerIndex++;
+                }
+            }
 
+            if (!CanRetry)
+            {
+                throw new HttpListenerException();
+            }
         }
+
+        public void DisConnect()
+        {
+            IsOnline = false;
+            TcpListener.Stop();
+        }
+
+        public void QuickReconnect()
+        {
+            DisConnect();
+            Thread.Sleep(200);
+            try
+            {
+                Connect();
+            }
+            catch (Exception e)
+            {
+                _logger.LogTrace(e, e.Message);
+                _logger.LogError("Quick reconnect failed.");
+            }
+        }
+
+        public void RegisterClient()
+        {
+            //TODO 注册客户端
+        }
+
+        public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
+        public int NextPacketSeq() => Interlocked.Add(ref _requestPacketRequestId, 2);
+        public int NextGroupSeq() => Interlocked.Add(ref _groupSeq, 2);
+        public int NextFriendSeq() => Interlocked.Add(ref _friendSeq, 2);
+        public int NextGroupDataTransSeq() => Interlocked.Add(ref _groupDataTransSeq, 2);
+        public int NextHighwayApplySeq() => Interlocked.Add(ref HighwayApplyUpSeq, 2);
     }
 }

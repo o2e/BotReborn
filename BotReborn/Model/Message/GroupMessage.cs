@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model.Message {
-    public class GroupMessage {
+﻿namespace BotReborn.Model.Message
+{
+    public class GroupMessage
+    {
         public int Id { get; }
         public int InternralId { get; }
         public long GroupCode { get; }

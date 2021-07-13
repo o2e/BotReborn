@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model.Message.Element {
-    public class ImageElement {
+﻿namespace BotReborn.Model.Message.Element
+{
+    public class ImageElement
+    {
         public string Filename { get; set; }
         public int Size { get; set; }
         public int Width { get; set; }

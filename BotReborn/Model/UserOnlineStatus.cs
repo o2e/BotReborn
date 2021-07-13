@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model {
-    public enum UserOnlineStatus {
+﻿namespace BotReborn.Model
+{
+    public enum UserOnlineStatus
+    {
         StatusOnline = 11, // 在线
         StatusOffline = 21,  // 离线
         StatusAway = 31, // 离开

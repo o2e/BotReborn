@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model.Message.Element {
-    public class VoiceElement {
+﻿namespace BotReborn.Model.Message.Element
+{
+    public class VoiceElement
+    {
         public string Name { get; set; }
         public byte[] Md5 { get; set; }
         public int Size { get; set; }

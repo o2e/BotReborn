@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace BotReborn
 {
-    public class Utils {
+    public class Utils
+    {
         public static byte[] ConvertHexStringToByteArray(string hex)
         {
             static int GetHexVal(char hex) => hex - (hex < 58 ? 48 : hex < 97 ? 55 : 87);

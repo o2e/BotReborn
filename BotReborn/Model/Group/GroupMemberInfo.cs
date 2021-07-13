@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model.Group {
-    public class GroupMemberInfo {
+﻿namespace BotReborn.Model.Group
+{
+    public class GroupMemberInfo
+    {
         public GroupInfo GroupInfo { get; set; }
         public long Uin { get; set; }
         public byte Gender { get; set; }
