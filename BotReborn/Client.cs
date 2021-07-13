@@ -21,10 +21,20 @@ namespace BotReborn
             Uin = uin;
             AllowSlider = true;
             RandomKey = new byte[16];
-            OutGoingPacketSessionId = new byte[] { 0x02, 0xB0, 0x5B, 0x8B };
+            OutGoingPacketSessionId = new byte[] { 0x02, 0xB0, 0x5B, 0x8B };//Magic number
             //TCP: &utils.TCPListener{ },
-            //sigInfo: &loginSigInfo{ },
-
+            SigInfo = new LogInSigInfo();
+            _requestPacketRequestId = 1921334513; //Magic number
+            _groupSeq = _random.Next(20000);
+            _friendSeq = 22911;//Magic number
+            _highwayApplyUpSeq = 77918;//Magic number
+            Ksid = Utils.GetBytes($"|{SystemDeviceInfo.IMEI}|A8.2.7.27f6ea96");
+            //eventHandlers:           &eventHandlers{},
+            //msgSvcCache: utils.NewCache(time.Second * 15),
+            //transCache: utils.NewCache(time.Second * 15),
+            //onlinePushCache: utils.NewCache(time.Second * 15),
+            //version:                 genVersionInfo(SystemDeviceInfo.Protocol),
+            Servers = Array.Empty<IPEndPoint>();
         }
 
         public Client(Uin uin, ILogger logger, string password) : this(uin, logger)
@@ -54,7 +64,7 @@ namespace BotReborn
 
         public LoginResponse Login()
         {
-            
+
             if (IsOnline) throw new LoginException("Already online.");
             try
             {
@@ -99,7 +109,7 @@ namespace BotReborn
             }
         }
 
-        public void DisConnect()
+        public void Disconnect()
         {
             IsOnline = false;
             TcpListener.Stop();
@@ -107,7 +117,7 @@ namespace BotReborn
 
         public void QuickReconnect()
         {
-            DisConnect();
+            Disconnect();
             Thread.Sleep(200);
             try
             {
@@ -131,6 +141,6 @@ namespace BotReborn
         public int NextGroupSeq() => Interlocked.Add(ref _groupSeq, 2);
         public int NextFriendSeq() => Interlocked.Add(ref _friendSeq, 2);
         public int NextGroupDataTransSeq() => Interlocked.Add(ref _groupDataTransSeq, 2);
-        public int NextHighwayApplySeq() => Interlocked.Add(ref HighwayApplyUpSeq, 2);
+        public int NextHighwayApplySeq() => Interlocked.Add(ref _highwayApplyUpSeq, 2);
     }
 }

@@ -12,11 +12,6 @@ namespace BotReborn
 {
     public partial class Client
     {
-        private EncryptECDH _ecdh;
-        private Random _random;
-        private MD5 _md5;
-        private ILogger _logger;
-
         public Uin Uin { get; set; }
         public byte[] PasswordMd5 { get; set; }
         public bool AllowSlider { get; set; }
@@ -31,7 +26,6 @@ namespace BotReborn
         //public QiDianAccountInfo QiDianAccountInfo { get; set; }
         //public bool NetLooping { get; set; }
 
-        private int _sequenceId;
         public byte[] OutGoingPacketSessionId { get; set; }
         public byte[] RandomKey { get; set; }
         public TcpListener TcpListener { get; set; }
@@ -81,13 +75,7 @@ namespace BotReborn
         //    groupSysMsgCache       *GroupSystemMessages
         //    groupMsgBuilders       sync.Map
         //    onlinePushCache        *utils.Cache
-        private int _requestPacketRequestId;
-        private int _groupSeq;
-        private int _friendSeq;
-        public bool HeartbeatEnabled;
-        private int _groupDataTransSeq;
 
-        public int HighwayApplyUpSeq;
         //    eventHandlers          *eventHandlers
         //    stat                   *Statistics
 

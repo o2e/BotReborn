@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
@@ -30,5 +31,7 @@ namespace BotReborn
         {
             return string.Concat(bytes.Select(b => b.ToString("X2")));
         }
+
+        public static byte[] GetBytes(string s) => Encoding.UTF8.GetBytes(s);
     }
 }

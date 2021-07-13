@@ -1,6 +1,6 @@
 ﻿namespace BotReborn.Model
 {
-    public struct Version
+    public class Version
     {
         public byte[] Incremental { get; set; }
         public byte[] Release { get; set; }
