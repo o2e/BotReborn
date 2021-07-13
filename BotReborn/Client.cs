@@ -112,13 +112,10 @@ namespace BotReborn
             PasswordMd5 = passwordMd5;
         }
 
-        public LoginResponse Login()
-        {
-            if (this.IsOnline)
-            {
-                throw new("already online");
-            }
-
+        public bool TryLogin(out LoginResponse resp) {
+            resp = null;
+            if (IsOnline) return false;
+            return false;
         }
     }
 }
