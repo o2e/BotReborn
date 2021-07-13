@@ -6,7 +6,6 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 
 using BotReborn.Model.Group;
-
 using Microsoft.Extensions.Logging;
 
 namespace BotReborn

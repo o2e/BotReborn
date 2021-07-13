@@ -54,6 +54,7 @@ namespace BotReborn
 
         public LoginResponse Login()
         {
+            
             if (IsOnline) throw new LoginException("Already online.");
             try
             {

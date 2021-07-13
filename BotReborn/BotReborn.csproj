@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -6,12 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Client\**" />
-	  <EmbeddedResource Remove="Client\**" />
-	  <None Remove="Client\**" />
-	</ItemGroup>
-
-	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.17.3" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.38.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.5.21301.5" />
 		<PackageReference Include="Grpc.Tools" Version="2.38.1">
@@ -23,7 +18,54 @@
 
 	<ItemGroup>
 	  <Folder Include="Model\Exception\" />
-	  <Folder Include="Protos\" />
 	</ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\cmd0x346\cmd0x346.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\cmd0x352\cmd0x352.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\cmd0x3f6\cmd0x3f6.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\cmd0x6ff\smbcmd0x519.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\cmd0x6ff\subcmd0x501.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\data.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\exciting\group.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\faceroam\faceroam.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\highway\bdhExtInfo.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\longmsg\longmsg.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\msf\register_proxy.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\msgtype0x210\subMsgType0x27.proto" />
+    <Protobuf Include="Protos\msg\head.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\msg\msg.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\msg\objmsg.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\msg\report.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\multimsg\multimsg.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\notify\group0x857.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x5eb.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x6d6.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x6d7.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x6d8.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x6d9.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x769.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x88d.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x8a7.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x8fc.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0x990.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xb77.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xbcb.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xD79.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xdad.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xe07.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xe5b.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xeac.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\oidb\oidb0xec4.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\profilecard\accountsearch.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\profilecard\busi.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\profilecard\gate.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\pttcenter\shortvideo.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\qweb\app.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\qweb\protocol.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\richmedia\tts.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\structmsg\structmsg.proto" GrpcServices="Client" />
+  </ItemGroup>
 
 </Project>
