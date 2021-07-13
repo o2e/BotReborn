@@ -1,8 +1,7 @@
-﻿namespace BotReborn.Client {
-    public struct BigDataSessionInfo {
+﻿namespace BotReborn
+{
+    public class BigDataSessionInfo {
         public byte[] SigSession;
         public byte[] SessionKey;
     }
-
-
 }

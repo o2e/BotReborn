@@ -1,6 +1,4 @@
-﻿using BotReborn.Client;
-
-namespace BotReborn.Model.Group {
+﻿namespace BotReborn.Model.Group {
     public class GroupInfo {
         public long Uin { get; set; }
         public long Code { get; set; }
@@ -16,7 +14,7 @@ namespace BotReborn.Model.Group {
         /// 最后一条信息的SEQ,只有通过 GetGroupInfo 函数获取的 GroupInfo 才会有
         /// </summary>
         public long LastMsgSeq { get; set; }
-        public QqClient QqClient { get; set; }
+        public Client Client { get; set; }
         //TODO lock sync.RWMutex
     }
 }

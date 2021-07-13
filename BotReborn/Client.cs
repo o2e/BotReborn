@@ -6,13 +6,11 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using BotReborn.Model.Group;
 
-[assembly: InternalsVisibleTo("BotReborn.Tests")]
-namespace BotReborn.Client
+namespace BotReborn
 {
-    public class QqClient
+    public class Client
     {
         private EncryptECDH _ecdh;
         private Random _random;
@@ -88,7 +86,7 @@ namespace BotReborn.Client
         //    stat                   *Statistics
 
         //TODO    groupListLock sync.Mutex
-        private QqClient(Uin uin)
+        private Client(Uin uin)
         {
             _ecdh = new();
             _random = new(DateTime.Now.Second);
@@ -103,15 +101,24 @@ namespace BotReborn.Client
         
         }
 
-        public QqClient(Uin uin, string password): this(uin)
+        public Client(Uin uin, string password): this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public QqClient(Uin uin, byte[] passwordMd5): this(uin)
+        public Client(Uin uin, byte[] passwordMd5): this(uin)
         {
             PasswordMd5 = passwordMd5;
+        }
+
+        public LoginResponse Login()
+        {
+            if (this.IsOnline)
+            {
+                throw new("already online");
+            }
+
         }
     }
 }
