@@ -1,9 +1,12 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Security;
 
 
 namespace BotReborn
@@ -43,12 +46,12 @@ namespace BotReborn
         {
             var pubKey = ConvertStringToByteArray(pubKeyStr);
             var generator = new ECKeyPairGenerator("ECDH");
-            var keyGenerationParameters = new ECKeyGenerationParameters(DerObjectIdentifier.GetInstance(pubKey), new());
+            var keyGenerationParameters = new ECKeyGenerationParameters(DerObjectIdentifier.GetInstance(pubKey), new SecureRandom());
             generator.Init(keyGenerationParameters);
             var keyPair = generator.GenerateKeyPair();
             var privateKey = (ECPrivateKeyParameters) keyPair.Private;
             var publicKey = (ECPublicKeyParameters) keyPair.Public;
-            var shareKey = privateKey.D.Multiply(new (pubKey));
+            var shareKey = privateKey.D.Multiply(new BigInteger(pubKey));
             InitialShareKey = shareKey.ToByteArray(); //May be ToByteArrayUnsigned()
             PublicKey = publicKey.PublicKeyParamSet.GetEncoded();
         }
@@ -58,7 +61,7 @@ namespace BotReborn
         {
             static int GetHexVal(char hex) => hex - (hex < 58 ? 48 : hex < 97 ? 55 : 87);
             if (hex.Length % 2 == 1)
-                throw new("The binary key cannot have an odd number of digits");
+                throw new Exception("The binary key cannot have an odd number of digits");
 
             var arr = new byte[hex.Length >> 1];
 

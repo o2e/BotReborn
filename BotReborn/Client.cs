@@ -88,26 +88,26 @@ namespace BotReborn
         //TODO    groupListLock sync.Mutex
         private Client(Uin uin)
         {
-            _ecdh = new();
-            _random = new(DateTime.Now.Second);
+            _ecdh = new EncryptECDH();
+            _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
 
             Uin = uin;
             AllowSlider = true;
             RandomKey = new byte[16];
-            OutGoingPacketSessionId = new byte[] {0x02, 0xB0, 0x5B, 0x8B};
-        //TCP: &utils.TCPListener{ },
-        //sigInfo: &loginSigInfo{ },
-        
+            OutGoingPacketSessionId = new byte[] { 0x02, 0xB0, 0x5B, 0x8B };
+            //TCP: &utils.TCPListener{ },
+            //sigInfo: &loginSigInfo{ },
+
         }
 
-        public Client(Uin uin, string password): this(uin)
+        public Client(Uin uin, string password) : this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public Client(Uin uin, byte[] passwordMd5): this(uin)
+        public Client(Uin uin, byte[] passwordMd5) : this(uin)
         {
             PasswordMd5 = passwordMd5;
         }
@@ -116,7 +116,7 @@ namespace BotReborn
         {
             if (this.IsOnline)
             {
-                throw new("already online");
+                throw new Exception("already online");
             }
 
         }

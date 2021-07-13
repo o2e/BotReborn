@@ -12,7 +12,7 @@ namespace BotReborn
         {
             static int GetHexVal(char hex) => hex - (hex < 58 ? 48 : hex < 97 ? 55 : 87);
             if (hex.Length % 2 == 1)
-                throw new("The binary key cannot have an odd number of digits");
+                throw new Exception("The binary key cannot have an odd number of digits");
 
             var arr = new byte[hex.Length >> 1];
 
