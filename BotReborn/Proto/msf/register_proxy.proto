@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-option go_package = "./;msf";
+package msf;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message DiscussList {
   optional uint64 discussCode = 1;

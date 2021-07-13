@@ -1,6 +1,8 @@
 syntax = "proto2"; // 似乎查询服务端是通过 exists flag 来返回 group info 的 这地方只能用 proto2
 
-option go_package = "./;oidb";
+package oidb;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message D88DGroupHeadPortraitInfo
 {

@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-option go_package = "./;structmsg";
+package structmsg;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message AddFrdSNInfo {
   int32 notSeeDynamic = 1;
@@ -239,4 +241,3 @@ message SystemMsgActionInfo {
   bool blacklist = 53;
   AddFrdSNInfo addFrdSNInfo = 54;
 }
-   

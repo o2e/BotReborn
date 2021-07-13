@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-option go_package = "./;oidb";
+package oidb;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message TranslateReqBody {
   // TranslateReq translate_req = 1;

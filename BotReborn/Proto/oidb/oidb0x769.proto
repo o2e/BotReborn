@@ -1,6 +1,8 @@
 syntax = "proto2";
 
-option go_package = "./;oidb";
+package oidb;
+
+option csharp_namespace = "BotReborn.Protos";
 
 message CPU {
   optional string model = 1;
