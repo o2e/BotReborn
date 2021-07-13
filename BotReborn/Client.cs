@@ -121,6 +121,7 @@ namespace BotReborn
 
         public void RegisterClient()
         {
+            var seq = NextSeq();
             //TODO 注册客户端
         }
 
