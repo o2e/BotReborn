@@ -14,7 +14,7 @@ indent_style = space
 #require members of object initializers to be on the same line
 csharp_new_line_before_members_in_object_initializers = false
 #require braces to be on a new line for control_blocks and methods (also known as "Allman" style)
-csharp_new_line_before_open_brace = control_blocks, methods
+csharp_new_line_before_open_brace =all
 
 #Formatting - organize using options
 
