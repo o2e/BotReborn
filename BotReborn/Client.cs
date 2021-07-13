@@ -6,6 +6,7 @@ using System.Text;
 using System;
 using System.Net;
 using System.Threading;
+using BotReborn.Protos;
 
 namespace BotReborn
 {
@@ -54,7 +55,7 @@ namespace BotReborn
 
         public LoginResponse Login()
         {
-            
+
             if (IsOnline) throw new LoginException("Already online.");
             try
             {
