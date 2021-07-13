@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model {
-    public enum GroupGift {
+﻿namespace BotReborn.Model
+{
+    public enum GroupGift
+    {
         HoldingYourHand = 280,
         CuteCat = 281,
         MysteryMask = 284,

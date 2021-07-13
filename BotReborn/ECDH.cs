@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -49,8 +50,8 @@ namespace BotReborn
             var keyGenerationParameters = new ECKeyGenerationParameters(DerObjectIdentifier.GetInstance(pubKey), new SecureRandom());
             generator.Init(keyGenerationParameters);
             var keyPair = generator.GenerateKeyPair();
-            var privateKey = (ECPrivateKeyParameters) keyPair.Private;
-            var publicKey = (ECPublicKeyParameters) keyPair.Public;
+            var privateKey = (ECPrivateKeyParameters)keyPair.Private;
+            var publicKey = (ECPublicKeyParameters)keyPair.Public;
             var shareKey = privateKey.D.Multiply(new BigInteger(pubKey));
             InitialShareKey = shareKey.ToByteArray(); //May be ToByteArrayUnsigned()
             PublicKey = publicKey.PublicKeyParamSet.GetEncoded();

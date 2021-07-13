@@ -1,5 +1,7 @@
-namespace BotReborn.Model {
-    public enum ElementType {
+namespace BotReborn.Model
+{
+    public enum ElementType
+    {
         Text = 0,
         Image,
         Face,

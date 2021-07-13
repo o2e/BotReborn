@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model.Message.Element {
-    public enum RedBagMessageType {
+﻿namespace BotReborn.Model.Message.Element
+{
+    public enum RedBagMessageType
+    {
         RedBagSimple = 2,
         RedBagLucky = 3,
         RedBagSimpleTheme = 4,

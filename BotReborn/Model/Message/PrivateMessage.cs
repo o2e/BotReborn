@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model.Message {
-    public class PrivateMessage {
+﻿namespace BotReborn.Model.Message
+{
+    public class PrivateMessage
+    {
         public int Id { get; set; }
         public int InternalId { get; set; }
         public long Self { get; set; }

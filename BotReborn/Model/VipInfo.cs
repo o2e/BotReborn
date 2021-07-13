@@ -1,5 +1,7 @@
-﻿namespace BotReborn.Model {
-    public class VipInfo {
+﻿namespace BotReborn.Model
+{
+    public class VipInfo
+    {
         public long Uin { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }

@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Asn1.X9;
@@ -21,7 +22,7 @@ using Org.BouncyCastle.X509;
 
 namespace BotReborn
 {
-    
+
 
     public class EncryptECDH
     {
@@ -44,11 +45,11 @@ namespace BotReborn
 
 
 
-        public  void FetchPubKey(Uin uin)
+        public void FetchPubKey(Uin uin)
         {
             var stream =
                  _httpClient.GetStreamAsync("https://keyrotate.qq.com/rotate_key?cipher_suite_ver=305&uin=" + uin).Result;
-            var json =  JsonDocument.Parse(stream);
+            var json = JsonDocument.Parse(stream);
             var pubKeyJson = json.RootElement.GetProperty("PubKeyMeta");
             PublicKeyVersion = pubKeyJson.GetProperty("KeyVer").GetUInt16();
             var pubKey = pubKeyJson.GetProperty("PubKey").GetString();
