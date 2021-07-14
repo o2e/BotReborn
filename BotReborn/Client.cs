@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using BotReborn.Protos;
+using BotReborn.Model;
 
 namespace BotReborn
 {
@@ -31,12 +31,12 @@ namespace BotReborn
             _groupSeq = _random.Next(20000);
             _friendSeq = 22911;//Magic number
             _highwayApplyUpSeq = 77918;//Magic number
-            Ksid = Utils.GetBytes($"|{SystemDeviceInfo.IMEI}|A8.2.7.27f6ea96");
+            Ksid = Utils.GetBytes($"|{DeviceInfo.Default.IMEI}|A8.2.7.27f6ea96");
             //eventHandlers:           &eventHandlers{},
             //msgSvcCache: utils.NewCache(time.Second * 15),
             //transCache: utils.NewCache(time.Second * 15),
             //onlinePushCache: utils.NewCache(time.Second * 15),
-            //version:                 genVersionInfo(SystemDeviceInfo.Protocol),
+            //version:                 genVersionInfo(DefaultDeviceInfo.Protocol),
             Servers = new List<IPEndPoint>();
             //sso, err:= getSSOAddress()
             //if err == nil && len(sso) > 0 {
@@ -148,6 +148,15 @@ namespace BotReborn
             var seq = NextSeq();
             //TODO 注册客户端
         }
+
+        public List<IPEndPoint> GetSSOAddresses()
+        {
+            var protocol = DeviceInfo.Default.Protocol;
+            var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
+
+        }
+
+
 
         public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
         public int NextPacketSeq() => Interlocked.Add(ref _requestPacketRequestId, 2);
