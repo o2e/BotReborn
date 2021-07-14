@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -6,13 +6,20 @@
 	</PropertyGroup>
 
   <ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.17.3" />
+		<PackageReference Include="Grpc.Tools" Version="2.38.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.5.21301.5" />
 		<PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
-		<PackageReference Include="protobuf-net" Version="3.0.101" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Model\Exception\" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Include="Protos\*.proto" GrpcServices="Client" />
+  </ItemGroup>
 </Project>

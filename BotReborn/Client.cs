@@ -152,8 +152,8 @@ namespace BotReborn
         public List<IPEndPoint> GetSSOAddresses()
         {
             var protocol = DeviceInfo.Default.Protocol;
-            var key = Utils.ConvertHexStringToByteArray[]("F0441F5FF42DA58FDCF7949ABA62D411");
-
+            var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
+            throw new NotImplementedException();
         }
 
 

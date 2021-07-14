@@ -36,7 +36,7 @@ namespace BotReborn
         public int RetryTimes { get; set; }
         public bool CanRetry
         {
-            get => RetryTimes <= Servers.Length;
+            get => RetryTimes <= Servers.Count;
         }
         public Version Version { get; set; }
 
