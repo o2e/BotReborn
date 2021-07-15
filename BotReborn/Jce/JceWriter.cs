@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using BotReborn.Jce;
 
 namespace BotReborn.Jce
 {
@@ -23,8 +27,7 @@ namespace BotReborn.Jce
             }
         }
 
-        public void WriteByte(byte b, int tag)
-        {
+        public JceWriter WriteByte(byte b, int tag) {
             if (b == 0)
             {
                 WriteHead(12, tag);
@@ -34,61 +37,65 @@ namespace BotReborn.Jce
                 WriteHead(0, tag);
                 _data.WriteByte(b);
             }
+            return this;
         }
 
-        public void WriteBool(bool b, int tag)
+        public JceWriter WriteBool(bool b, int tag)
         {
-            _data.WriteByte((byte)(b ? 1 : 0));
+            _data.WriteByte((byte)(b?1:0));
+            return this;
         }
 
-        public void WriteInt16(short n, int tag)
+        public JceWriter WriteInt16(short n, int tag)
         {
             if (n >= -128 && n <= 127)
             {
                 WriteByte((byte)(n), tag);
-                return;
+                return this;
             }
             WriteHead(1, tag);
             _data.Write(BitConverter.GetBytes(n));
+            return this;
         }
 
-        public void WriteInt32(int n, int tag)
-        {
-            if (n >= -32768 && n <= 32767)
-            { // ? if ((n >= 32768) && (n <= 32767))
+        public JceWriter WriteInt32(int n, int tag) {
+            if (n >= -32768 && n <= 32767) { // ? if ((n >= 32768) && (n <= 32767))
                 WriteInt16((short)n, tag);
-                return;
+                return this;
             }
 
             WriteHead(2, tag);
             _data.Write(BitConverter.GetBytes(n));
+            return this;
         }
 
-        public void WriteInt64(long n, int tag)
-        {
-            if (n >= -2147483648 && n <= 2147483647)
+        public JceWriter WriteInt64(long n,int tag) {
+            if (n >= -2147483648 && n <= 2147483647 )
             {
                 WriteInt32((int)n, tag);
-                return;
+                return this;
             }
 
             WriteHead(3, tag);
             _data.Write(BitConverter.GetBytes(n));
+            return this;
         }
 
-        public void WriteFloat32(float n, int tag)
+        public JceWriter WriteFloat32(float n, int tag)
         {
             WriteHead(4, tag);
             _data.Write(BitConverter.GetBytes(n));
+            return this;
         }
 
-        public void WriteFloat64(double n, int tag)
+        public JceWriter WriteFloat64(double n, int tag)
         {
             WriteHead(5, tag);
             _data.Write(BitConverter.GetBytes(n));
+            return this;
         }
 
-        public void WriteString(string s, int tag)
+        public JceWriter WriteString(string s,int tag)
         {
             var bytes = Encoding.UTF8.GetBytes(s);
             if (bytes.Length > 255)
@@ -96,13 +103,33 @@ namespace BotReborn.Jce
                 WriteHead(7, tag);
                 _data.Write(BitConverter.GetBytes(bytes.Length));
                 _data.Write(bytes);
-                return;
+                return this;
             }
             WriteHead(6, tag);
             _data.WriteByte((byte)bytes.Length);
             _data.Write(bytes);
+            return this;
         }
-    }
+
+        public JceWriter WriteBytes(byte[] b, int tag)
+        {
+            WriteHead(13, tag);
+            WriteHead(0, 0);
+            WriteInt32((int)b.Length, 0);
+            _data.Write(b);
+            return this;
+        }
+
+        public void WriteJceStructRaw(IJceStruct s)
+        {
+            //TODO
+        }
+
+        public byte[] GetBytes()
+        {
+            return _data.ToArray();
+        }
+}
 
     //TODO
 }
