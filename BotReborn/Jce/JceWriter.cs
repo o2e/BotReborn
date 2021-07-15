@@ -122,7 +122,12 @@ namespace BotReborn.Jce
 
         public void WriteJceStructRaw(IJceStruct s)
         {
-            //TODO
+            var fields =s.GetType().GetFields();
+            foreach (var fieldInfo in fields)
+            {
+                //TODO WriteObject
+            }
+
         }
 
         public byte[] GetBytes()
