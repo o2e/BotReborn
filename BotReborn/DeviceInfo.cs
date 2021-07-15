@@ -1,4 +1,6 @@
-﻿namespace BotReborn.Model
+﻿using BotReborn.Model;
+
+namespace BotReborn
 {
     public class DeviceInfo
     {
@@ -50,7 +52,7 @@
                 SimInfo = Utils.GetBytes("T-Mobile"),
                 OSType = Utils.GetBytes("android"),
                 MacAddress = Utils.GetBytes("00:50:56:C0:00:08"),
-                IpAddress = new byte[] {10, 0, 1, 3}, // 10.0.1.3
+                IpAddress = new byte[] { 10, 0, 1, 3 }, // 10.0.1.3
                 WifiBSSID = Utils.GetBytes("00:50:56:C0:00:08"),
                 WifiSSID = Utils.GetBytes("<unknown ssid>"),
                 IMEI = "468356291846738",

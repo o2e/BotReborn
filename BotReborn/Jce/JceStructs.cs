@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BotReborn.Jce
 {
@@ -10,7 +6,7 @@ namespace BotReborn.Jce
     {
 
     }
-    public class JceStructs:IJceStruct
+    public class JceStructs : IJceStruct
     {
         public struct RequestPacket
         {
@@ -25,11 +21,11 @@ namespace BotReborn.Jce
             public Dictionary<string, string> Context;
             public Dictionary<string, string> Status;
         }
-        public struct RequestDataVersion3:IJceStruct
+        public struct RequestDataVersion3 : IJceStruct
         {
             public Dictionary<string, byte[]> Map;
         }
-        public struct RequestDataVersion2:IJceStruct
+        public struct RequestDataVersion2 : IJceStruct
         {
             public Dictionary<string, Dictionary<string, byte[]>> Map;
         }

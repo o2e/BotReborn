@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BotReborn.Jce;
 using BotReborn.Model;
 using BotReborn.Model.Exception;
+
 using Microsoft.Extensions.Logging;
 
 namespace BotReborn
