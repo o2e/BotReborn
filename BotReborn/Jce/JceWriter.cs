@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using BotReborn.Jce;
 
 namespace BotReborn.Jce
 {
@@ -27,7 +23,8 @@ namespace BotReborn.Jce
             }
         }
 
-        public JceWriter WriteByte(byte b, int tag) {
+        public JceWriter WriteByte(byte b, int tag)
+        {
             if (b == 0)
             {
                 WriteHead(12, tag);
@@ -42,7 +39,7 @@ namespace BotReborn.Jce
 
         public JceWriter WriteBool(bool b, int tag)
         {
-            _data.WriteByte((byte)(b?1:0));
+            _data.WriteByte((byte)(b ? 1 : 0));
             return this;
         }
 
@@ -58,8 +55,10 @@ namespace BotReborn.Jce
             return this;
         }
 
-        public JceWriter WriteInt32(int n, int tag) {
-            if (n >= -32768 && n <= 32767) { // ? if ((n >= 32768) && (n <= 32767))
+        public JceWriter WriteInt32(int n, int tag)
+        {
+            if (n >= -32768 && n <= 32767)
+            { // ? if ((n >= 32768) && (n <= 32767))
                 WriteInt16((short)n, tag);
                 return this;
             }
@@ -69,8 +68,9 @@ namespace BotReborn.Jce
             return this;
         }
 
-        public JceWriter WriteInt64(long n,int tag) {
-            if (n >= -2147483648 && n <= 2147483647 )
+        public JceWriter WriteInt64(long n, int tag)
+        {
+            if (n >= -2147483648 && n <= 2147483647)
             {
                 WriteInt32((int)n, tag);
                 return this;
@@ -95,7 +95,7 @@ namespace BotReborn.Jce
             return this;
         }
 
-        public JceWriter WriteString(string s,int tag)
+        public JceWriter WriteString(string s, int tag)
         {
             var bytes = Encoding.UTF8.GetBytes(s);
             if (bytes.Length > 255)
@@ -129,7 +129,7 @@ namespace BotReborn.Jce
         {
             return _data.ToArray();
         }
-}
+    }
 
     //TODO
 }

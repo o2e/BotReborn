@@ -1,10 +1,12 @@
-﻿namespace BotReborn.Jce
+﻿using System.Collections.Generic;
+
+namespace BotReborn.Jce
 {
     public interface IJceStruct
     {
 
     }
-    public class JceStructs:IJceStruct
+    public class JceStructs : IJceStruct
     {
         public struct RequestPacket
         {
@@ -19,11 +21,11 @@
             public Dictionary<string, string> Context;
             public Dictionary<string, string> Status;
         }
-        public struct RequestDataVersion3:IJceStruct
+        public struct RequestDataVersion3 : IJceStruct
         {
             public Dictionary<string, byte[]> Map;
         }
-        public struct RequestDataVersion2:IJceStruct
+        public struct RequestDataVersion2 : IJceStruct
         {
             public Dictionary<string, Dictionary<string, byte[]>> Map;
         }
