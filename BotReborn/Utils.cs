@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -33,5 +34,14 @@ namespace BotReborn
         }
 
         public static byte[] GetBytes(string s) => Encoding.UTF8.GetBytes(s);
+
+        public static byte[] PackUniRequestData(byte[] data)
+        {
+           var r =  new List<byte> {0x0A};
+           r.AddRange(data);
+           r.Add(0x0B);
+           return r.ToArray();
+
+        }
     }
 }
