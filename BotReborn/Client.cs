@@ -1,14 +1,10 @@
-﻿using BotReborn.Model.Exception;
-using Microsoft.Extensions.Logging;
-using System.Net.Sockets;
+﻿using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 using System.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading;
-using BotReborn.Model;
 
 namespace BotReborn
 {
@@ -24,7 +20,7 @@ namespace BotReborn
             Uin = uin;
             AllowSlider = true;
             RandomKey = new byte[16];
-            OutGoingPacketSessionId = new byte[] {0x02, 0xB0, 0x5B, 0x8B}; //Magic number
+            OutGoingPacketSessionId = new byte[] { 0x02, 0xB0, 0x5B, 0x8B }; //Magic number
             //TCP: &utils.TCPListener{ },
             SigInfo = new LogInSigInfo();
             _requestPacketRequestId = 1921334513; //Magic number
