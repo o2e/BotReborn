@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-
+using BotReborn.Crypto;
 using Xunit;
 
 namespace BotReborn.Tests

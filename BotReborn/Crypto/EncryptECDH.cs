@@ -2,15 +2,13 @@
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
-
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math.EC.Multiplier;
 using Org.BouncyCastle.Security;
 
-
-namespace BotReborn
+namespace BotReborn.Crypto
 {
 
 

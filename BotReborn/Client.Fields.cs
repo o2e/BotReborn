@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using BotReborn.Crypto;
 using Microsoft.Extensions.Logging;
 
 namespace BotReborn

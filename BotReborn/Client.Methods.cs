@@ -118,6 +118,8 @@ namespace BotReborn
             {
                 IVersion = 3, SServantName = "ConfigHttp", SFuncName = "HttpServerListReq", SBuffer = buf.GetBytes()
             };
+            //TODO tea
+
             throw new NotImplementedException();
         }
 
