@@ -2,7 +2,7 @@
 using BotReborn.Crypto;
 using Xunit;
 
-namespace BotReborn.Tests
+namespace BotReborn.Tests.Crypto
 {
     public class ECDHTests
     {

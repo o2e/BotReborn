@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BotReborn.Crypto
 {
-    class Tea
+    public class Tea
     {
         private uint[] _buffer;
         private uint[] _sumTable =
@@ -23,10 +23,10 @@ namespace BotReborn.Crypto
             if (key.Length != 16) throw new();
             _random = new Random();
             _buffer = new uint[4];
-            _buffer[3] = Convert.ToUInt32(key[12..]);
-            _buffer[2] = Convert.ToUInt32(key[8..]);
-            _buffer[1] = Convert.ToUInt32(key[4..]);
-            _buffer[0] = Convert.ToUInt32(key[..]);
+            _buffer[3] = BitConverter.ToUInt32(key[12..]);
+            _buffer[2] = BitConverter.ToUInt32(key[8..]);
+            _buffer[1] = BitConverter.ToUInt32(key[4..]);
+            _buffer[0] = BitConverter.ToUInt32(key[..]);
         }
 
         private void Xor(byte[] a, int aOffset, byte[] b, int bOffset ,byte[] ret,int retOffset, int count)
@@ -85,7 +85,7 @@ namespace BotReborn.Crypto
             }
 
             var tmp3 = new byte[8];
-            Buffer.BlockCopy(src,@in,tmp3,0,8);
+            Buffer.BlockCopy(src,@in,tmp3,0,src.Length-@in);
             Xor(tmp3,0,dst,@out-8,dst,@out,8);
             Encode(dst,@out,dst,@out,8);
             Xor(dst,@out,tmp2,0,dst,@out,8);
@@ -112,50 +112,50 @@ namespace BotReborn.Crypto
                 Xor(dst,i,dst,i-8,tmp,0,8);
             }
 
-            return dst[(dst[0] & 7 + 3) ..(data.Length - 7)];
+            return dst[((dst[0] & 7) + 3) ..(data.Length - 7)];
         }
 
         public void Encode(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
         {
-            var (v0, v1) = Unpack(src[srcOffset..(srcOffset+count)]);
+            var (v0, v1) = Unpack(src,srcOffset);
             for (var i = 0; i < 0x10; i++)
             {
                 v0 += ((v1 << 4) + _buffer[0]) ^ (v1 + _sumTable[i]) ^ ((v1 >> 5) + _buffer[1]);
                 v1 += ((v0 << 4) + _buffer[2]) ^ (v0 + _sumTable[i]) ^ ((v0 >> 5) + _buffer[3]);
             }
-            Repack(dst[dstOffset..(dstOffset+count)],v0,v1);
+            Repack(dst,dstOffset,v0,v1);
         }
 
         public void Decode(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
         {
-            var (v0, v1) = Unpack(src[srcOffset..(srcOffset + count)]);
+            var (v0, v1) = Unpack(src,srcOffset);
             for (var i = 0xf; i >= 0; i-- )
             {
                 v1 -= ((v0 << 4) + _buffer[2]) ^ (v0 + _sumTable[i]) ^ ((v0 >> 5) + _buffer[3]);
                 v0 -= ((v1 << 4) + _buffer[0]) ^ (v1 + _sumTable[i]) ^ ((v1 >> 5) + _buffer[1]);
             }
-            Repack(dst[dstOffset..(dstOffset + count)], v0, v1);
+            Repack(dst,dstOffset, v0, v1);
         }
 
-        public (uint v0, uint v1) Unpack(byte[] data)
+        public (uint v0, uint v1) Unpack(byte[] data, int dataOffset)
         {
-            var v1 = (uint)(data[7]) | (uint)(data[6]) << 8 | (uint)(data[5]) << 16 | (uint)(data[4]) << 24;
+            var v1 = (uint)(data[dataOffset+7]) | (uint)(data[dataOffset+6]) << 8 | (uint)(data[dataOffset+5]) << 16 | (uint)(data[dataOffset+4]) << 24;
 
-            var v0 = (uint)(data[3]) | (uint)(data[2]) << 8 | (uint)(data[1]) << 16 | (uint)(data[0]) << 24;
+            var v0 = (uint)(data[dataOffset+3]) | (uint)(data[dataOffset+2]) << 8 | (uint)(data[dataOffset+1]) << 16 | (uint)(data[dataOffset+0]) << 24;
 
             return (v0, v1);
         }
 
-        public void Repack(byte[] data, uint v0, uint v1)
+        public void Repack(byte[] data,int dataOffset, uint v0, uint v1)
         {
-            data[0] = (byte)(v0 >> 24);
-            data[1] = (byte)(v0 >> 16);
-            data[2] = (byte)(v0 >> 8);
-            data[3] = (byte)(v0);
-            data[4] = (byte)(v1 >> 24);
-            data[5] = (byte)(v1 >> 16);
-            data[6] = (byte)(v1 >> 8);
-            data[7] = (byte)(v1);
+            data[dataOffset+0] = (byte)(v0 >> 24);
+            data[dataOffset+1] = (byte)(v0 >> 16);
+            data[dataOffset+2] = (byte)(v0 >> 8);
+            data[dataOffset+3] = (byte)(v0);
+            data[dataOffset+4] = (byte)(v1 >> 24);
+            data[dataOffset+5] = (byte)(v1 >> 16);
+            data[dataOffset+6] = (byte)(v1 >> 8);
+            data[dataOffset+7] = (byte)(v1);
         }
     }
 }
