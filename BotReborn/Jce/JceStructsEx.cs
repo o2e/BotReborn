@@ -8,10 +8,11 @@ namespace BotReborn.Jce
 {
     public static class JceStructsEx
     {
-        public static void GetBytes(this IJceStruct s)
+        public static byte[] GetBytes(this IJceStruct s)
         {
             var writer = new JceWriter();
-            writer.
+            writer.WriteJceStructRaw(s);
+            return writer.GetBytes();
         }
     }
 }
