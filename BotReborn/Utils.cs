@@ -27,10 +27,6 @@ namespace BotReborn
 
         public static string ConvertByteArrayToHexString(byte[] bytes)
         {
-            if (BitConverter.IsLittleEndian)
-            {
-                bytes = Utils.ReverseEndianness(bytes);
-            }
             return string.Concat(bytes.Select(b => b.ToString("X2")));
         }
 

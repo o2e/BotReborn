@@ -34,9 +34,9 @@ namespace BotReborn.Tests.Crypto
         [Theory()]
         [InlineData("0123456789ABCDEF", "MiraiGO Here", "b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf")]
         [InlineData("0123456789ABCDEF", "s", "528e8b5c48300b548e94262736ebb8b7")]
-        public void TeaEncryptTest(string cipher,string str,string enc)
+        public void TeaEncryptTest(string key,string str,string enc)
         {
-            var tea = new Tea(Encoding.UTF8.GetBytes(cipher));
+            var tea = new Tea(Encoding.UTF8.GetBytes(key));
             var actual = tea.Encrypt(Encoding.UTF8.GetBytes(str));
             var expected = Utils.ConvertHexStringToByteArray(enc);
             Assert.Equal(expected,actual);
@@ -45,9 +45,9 @@ namespace BotReborn.Tests.Crypto
         [Theory]
         [InlineData("0123456789ABCDEF", "MiraiGO Here", "b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf")]
         [InlineData("0123456789ABCDEF", "s", "528e8b5c48300b548e94262736ebb8b7")]
-        public void TeaDecryptTest(string cipher, string str, string enc)
+        public void TeaDecryptTest(string key, string str, string enc)
         {
-            var tea = new Tea(Encoding.UTF8.GetBytes(cipher));
+            var tea = new Tea(Encoding.UTF8.GetBytes(key));
             var dec = tea.Decrypt(Utils.ConvertHexStringToByteArray(enc));
             var expected = Encoding.UTF8.GetBytes(str);
             Assert.Equal(expected,dec);

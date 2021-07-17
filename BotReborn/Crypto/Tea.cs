@@ -55,12 +55,11 @@ namespace BotReborn.Crypto
             var tmp2 = new byte[8];
             var dst = new byte[length + fill + 7];
             var buf = new byte[fill];
-            _random.NextBytes(buf);
-            //buf[0] = 114;
-            //buf[1] = 114;
-            //buf[2] = 114;
-            //buf[3] = 114;
-            //buf[4] = 114;
+            //_random.NextBytes(buf);
+            for (var i = 0; i < buf.Length; i++)
+            {
+                buf[i] = 114;
+            }
             Buffer.BlockCopy(buf, 0, dst, 0, buf.Length);
             dst[0] = (byte)((byte)(fill - 3) | 0xF8);
             var @in = 0;
