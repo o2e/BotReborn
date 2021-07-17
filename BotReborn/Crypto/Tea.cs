@@ -35,53 +35,48 @@ namespace BotReborn.Crypto
             _key[3] = BitConverter.ToUInt32(key[..]);
         }
 
-        private void Xor(byte[] a, int aOffset, byte[] b, int bOffset, byte[] ret, int retOffset, int count)
+        private static void Xor(Span<byte> a, Span<byte> b, Span<byte> ret)
         {
-            //var aA = new BitArray(a[aOffset..(aOffset + count)]);
-            //var bA = new BitArray(b[bOffset..(bOffset + count)]);
-            var tA = a[aOffset..(aOffset + count)];
-            var tB = b[bOffset..(bOffset + count)];
-            var aA = new BitArray(tA);
-            var bA = new BitArray(tB);
-            var cA = aA.Xor(bA);
-            cA.CopyTo(ret, retOffset);
+            var aN = BitConverter.ToUInt64(a);
+            var bN = BitConverter.ToUInt64(b);
+            var cN = aN ^ bN;
+            var cBytes = BitConverter.GetBytes(cN);
+            cBytes.AsSpan().CopyTo(ret);
         }
 
-        public byte[] Encrypt(byte[] src)
+        public byte[] Encrypt(Span<byte> src)
         {
             var length = src.Length;
             var fill = 10 - ((length + 1) % 8);
             var tmp1 = new byte[8];
             var tmp2 = new byte[8];
             var dst = new byte[length + fill + 7];
-            var buf = new byte[fill];
-            //_random.NextBytes(buf);
-            for (var i = 0; i < buf.Length; i++)
+            //_random.NextBytes(dst.AsSpan(0,fill));
+            for (var i = 0; i < fill; i++)
             {
-                buf[i] = 114;
+                dst[i] = 114;
             }
-            Buffer.BlockCopy(buf, 0, dst, 0, buf.Length);
             dst[0] = (byte)((byte)(fill - 3) | 0xF8);
             var @in = 0;
             //#1
             if (fill < 8)
             {
                 @in = 8 - fill;
-                Buffer.BlockCopy(src, 0, dst, fill, @in);
+                src[..@in].CopyTo(dst.AsSpan(fill));
             }
-
-            Buffer.BlockCopy(dst, 0, tmp2, 0, 8);
-            Encode(dst, 0, dst, 0, 8);
+            dst.AsSpan(0,8).CopyTo(tmp2);
+            Encode(dst ,dst);
             var @out = 8;
             //#2
             if (fill > 8)
             {
-                Buffer.BlockCopy(src, 0, dst, fill, 16 - fill);
-                Xor(dst, 8, dst, 0, dst, 8, 8);
-                Buffer.BlockCopy(dst, 8, tmp1, 0, 8);
-                Encode(dst, 8, dst, 8, 8);
-                Xor(dst, 8, tmp2, 0, dst, 8, 8);
-                Buffer.BlockCopy(tmp1, 0, tmp2, 0, 8);
+                src[..(16-fill)].CopyTo(dst.AsSpan(fill));
+                Xor(dst,  dst,  dst);
+                dst.AsSpan(8).CopyTo(tmp1);
+                Encode(dst.AsSpan(8) ,dst.AsSpan(8));
+                Xor(dst.AsSpan(8), tmp2, dst.AsSpan(8));
+                tmp1.CopyTo(tmp2.AsSpan());
+                
                 @in = 16 - fill;
                 @out = 16;
             }
@@ -89,20 +84,20 @@ namespace BotReborn.Crypto
             length -= 8;
             for (; @in < length;)
             {
-                Xor(src, @in, dst, @out - 8, dst, @out, 8);
-                Buffer.BlockCopy(dst, @out, tmp1, 0, 8);
-                Encode(dst, @out, dst, @out, 8);
-                Xor(dst, @out, tmp2, 0, dst, @out, 8);
-                Buffer.BlockCopy(tmp1, 0, tmp2, 0, 8);
+                Xor(src[@in..],dst.AsSpan(@out-8,8),dst.AsSpan(@out));
+                dst.AsSpan(@out,8).CopyTo(tmp1);
+                Encode(dst[@out..],dst.AsSpan(@out));
+                Xor(dst.AsSpan(@out),tmp2,dst.AsSpan(@out));
+                tmp1.CopyTo(tmp2,0);
                 @in += 8;
                 @out += 8;
             }
 
             var tmp3 = new byte[8];
-            Buffer.BlockCopy(src, @in, tmp3, 0, src.Length - @in);
-            Xor(tmp3, 0, dst, @out - 8, dst, @out, 8);
-            Encode(dst, @out, dst, @out, 8);
-            Xor(dst, @out, tmp2, 0, dst, @out, 8);
+            src[@in..].CopyTo(tmp3);
+            Xor(tmp3,dst.AsSpan(@out-8),dst.AsSpan(@out));
+            Encode(dst.AsSpan(@out), dst.AsSpan(@out));
+            Xor(dst.AsSpan(@out),tmp2,dst.AsSpan(@out));
             return dst;
         }
 
@@ -115,61 +110,61 @@ namespace BotReborn.Crypto
 
             var dst = new byte[data.Length];
             Buffer.BlockCopy(data, 0, dst, 0, data.Length);
-            Decode(dst, 0, dst, 0, 8);
+            Decode(dst,dst);
             var tmp = new byte[8];
             Buffer.BlockCopy(dst, 0, tmp, 0, 8);
             for (int i = 8; i < data.Length; i += 8)
             {
-                Xor(dst, i, tmp, 0, dst, i, 8);
-                Decode(dst, i, dst, i, 8);
-                Xor(dst, i, dst, i - 8, dst, i, 8);
-                Xor(dst, i, dst, i - 8, tmp, 0, 8);
+                Xor(dst.AsSpan(i) ,tmp, dst.AsSpan(i));
+                Decode(dst.AsSpan(i) , dst.AsSpan(i));
+                Xor(dst.AsSpan(i,8), dst.AsSpan(i-8,8) ,dst.AsSpan(i,8));
+                Xor(dst.AsSpan(i) ,dst.AsSpan(i-8), tmp);
             }
 
             return dst[((dst[0] & 7) + 3)..(data.Length - 7)];
         }
 
-        internal void Encode(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
+        internal void Encode(Span<byte> src, Span<byte> dst)
         {
-            var (v0, v1) = Unpack(src, srcOffset);
+            var (v0, v1) = Unpack(src);
             for (var i = 0; i < 0x10; i++)
             {
                 v0 += ((v1 << 4) + _key[0]) ^ (v1 + _sumTable[i]) ^ ((v1 >> 5) + _key[1]);
                 v1 += ((v0 << 4) + _key[2]) ^ (v0 + _sumTable[i]) ^ ((v0 >> 5) + _key[3]);
             }
-            Repack(dst, dstOffset, v0, v1);
+            Repack(dst, v0, v1);
         }
 
-        internal void Decode(byte[] src, int srcOffset, byte[] dst, int dstOffset, int count)
+        internal void Decode(Span<byte> src, Span<byte> dst)
         {
-            var (v0, v1) = Unpack(src, srcOffset);
+            var (v0, v1) = Unpack(src);
             for (var i = 0xf; i >= 0; i--)
             {
                 v1 -= ((v0 << 4) + _key[2]) ^ (v0 + _sumTable[i]) ^ ((v0 >> 5) + _key[3]);
                 v0 -= ((v1 << 4) + _key[0]) ^ (v1 + _sumTable[i]) ^ ((v1 >> 5) + _key[1]);
             }
-            Repack(dst, dstOffset, v0, v1);
+            Repack(dst, v0, v1);
         }
 
-        internal (uint v0, uint v1) Unpack(byte[] data, int dataOffset)
+        internal (uint v0, uint v1) Unpack(Span<byte> data)
         {
-            var v1 = data[dataOffset + 7]| ((uint)data[dataOffset + 6] << 8) | ((uint)data[dataOffset + 5] << 16) | ((uint)data[dataOffset + 4] << 24);
+            var v1 = data[7]| ((uint)data[6] << 8) | ((uint)data[5] << 16) | ((uint)data[4] << 24);
 
-            var v0 = data[dataOffset + 3] | ((uint)data[dataOffset + 2] << 8) | ((uint)data[dataOffset + 1] << 16) | ((uint)data[dataOffset + 0] << 24);
+            var v0 = data[3] | ((uint)data[2] << 8) | ((uint)data[1] << 16) | ((uint)data[0] << 24);
 
             return (v0, v1);
         }
 
-        internal void Repack(byte[] data, int dataOffset, uint v0, uint v1)
+        internal void Repack(Span<byte> data,uint v0, uint v1)
         {
-            data[dataOffset + 0] = (byte)(v0 >> 24);
-            data[dataOffset + 1] = (byte)(v0 >> 16);
-            data[dataOffset + 2] = (byte)(v0 >> 8);
-            data[dataOffset + 3] = (byte)v0;
-            data[dataOffset + 4] = (byte)(v1 >> 24);
-            data[dataOffset + 5] = (byte)(v1 >> 16);
-            data[dataOffset + 6] = (byte)(v1 >> 8);
-            data[dataOffset + 7] = (byte)v1;
+            data[0] = (byte)(v0 >> 24);
+            data[1] = (byte)(v0 >> 16);
+            data[2] = (byte)(v0 >> 8);
+            data[3] = (byte)v0;
+            data[4] = (byte)(v1 >> 24);
+            data[5] = (byte)(v1 >> 16);
+            data[6] = (byte)(v1 >> 8);
+            data[7] = (byte)v1;
         }
     }
 }

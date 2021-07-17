@@ -54,21 +54,21 @@ namespace BotReborn.Tests.Crypto
         }
 
         [Theory]
-        [InlineData("0123456789ABCDEF", new byte[] { 183, 178, 229, 42, 247, 245, 177, 251 }, 0)]
-        public void TeaUnpackTest(string key,byte[] data,int dataOffset)
+        [InlineData("0123456789ABCDEF", new byte[] { 183, 178, 229, 42, 247, 245, 177, 251 })]
+        public void TeaUnpackTest(string key,byte[] data)
         {
             var tea = new Tea(Utils.GetBytes(key));
-            var actual = tea.Unpack(data, dataOffset);
+            var actual = tea.Unpack(data);
             var expected = (3081954602, 4160074235);
             Assert.Equal(expected, actual);
         }
 
         [Theory]
-        [InlineData("0123456789ABCDEF", new byte[]{0,0,0,0,0,0,0,0}, 0, 4206698361, 1129146738)]
-        public void TeaRepackTest(string key, byte[] data,int dataOffset,uint v0,uint v1)
+        [InlineData("0123456789ABCDEF", new byte[]{0,0,0,0,0,0,0,0}, 4206698361, 1129146738)]
+        public void TeaRepackTest(string key, byte[] data,uint v0,uint v1)
         {
             var tea = new Tea(Utils.GetBytes(key));
-            tea.Repack(data, dataOffset,v0,v1);
+            tea.Repack(data,v0,v1);
             var expected = new byte[] {250, 189, 31, 121, 67, 77, 105, 114};
             Assert.Equal(expected,data);
         }
@@ -78,7 +78,7 @@ namespace BotReborn.Tests.Crypto
         {
             var dst = new byte[8];
             var tea = new Tea(Utils.GetBytes(key));
-            tea.Encode(src,0,dst,0,8);
+            tea.Encode(src,dst);
             var expected = new byte[] {7, 19, 55, 116, 179, 195, 186, 143};
             Assert.Equal(expected,dst);
         }
@@ -89,7 +89,7 @@ namespace BotReborn.Tests.Crypto
         {
             var dst = new byte[8];
             var tea = new Tea(Utils.GetBytes(key));
-            tea.Decode(src, 0, dst, 0, 8);
+            tea.Decode(src, dst);
             var expected = new byte[] {250,189,31,121,67,77,105,114};
             Assert.Equal(expected, dst);
         }
