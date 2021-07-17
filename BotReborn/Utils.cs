@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,10 +27,15 @@ namespace BotReborn
 
         public static string ConvertByteArrayToHexString(byte[] bytes)
         {
+            if (BitConverter.IsLittleEndian)
+            {
+                bytes = Utils.ReverseEndianness(bytes);
+            }
             return string.Concat(bytes.Select(b => b.ToString("X2")));
         }
 
         public static byte[] GetBytes(string s) => Encoding.UTF8.GetBytes(s);
+        public static string GetString(byte[] b) => Encoding.UTF8.GetString(b);
 
         public static byte[] PackUniRequestData(byte[] data)
         {
@@ -38,6 +44,11 @@ namespace BotReborn
            r.Add(0x0B);
            return r.ToArray();
 
+        }
+
+        public static byte[] ReverseEndianness(byte[] bytes)
+        {
+            return bytes.Reverse().Select(BinaryPrimitives.ReverseEndianness).ToArray();
         }
     }
 }
