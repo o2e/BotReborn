@@ -343,27 +343,165 @@ namespace BotReborn.Jce
 
         public struct FriendInfo
         {
-            //todo
+            [JceId(0)] public long FriendUin;
+            [JceId(1)] public byte GroupId;
+            [JceId(2)] public short FaceId;
+            [JceId(3)] public string Remark;
+            [JceId(4)] public byte QQType;
+            [JceId(5)] public byte Status;
+            [JceId(6)] public byte MemberLevel;
+            [JceId(7)] public byte IsMqqOnLine;
+            [JceId(8)] public byte QQOnlineState;
+            [JceId(9)] public byte IsIphoneOnline;
+            [JceId(10)] public byte DetailStatusFlag;
+            [JceId(11)] public byte QQOnlineStateV2;
+            [JceId(12)] public string ShowName;
+            [JceId(13)] public byte IsRemark;
+            [JceId(14)] public string Nick;
+            [JceId(15)] public byte SpecialFlag;
+            [JceId(16)] public byte[] IMGroupID;
+            [JceId(17)] public byte[] MSFGroupID;
+            [JceId(18)] public int TermType;
+            [JceId(20)] public byte Network;
+            [JceId(21)] public byte[] Ring;
+            [JceId(22)] public long AbiFlag;
+            [JceId(23)] public long FaceAddonId;
+            [JceId(24)] public int NetworkType;
+            [JceId(25)] public long VipFont;
+            [JceId(26)] public int IconType;
+            [JceId(27)] public string TermDesc;
+            [JceId(28)] public long ColorRing;
+            [JceId(29)] public byte ApolloFlag;
+            [JceId(30)] public long ApolloTimestamp;
+            [JceId(31)] public byte Sex;
+            [JceId(32)] public long FounderFont;
+            [JceId(33)] public string EimId;
+            [JceId(34)] public string EimMobile;
+            [JceId(35)] public byte OlympicTorch;
+            [JceId(36)] public long ApolloSignTime;
+            [JceId(37)] public long LaviUin;
+            [JceId(38)] public long TagUpdateTime;
+            [JceId(39)] public long GameLastLoginTime;
+            [JceId(40)] public long GameAppId;
+            [JceId(41)] public byte[] CardID;
+            [JceId(42)] public long BitSet;
+            [JceId(43)] public byte KingOfGloryFlag;
+            [JceId(44)] public long KingOfGloryRank;
+            [JceId(45)] public string MasterUin;
+            [JceId(46)] public long LastMedalUpdateTime;
+            [JceId(47)] public long FaceStoreId;
+            [JceId(48)] public long FontEffect;
+            [JceId(49)] public string DOVId;
+            [JceId(50)] public long BothFlag;
+            [JceId(51)] public byte CentiShow3DFlag;
+            [JceId(52)] public byte[] IntimateInfo;
+            [JceId(53)] public byte ShowNameplate;
+            [JceId(54)] public byte NewLoverDiamondFlag;
+            [JceId(55)] public byte[] ExtSnsFrdData;
+            [JceId(56)] public byte[] MutualMarkData;
         }
 
         public struct TroopListRequest : IJceStruct
         {
-            //todo
+            [JceId(0)] public long Uin;
+            [JceId(1)] public byte GetMSFMsgFlag;
+            [JceId(2)] public byte[] Cookies;
+            [JceId(3)] public long[] GroupInfo;
+            [JceId(4)] public byte GroupFlagExt;
+            [JceId(5)] public int Version;
+            [JceId(6)] public long CompanyId;
+            [JceId(7)] public long VersionNum;
+            [JceId(8)] public byte GetLongGroupName;
         }
 
         public struct TroopNumber
         {
-            //todo
+            [JceId(0)] public long GroupUin;
+            [JceId(1)] public long GroupCode;
+            [JceId(2)] public byte Flag;
+            [JceId(3)] public long GroupInfoSeq;
+            [JceId(4)] public string GroupName;
+            [JceId(5)] public string GroupMemo;
+            [JceId(6)] public long GroupFlagExt;
+            [JceId(7)] public long GroupRankSeq;
+            [JceId(8)] public long CertificationType;
+            [JceId(9)] public long ShutUpTimestamp;
+            [JceId(10)] public long MyShutUpTimestamp;
+            [JceId(11)] public long CmdUinUinFlag;
+            [JceId(12)] public long AdditionalFlag;
+            [JceId(13)] public long GroupTypeFlag;
+            [JceId(14)] public long GroupSecType;
+            [JceId(15)] public long GroupSecTypeInfo;
+            [JceId(16)] public long GroupClassExt;
+            [JceId(17)] public long AppPrivilegeFlag;
+            [JceId(18)] public long SubscriptionUin;
+            [JceId(19)] public long MemberNum;
+            [JceId(20)] public long MemberNumSeq;
+            [JceId(21)] public long MemberCardSeq;
+            [JceId(22)] public long GroupFlagExt3;
+            [JceId(23)] public long GroupOwnerUin;
+            [JceId(24)] public byte IsConfGroup;
+            [JceId(25)] public byte IsModifyConfGroupFace;
+            [JceId(26)] public byte IsModifyConfGroupName;
+            [JceId(27)] public long CmdUinJoinTime;
+            [JceId(28)] public long CompanyId;
+            [JceId(29)] public long MaxGroupMemberNum;
+            [JceId(30)] public long CmdUinGroupMask;
+            [JceId(31)] public long GuildAppId;
+            [JceId(32)] public long GuildSubType;
+            [JceId(33)] public long CmdUinRingtoneID;
+            [JceId(34)] public long CmdUinFlagEx2;
         }
 
         public struct TroopMemberListRequest : IJceStruct
         {
-            //todo
+            [JceId(0)] public long Uin;
+            [JceId(1)] public long GroupCode;
+            [JceId(2)] public long NextUin;
+            [JceId(3)] public long GroupUin;
+            [JceId(4)] public long Version;
+            [JceId(5)] public long ReqType;
+            [JceId(6)] public long GetListAppointTime;
+            [JceId(7)] public byte RichCardNameVer;
         }
 
         public struct TroopMemberInfo
         {
-            //todo
+            [JceId(0)] public long MemberUin;
+            [JceId(1)] public short FaceId;
+            [JceId(2)] public byte Age;
+            [JceId(3)] public byte Gender;
+            [JceId(4)] public string Nick;
+            [JceId(5)] public byte Status;
+            [JceId(6)] public string ShowName;
+            [JceId(8)] public string Name;
+            [JceId(12)] public string Memo;
+            [JceId(13)] public string AutoRemark;
+            [JceId(14)] public long MemberLevel;
+            [JceId(15)] public long JoinTime;
+            [JceId(16)] public long LastSpeakTime;
+            [JceId(17)] public long CreditLevel;
+            [JceId(18)] public long Flag;
+            [JceId(19)] public long FlagExt;
+            [JceId(20)] public long Point;
+            [JceId(21)] public byte Concerned;
+            [JceId(22)] public byte Shielded;
+            [JceId(23)] public string SpecialTitle;
+            [JceId(24)] public long SpecialTitleExpireTime;
+            [JceId(25)] public string Job;
+            [JceId(26)] public byte ApolloFlag;
+            [JceId(27)] public long ApolloTimestamp;
+            [JceId(28)] public long GlobalGroupLevel;
+            [JceId(29)] public long TitleId;
+            [JceId(30)] public long ShutUpTimestap;
+            [JceId(31)] public long GlobalGroupPoint;
+            [JceId(33)] public byte RichCardNameVer;
+            [JceId(34)] public long VipType;
+            [JceId(35)] public long VipLevel;
+            [JceId(36)] public long BigClubLevel;
+            [JceId(37)] public long BigClubFlag;
+            [JceId(38)] public long Nameplate;
+            [JceId(39)] public byte[] GroupHonor;
         }
 
         public struct ModifyGroupCardRequest : IJceStruct
