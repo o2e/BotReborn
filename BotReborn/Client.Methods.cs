@@ -4,6 +4,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+
+using BotReborn.Crypto;
 using BotReborn.Jce;
 using BotReborn.Model;
 using BotReborn.Model.Exception;
@@ -112,13 +114,17 @@ namespace BotReborn
                 .GetBytes();
             var buf = new JceStructs.RequestDataVersion3()
             {
-                Map = new Dictionary<string, byte[]>() {["HttpServerListReq"] = Utils.PackUniRequestData(payload)}
+                Map = new Dictionary<string, byte[]>() { ["HttpServerListReq"] = Utils.PackUniRequestData(payload) }
             };
             var pkt = new JceStructs.RequestPacket
             {
-                IVersion = 3, SServantName = "ConfigHttp", SFuncName = "HttpServerListReq", SBuffer = buf.GetBytes()
+                IVersion = 3,
+                SServantName = "ConfigHttp",
+                SFuncName = "HttpServerListReq",
+                SBuffer = buf.GetBytes()
             };
-            //TODO tea
+            var t = new Tea(key);
+
 
             throw new NotImplementedException();
         }
