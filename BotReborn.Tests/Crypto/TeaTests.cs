@@ -15,10 +15,9 @@ namespace BotReborn.Tests.Crypto
         {
             var tea = new Tea(Utils.GetBytes("0123456789ABCDEF"));
             var bytes = Utils.GetBytes("MiraiGO Here");
-            var enc = tea.Encrypt(bytes);
-            var str = Utils.ConvertByteArrayToHexString(enc);
-            var dec = tea.Decrypt(enc);
-            Assert.Equal(bytes,dec);
+            var enc1 = tea.Encrypt(bytes);
+            var dec = tea.Decrypt(enc1);
+            Assert.Equal(bytes, dec);
         }
 
         [Fact]
@@ -26,22 +25,12 @@ namespace BotReborn.Tests.Crypto
         {
             var tea = new Tea(Utils.GetBytes("0123456789ABCDEF"));
             var bytes = Utils.ConvertHexStringToByteArray("b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf");
-            var dec = tea.Decrypt(bytes);
-            var str = Utils.GetString(dec);
-            var enc = tea.Encrypt(dec);
-            Assert.Equal(bytes, enc);
+            var dec1 = tea.Decrypt(bytes);
+            var enc = tea.Encrypt(dec1);
+            var dec2 = tea.Decrypt(enc);
+            Assert.Equal(dec1, dec2);
         }
-        [Theory()]
-        [InlineData("0123456789ABCDEF", "MiraiGO Here", "b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf")]
-        [InlineData("0123456789ABCDEF", "s", "528e8b5c48300b548e94262736ebb8b7")]
-        public void TeaEncryptTest(string key,string str,string enc)
-        {
-            var tea = new Tea(Encoding.UTF8.GetBytes(key));
-            var actual = tea.Encrypt(Encoding.UTF8.GetBytes(str));
-            var expected = Utils.ConvertHexStringToByteArray(enc);
-            Assert.Equal(expected,actual);
-        }
-
+        
         [Theory]
         [InlineData("0123456789ABCDEF", "MiraiGO Here", "b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf")]
         [InlineData("0123456789ABCDEF", "s", "528e8b5c48300b548e94262736ebb8b7")]

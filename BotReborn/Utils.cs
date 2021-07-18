@@ -21,9 +21,7 @@ namespace BotReborn
             {
                 arr[i] = (byte)((GetHexVal(hex[i << 1]) << 4) + (GetHexVal(hex[(i << 1) + 1])));
             }
-
             return arr;
-
         }
 
         public static string ConvertByteArrayToHexString(byte[] bytes)
