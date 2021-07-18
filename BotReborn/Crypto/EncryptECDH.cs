@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
+
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -47,7 +48,7 @@ namespace BotReborn.Crypto
 
         public void GenerateKey(string pubKeyStr)
         {
-            var md5 = HashAlgorithm.Create("md5");
+            var md5 = MD5.Create();
             var fixedPointCombMultiplier = new FixedPointCombMultiplier();
             var pubKeyBytes = Utils.ConvertHexStringToByteArray(pubKeyStr);
             var generator = new ECKeyPairGenerator("EC");
