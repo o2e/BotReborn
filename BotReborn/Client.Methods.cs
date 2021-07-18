@@ -114,12 +114,12 @@ namespace BotReborn
             {
                 Map = new Dictionary<string, byte[]>() {["HttpServerListReq"] = Utils.PackUniRequestData(payload)}
             };
-            var pkt = new JceStructs.RequestPacket{
-                IVersion=    3,
-                SServantName= "ConfigHttp",
-                SFuncName="HttpServerListReq",
-                SBuffer: buf.
-            }
+            var pkt = new JceStructs.RequestPacket
+            {
+                IVersion = 3, SServantName = "ConfigHttp", SFuncName = "HttpServerListReq", SBuffer = buf.GetBytes()
+            };
+            //TODO tea
+
             throw new NotImplementedException();
         }
 

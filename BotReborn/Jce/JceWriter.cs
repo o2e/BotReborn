@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace BotReborn.Jce
@@ -120,9 +122,96 @@ namespace BotReborn.Jce
             return this;
         }
 
+
+        public JceWriter WriteInt64Slice(long[] l, int tag)
+        {
+            WriteHead(9, tag);
+            if (l.Length == 0)
+            {
+                WriteInt32(0, 0);
+                return this;
+            }
+            WriteInt32(l.Length, 0);
+            foreach (var v in l)
+            {
+                WriteInt64(v, 0);
+            }
+            return this;
+        }
+
+        public JceWriter WriteMap(IDictionary m, int tag)
+        {
+            if (m is null)
+            {
+                WriteHead(8, tag);
+                WriteInt32(0, 0);
+                return this;
+            }
+            WriteHead(8, tag);
+            WriteInt32(m.Keys.Count, 0);
+            foreach (DictionaryEntry entry in m)
+            {
+                WriteObject(entry.Key, 0);
+                WriteObject(entry.Value, 1);
+            }
+            return this;
+        }
+
+        private void WriteObject(object value, int tag)
+        {
+            _ = value switch
+            {
+                IDictionary map => WriteMap(map, tag),
+                byte[] bytes => WriteBytes(bytes, tag),
+                Array arr => WriteSlice(arr, tag),
+                byte b => WriteByte(b, tag),
+                bool b => WriteBool(b, tag),
+                short n => WriteInt16(n, tag),
+                int n => WriteInt32(n, tag),
+                long n => WriteInt64(n, tag),
+                float f => WriteFloat32(f, tag),
+                double d => WriteFloat64(d, tag),
+                string s => WriteString(s, tag),
+                IJceStruct s => WriteJceStruct(s, tag),
+                _ => throw new Exception()
+            };
+        }
+
+        private JceWriter WriteJceStruct(IJceStruct s, int tag)
+        {
+            WriteHead(10, tag);
+            WriteJceStructRaw(s);
+            WriteHead(11, 0);
+            return this;
+        }
+
+        private JceWriter WriteSlice(Array arr, int tag)
+        {
+            WriteHead(9, tag);
+            if (arr.Length == 0)
+            {
+                WriteInt32(0, 0);
+                return this;
+            }
+            WriteInt32(arr.Length, 0);
+
+            foreach (var i in arr)
+            {
+                WriteObject(i, 0);
+            }
+            return this;
+        }
+
         public void WriteJceStructRaw(IJceStruct s)
         {
-            //TODO
+            var fields = s.GetType().GetFields();
+            foreach (var fieldInfo in fields)
+            {
+                var attribute = fieldInfo.GetCustomAttribute<JceIdAttribute>();
+                var value = fieldInfo.GetValue(s);
+                WriteObject(value,attribute!.Id);
+            }
+
         }
 
         public byte[] GetBytes()
