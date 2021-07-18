@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BotReborn.Jce
+﻿namespace BotReborn.Jce
 {
     public static class JceStructsEx
     {

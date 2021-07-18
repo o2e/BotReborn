@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Buffers.Binary;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace BotReborn
 {
-    public class Utils
+    public static class Utils
     {
         public static byte[] ConvertHexStringToByteArray(string hex)
         {
@@ -34,10 +33,10 @@ namespace BotReborn
 
         public static byte[] PackUniRequestData(byte[] data)
         {
-           var r =  new List<byte> {0x0A};
-           r.AddRange(data);
-           r.Add(0x0B);
-           return r.ToArray();
+            var r = new List<byte> { 0x0A };
+            r.AddRange(data);
+            r.Add(0x0B);
+            return r.ToArray();
 
         }
 

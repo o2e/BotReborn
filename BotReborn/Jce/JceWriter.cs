@@ -117,7 +117,7 @@ namespace BotReborn.Jce
         {
             WriteHead(13, tag);
             WriteHead(0, 0);
-            WriteInt32((int)b.Length, 0);
+            WriteInt32(b.Length, 0);
             _data.Write(b);
             return this;
         }
@@ -209,7 +209,7 @@ namespace BotReborn.Jce
             {
                 var attribute = fieldInfo.GetCustomAttribute<JceIdAttribute>();
                 var value = fieldInfo.GetValue(s);
-                WriteObject(value,attribute!.Id);
+                WriteObject(value, attribute!.Id);
             }
 
         }
