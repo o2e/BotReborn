@@ -123,13 +123,10 @@ namespace BotReborn
                 SFuncName = "HttpServerListReq",
                 SBuffer = buf.GetBytes()
             };
-            var pkt = new JceStructs.RequestPacket
-            {
-                IVersion = 3, SServantName = "ConfigHttp", SFuncName = "HttpServerListReq", SBuffer = buf.GetBytes()
-            };
             var tea = new Tea(key);
-            _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",new ByteArrayContent(tea.Encrypt()))
-            //TODO tea
+            _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",
+                new ByteArrayContent(tea.Encrypt()));
+            //TODO
 
             throw new NotImplementedException();
         }
