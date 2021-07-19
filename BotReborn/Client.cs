@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using BotReborn.Crypto;
 
@@ -17,6 +18,7 @@ namespace BotReborn
         {
             _logger = logger;
             _ecdh = new EncryptECDH();
+            _httpClient = new HttpClient();
             _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
 

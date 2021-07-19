@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using BotReborn.Crypto;
 using BotReborn.Jce;
 using BotReborn.Model;
 using BotReborn.Model.Exception;
@@ -118,6 +120,8 @@ namespace BotReborn
             {
                 IVersion = 3, SServantName = "ConfigHttp", SFuncName = "HttpServerListReq", SBuffer = buf.GetBytes()
             };
+            var tea = new Tea(key);
+            _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",new ByteArrayContent(tea.Encrypt()))
             //TODO tea
 
             throw new NotImplementedException();

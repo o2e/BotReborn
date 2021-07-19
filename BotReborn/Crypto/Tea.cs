@@ -52,10 +52,6 @@ namespace BotReborn.Crypto
             var tmp2 = new byte[8];
             var dst = new byte[length + fill + 7];
             _random.NextBytes(dst.AsSpan(0, fill));
-            //for (var i = 0; i < fill; i++)
-            //{
-            //    dst[i] = 114;
-            //}
             dst[0] = (byte)((byte)(fill - 3) | 0xF8);
             var @in = 0;
             //#1

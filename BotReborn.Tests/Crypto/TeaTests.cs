@@ -34,6 +34,8 @@ namespace BotReborn.Tests.Crypto
         [Theory]
         [InlineData("0123456789ABCDEF", "MiraiGO Here", "b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf")]
         [InlineData("0123456789ABCDEF", "s", "528e8b5c48300b548e94262736ebb8b7")]
+        [InlineData("0123456789ABCDEF", "LXY Testing~", "9d0ab85aa14f5434ee83cd2a6b28bf306263cdf88e01264c")]
+        [InlineData("0123456789ABCDEF", "long long long long long long long", "95715fab6efbd0fd4b76dbc80bd633ebe805849dbc242053b06557f87e748effd9f613f782749fb9fdfa3f45c0c26161")]
         public void TeaDecryptTest(string key, string str, string enc)
         {
             var tea = new Tea(Encoding.UTF8.GetBytes(key));
