@@ -117,8 +117,43 @@ namespace BotReborn.Jce
         {
             WriteHead(13, tag);
             WriteHead(0, 0);
-            WriteInt32((int)b.Length, 0);
+            WriteInt32(b.Length, 0);
             _data.Write(b);
+            return this;
+        }
+
+
+        public JceWriter WriteInt64Slice(long[] l, int tag)
+        {
+            WriteHead(9, tag);
+            if (l.Length == 0)
+            {
+                WriteInt32(0, 0);
+                return this;
+            }
+            WriteInt32(l.Length, 0);
+            foreach (var v in l)
+            {
+                WriteInt64(v, 0);
+            }
+            return this;
+        }
+
+        public JceWriter WriteMap(IDictionary m, int tag)
+        {
+            if (m is null)
+            {
+                WriteHead(8, tag);
+                WriteInt32(0, 0);
+                return this;
+            }
+            WriteHead(8, tag);
+            WriteInt32(m.Keys.Count, 0);
+            foreach (DictionaryEntry entry in m)
+            {
+                WriteObject(entry.Key, 0);
+                WriteObject(entry.Value, 1);
+            }
             return this;
         }
 

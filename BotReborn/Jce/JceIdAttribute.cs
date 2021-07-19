@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BotReborn.Jce
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class JceIdAttribute:Attribute
+    public class JceIdAttribute : Attribute
     {
         public int Id { get; set; }
 

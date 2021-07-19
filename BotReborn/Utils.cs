@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BotReborn
 {
-    public class Utils
+    public static class Utils
     {
         public static byte[] ConvertHexStringToByteArray(string hex)
         {
@@ -34,11 +34,16 @@ namespace BotReborn
 
         public static byte[] PackUniRequestData(byte[] data)
         {
-           var r =  new List<byte> {0x0A};
-           r.AddRange(data);
-           r.Add(0x0B);
-           return r.ToArray();
+            var r = new List<byte> { 0x0A };
+            r.AddRange(data);
+            r.Add(0x0B);
+            return r.ToArray();
 
+        }
+
+        public static byte[] ReverseEndianness(byte[] bytes)
+        {
+            return bytes.Reverse().Select(BinaryPrimitives.ReverseEndianness).ToArray();
         }
 
         public static byte[] ReverseEndianness(byte[] bytes)

@@ -47,7 +47,7 @@ namespace BotReborn.Crypto
 
         public void GenerateKey(string pubKeyStr)
         {
-            var md5 = HashAlgorithm.Create("md5");
+            var md5 = MD5.Create();
             var fixedPointCombMultiplier = new FixedPointCombMultiplier();
             var pubKeyBytes = Utils.ConvertHexStringToByteArray(pubKeyStr);
             var generator = new ECKeyPairGenerator("EC");
