@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections;
 using System.IO;
 using System.Reflection;
@@ -8,7 +9,7 @@ namespace BotReborn.Jce
 {
     class JceWriter
     {
-        private MemoryStream _data = new MemoryStream();
+        private readonly MemoryStream _data = new MemoryStream();
 
         public void WriteHead(byte t, int tag)
         {
@@ -47,53 +48,63 @@ namespace BotReborn.Jce
 
         public JceWriter WriteInt16(short n, int tag)
         {
-            if (n >= -128 && n <= 127)
+            if (n is >= -128 and <= 127)
             {
                 WriteByte((byte)(n), tag);
                 return this;
             }
             WriteHead(1, tag);
-            _data.Write(BitConverter.GetBytes(n));
+            var b = new byte[sizeof(short)];
+            BinaryPrimitives.WriteInt16BigEndian(b,n);
+            _data.Write(b);
             return this;
         }
 
         public JceWriter WriteInt32(int n, int tag)
         {
-            if (n >= -32768 && n <= 32767)
+            if (n is >= -32768 and <= 32767)
             { // ? if ((n >= 32768) && (n <= 32767))
                 WriteInt16((short)n, tag);
                 return this;
             }
 
             WriteHead(2, tag);
-            _data.Write(BitConverter.GetBytes(n));
+            var b = new byte[sizeof(int)];
+            BinaryPrimitives.WriteInt32BigEndian(b,n);
+            _data.Write(b);
             return this;
         }
 
         public JceWriter WriteInt64(long n, int tag)
         {
-            if (n >= -2147483648 && n <= 2147483647)
+            if (n is >= -2147483648 and <= 2147483647)
             {
                 WriteInt32((int)n, tag);
                 return this;
             }
 
             WriteHead(3, tag);
-            _data.Write(BitConverter.GetBytes(n));
+            var b = new byte[sizeof(long)];
+            BinaryPrimitives.WriteInt64BigEndian(b,n);
+            _data.Write(b);
             return this;
         }
 
         public JceWriter WriteFloat32(float n, int tag)
         {
             WriteHead(4, tag);
-            _data.Write(BitConverter.GetBytes(n));
+            var b = new byte[sizeof(float)];
+            BinaryPrimitives.WriteSingleBigEndian(b,n);
+            _data.Write(b);
             return this;
         }
 
         public JceWriter WriteFloat64(double n, int tag)
         {
             WriteHead(5, tag);
-            _data.Write(BitConverter.GetBytes(n));
+            var b = new byte[sizeof(double)];
+            BinaryPrimitives.WriteDoubleBigEndian(b, n);
+            _data.Write(b);
             return this;
         }
 
@@ -103,7 +114,9 @@ namespace BotReborn.Jce
             if (bytes.Length > 255)
             {
                 WriteHead(7, tag);
-                _data.Write(BitConverter.GetBytes(bytes.Length));
+                var b = new byte[sizeof(int)];
+                BinaryPrimitives.WriteInt32BigEndian(b, bytes.Length);
+                _data.Write(b);
                 _data.Write(bytes);
                 return this;
             }
@@ -139,40 +152,6 @@ namespace BotReborn.Jce
             return this;
         }
 
-        public JceWriter WriteMap(IDictionary m, int tag)
-        {
-            if (m is null)
-            {
-                WriteHead(8, tag);
-                WriteInt32(0, 0);
-                return this;
-            }
-            WriteHead(8, tag);
-            WriteInt32(m.Keys.Count, 0);
-            foreach (DictionaryEntry entry in m)
-            {
-                WriteObject(entry.Key, 0);
-                WriteObject(entry.Value, 1);
-            }
-            return this;
-        }
-
-
-        public JceWriter WriteInt64Slice(long[] l, int tag)
-        {
-            WriteHead(9, tag);
-            if (l.Length == 0)
-            {
-                WriteInt32(0, 0);
-                return this;
-            }
-            WriteInt32(l.Length, 0);
-            foreach (var v in l)
-            {
-                WriteInt64(v, 0);
-            }
-            return this;
-        }
 
         public JceWriter WriteMap(IDictionary m, int tag)
         {
@@ -254,6 +233,4 @@ namespace BotReborn.Jce
             return _data.ToArray();
         }
     }
-
-    //TODO
 }

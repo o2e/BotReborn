@@ -3,9 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>true</IsPackable>
-    <PublishTrimmed>true</PublishTrimmed>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.17.3" />
@@ -13,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="LazyCache" Version="2.1.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.5.21301.5" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
   </ItemGroup>

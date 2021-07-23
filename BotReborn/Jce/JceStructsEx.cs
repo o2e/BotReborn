@@ -8,5 +8,6 @@
             writer.WriteJceStructRaw(s);
             return writer.GetBytes();
         }
+
     }
 }

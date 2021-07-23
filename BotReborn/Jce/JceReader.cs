@@ -1,6 +1,6 @@
 ﻿namespace BotReborn.Jce
 {
-    class JceReader
+    public class JceReader
     {
     }
 }

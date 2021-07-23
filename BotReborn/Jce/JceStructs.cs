@@ -4,11 +4,11 @@ namespace BotReborn.Jce
 {
     public interface IJceStruct
     {
-
+        void ReadFrom(JceReader r);
     }
-    public class JceStructs : IJceStruct
+    public class JceStructs
     {
-        public struct RequestPacket
+        public struct RequestPacket:IJceStruct
         {
             [JceId(1)] public short IVersion;
             [JceId(2)] public byte CPacketType;
@@ -20,16 +20,23 @@ namespace BotReborn.Jce
             [JceId(8)] public int ITimeout;
             [JceId(9)] public Dictionary<string, string> Context;
             [JceId(10)] public Dictionary<string, string> Status;
+
+            public void ReadFrom(JceReader r) {
+                this.SBuffer = new byte[]
+            }
         }
 
         public struct RequestDataVersion3 : IJceStruct
         {
             [JceId(0)] public Dictionary<string, byte[]> Map;
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct RequestDataVersion2 : IJceStruct
         {
             [JceId(0)] public Dictionary<string, Dictionary<string, byte[]>> Map;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SsoServerInfo
@@ -125,6 +132,8 @@ namespace BotReborn.Jce
             [JceId(36)] public byte SetMute;
             [JceId(38)] public long ExtOnlineStatus;
             [JceId(39)] public int BatteryStatus;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SvcRespRegister
@@ -160,6 +169,8 @@ namespace BotReborn.Jce
             [JceId(15)] public byte GroupMask;
             [JceId(16)] public long EndSeq;
             [JceId(20)] public byte[] O769Body;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SvcReqGetMsgV2 : IJceStruct
@@ -176,6 +187,8 @@ namespace BotReborn.Jce
             [JceId(20)] public byte RambleFlag;
             [JceId(26)] public long GeneralAbi;
             [JceId(27)] public byte[] PubAccountCookie;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SvcReqPullGroupMsgSeq : IJceStruct
@@ -183,12 +196,16 @@ namespace BotReborn.Jce
             [JceId(0)] public IJceStruct[] GroupInfo; // PullGroupSeqParam
             [JceId(1)] public byte VerifyType;
             [JceId(2)] public int Filter;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct PullGroupSeqParam : IJceStruct
         {
             [JceId(0)] public long GroupCode;
             [JceId(1)] public long LastSeqId;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SvcRespParam
@@ -276,6 +293,8 @@ namespace BotReborn.Jce
             [JceId(2)] public int Svrip;
             [JceId(3)] public byte[] PushToken;
             [JceId(4)] public int ServiceType;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SvcReqGetDevLoginInfo : IJceStruct
@@ -287,6 +306,8 @@ namespace BotReborn.Jce
             [JceId(4)] public long NextItemIndex;
             [JceId(5)] public long RequireMax;
             [JceId(6)] public long GetDevListType; // 1: getLoginDevList 2: getRecentLoginDevList 4: getAuthLoginDevList
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SvcDevLoginInfo
@@ -316,6 +337,8 @@ namespace BotReborn.Jce
             [JceId(8)] public int SsoSeq;
             [JceId(9)] public int SsoIp;
             [JceId(10)] public int ClientIp;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct FriendListRequest : IJceStruct
@@ -339,6 +362,8 @@ namespace BotReborn.Jce
             [JceId(16)] public byte[] D50;
             [JceId(17)] public byte[] D6B;
             [JceId(18)] public long[] SnsTypeList;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct FriendInfo
@@ -412,6 +437,8 @@ namespace BotReborn.Jce
             [JceId(6)] public long CompanyId;
             [JceId(7)] public long VersionNum;
             [JceId(8)] public byte GetLongGroupName;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct TroopNumber
@@ -463,6 +490,8 @@ namespace BotReborn.Jce
             [JceId(5)] public long ReqType;
             [JceId(6)] public long GetListAppointTime;
             [JceId(7)] public byte RichCardNameVer;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct TroopMemberInfo
@@ -510,6 +539,8 @@ namespace BotReborn.Jce
             [JceId(1)] public long GroupCode;
             [JceId(2)] public long NewSeq;
             [JceId(3)] public IJceStruct[] UinInfo;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct UinInfo : IJceStruct
@@ -521,6 +552,8 @@ namespace BotReborn.Jce
             [JceId(4)] public string Phone;
             [JceId(5)] public string Email;
             [JceId(6)] public string Remark;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SummaryCardReq : IJceStruct
@@ -543,6 +576,8 @@ namespace BotReborn.Jce
             [JceId(19)] public long[] Req0x5ebFieldId;
             [JceId(20)] public byte ReqNearbyGodInfo;
             [JceId(22)] public byte ReqExtendCard;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct SummaryCardReqSearch : IJceStruct
@@ -551,6 +586,8 @@ namespace BotReborn.Jce
             [JceId(1)] public string CountryCode;
             [JceId(2)] public int Version;
             [JceId(3)] public byte[][] ReqServices;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
         public struct DelFriendReq : IJceStruct
@@ -559,6 +596,8 @@ namespace BotReborn.Jce
             [JceId(1)] public long DelUin;
             [JceId(2)] public byte DelType;
             [JceId(3)] public int Version;
+
+            public void ReadFrom(JceReader r) => throw new System.NotImplementedException();
         }
 
 

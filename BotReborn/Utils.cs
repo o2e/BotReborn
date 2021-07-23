@@ -40,10 +40,5 @@ namespace BotReborn
             return r.ToArray();
 
         }
-
-        public static byte[] ReverseEndianness(byte[] bytes)
-        {
-            return bytes.Reverse().Select(BinaryPrimitives.ReverseEndianness).ToArray();
-        }
     }
 }

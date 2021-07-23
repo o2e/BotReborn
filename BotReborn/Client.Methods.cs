@@ -125,9 +125,10 @@ namespace BotReborn
             };
             var tea = new Tea(key);
             _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",
-                new ByteArrayContent(tea.Encrypt()));
-            //TODO
-
+                new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray())));
+            var responsePacket = new JceStructs.RequestPacket();
+            var data = new JceStructs.RequestDataVersion3();
+            responsePacket.
             throw new NotImplementedException();
         }
 
