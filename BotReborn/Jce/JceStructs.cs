@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BotReborn.Jce
 {
@@ -8,7 +9,7 @@ namespace BotReborn.Jce
     }
     public class JceStructs
     {
-        public struct RequestPacket:IJceStruct
+        public struct RequestPacket : IJceStruct
         {
             [JceId(1)] public short IVersion;
             [JceId(2)] public byte CPacketType;
@@ -21,8 +22,11 @@ namespace BotReborn.Jce
             [JceId(9)] public Dictionary<string, string> Context;
             [JceId(10)] public Dictionary<string, string> Status;
 
-            public void ReadFrom(JceReader r) {
-                this.SBuffer = new byte[]
+            public void ReadFrom(JceReader r)
+            {
+                SBuffer = Array.Empty<byte>();
+                Context = new();
+                Status = new();
             }
         }
 

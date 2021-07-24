@@ -27,7 +27,7 @@ namespace BotReborn.Crypto
             _key = new uint[4];
             if (BitConverter.IsLittleEndian)
             {
-                key = Utils.ReverseEndianness(key);
+                Array.Reverse(key);
             }
             _key[0] = BitConverter.ToUInt32(key[12..]);
             _key[1] = BitConverter.ToUInt32(key[8..]);
@@ -60,19 +60,19 @@ namespace BotReborn.Crypto
                 @in = 8 - fill;
                 src[..@in].CopyTo(dst.AsSpan(fill));
             }
-            dst.AsSpan(0,8).CopyTo(tmp2);
-            Encode(dst ,dst);
+            dst.AsSpan(0, 8).CopyTo(tmp2);
+            Encode(dst, dst);
             var @out = 8;
             //#2
             if (fill > 8)
             {
-                src[..(16-fill)].CopyTo(dst.AsSpan(fill));
-                Xor(dst,  dst,  dst);
+                src[..(16 - fill)].CopyTo(dst.AsSpan(fill));
+                Xor(dst, dst, dst);
                 dst.AsSpan(8).CopyTo(tmp1);
-                Encode(dst.AsSpan(8) ,dst.AsSpan(8));
+                Encode(dst.AsSpan(8), dst.AsSpan(8));
                 Xor(dst.AsSpan(8), tmp2, dst.AsSpan(8));
                 tmp1.CopyTo(tmp2.AsSpan());
-                
+
                 @in = 16 - fill;
                 @out = 16;
             }
@@ -80,20 +80,20 @@ namespace BotReborn.Crypto
             length -= 8;
             for (; @in < length;)
             {
-                Xor(src[@in..],dst.AsSpan(@out-8,8),dst.AsSpan(@out));
-                dst.AsSpan(@out,8).CopyTo(tmp1);
-                Encode(dst[@out..],dst.AsSpan(@out));
-                Xor(dst.AsSpan(@out),tmp2,dst.AsSpan(@out));
-                tmp1.CopyTo(tmp2,0);
+                Xor(src[@in..], dst.AsSpan(@out - 8, 8), dst.AsSpan(@out));
+                dst.AsSpan(@out, 8).CopyTo(tmp1);
+                Encode(dst[@out..], dst.AsSpan(@out));
+                Xor(dst.AsSpan(@out), tmp2, dst.AsSpan(@out));
+                tmp1.CopyTo(tmp2, 0);
                 @in += 8;
                 @out += 8;
             }
 
             var tmp3 = new byte[8];
             src[@in..].CopyTo(tmp3);
-            Xor(tmp3,dst.AsSpan(@out-8),dst.AsSpan(@out));
+            Xor(tmp3, dst.AsSpan(@out - 8), dst.AsSpan(@out));
             Encode(dst.AsSpan(@out), dst.AsSpan(@out));
-            Xor(dst.AsSpan(@out),tmp2,dst.AsSpan(@out));
+            Xor(dst.AsSpan(@out), tmp2, dst.AsSpan(@out));
             return dst;
         }
 
@@ -106,15 +106,15 @@ namespace BotReborn.Crypto
 
             var dst = new byte[data.Length];
             Buffer.BlockCopy(data, 0, dst, 0, data.Length);
-            Decode(dst,dst);
+            Decode(dst, dst);
             var tmp = new byte[8];
             Buffer.BlockCopy(dst, 0, tmp, 0, 8);
             for (int i = 8; i < data.Length; i += 8)
             {
-                Xor(dst.AsSpan(i) ,tmp, dst.AsSpan(i));
-                Decode(dst.AsSpan(i) , dst.AsSpan(i));
-                Xor(dst.AsSpan(i,8), data.AsSpan(i-8,8) ,dst.AsSpan(i,8));
-                Xor(dst.AsSpan(i) ,data.AsSpan(i-8), tmp);
+                Xor(dst.AsSpan(i), tmp, dst.AsSpan(i));
+                Decode(dst.AsSpan(i), dst.AsSpan(i));
+                Xor(dst.AsSpan(i, 8), data.AsSpan(i - 8, 8), dst.AsSpan(i, 8));
+                Xor(dst.AsSpan(i), data.AsSpan(i - 8), tmp);
             }
 
             return dst[((dst[0] & 7) + 3)..(data.Length - 7)];
@@ -144,14 +144,14 @@ namespace BotReborn.Crypto
 
         internal (uint v0, uint v1) Unpack(Span<byte> data)
         {
-            var v1 = data[7]| ((uint)data[6] << 8) | ((uint)data[5] << 16) | ((uint)data[4] << 24);
+            var v1 = data[7] | ((uint)data[6] << 8) | ((uint)data[5] << 16) | ((uint)data[4] << 24);
 
             var v0 = data[3] | ((uint)data[2] << 8) | ((uint)data[1] << 16) | ((uint)data[0] << 24);
 
             return (v0, v1);
         }
 
-        internal void Repack(Span<byte> data,uint v0, uint v1)
+        internal void Repack(Span<byte> data, uint v0, uint v1)
         {
             data[0] = (byte)(v0 >> 24);
             data[1] = (byte)(v0 >> 16);
