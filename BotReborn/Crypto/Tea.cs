@@ -29,10 +29,10 @@ namespace BotReborn.Crypto
             {
                 Array.Reverse(key);
             }
-            _key[0] = BitConverter.ToUInt32(key[12..]);
-            _key[1] = BitConverter.ToUInt32(key[8..]);
-            _key[2] = BitConverter.ToUInt32(key[4..]);
-            _key[3] = BitConverter.ToUInt32(key[..]);
+            _key[0] = BitConverter.ToUInt32(key.AsSpan(12));
+            _key[1] = BitConverter.ToUInt32(key.AsSpan(8));
+            _key[2] = BitConverter.ToUInt32(key.AsSpan(4));
+            _key[3] = BitConverter.ToUInt32(key.AsSpan());
         }
 
         private static void Xor(Span<byte> a, Span<byte> b, Span<byte> ret)
