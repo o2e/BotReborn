@@ -129,7 +129,7 @@ namespace BotReborn
                 new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray())));
             var responsePacket = new JceStructs.RequestPacket();
             var data = new JceStructs.RequestDataVersion3();
-            
+            throw new NotImplementedException();
         }
 
         public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
