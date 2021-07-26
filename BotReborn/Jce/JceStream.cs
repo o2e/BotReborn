@@ -243,7 +243,8 @@ namespace BotReborn.Jce
             {
                 12 => 0,
                 0 => (short)ReadByte(),
-                1 => (short)ReadUInt16()
+                1 => (short)ReadUInt16(),
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
 

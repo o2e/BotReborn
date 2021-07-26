@@ -113,8 +113,8 @@ namespace BotReborn.Crypto
             {
                 Xor(dst.AsSpan(i), tmp, dst.AsSpan(i));
                 Decode(dst.AsSpan(i), dst.AsSpan(i));
-                Xor(dst.AsSpan(i, 8), data.AsSpan(i - 8, 8), dst.AsSpan(i, 8));
-                Xor(dst.AsSpan(i), data.AsSpan(i - 8), tmp);
+                Xor(dst.AsSpan(i, 8), data.Slice(i - 8, 8), dst.AsSpan(i, 8));
+                Xor(dst.AsSpan(i), data[(i - 8)..], tmp);
             }
 
             return dst[((dst[0] & 7) + 3)..(data.Length - 7)];
