@@ -124,11 +124,25 @@ namespace BotReborn
                 SBuffer = buf.GetBytes()
             };
             var tea = new Tea(key);
-            _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",
-                new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray())));
-            var responsePacket = new JceStructs.RequestPacket();
+            var rsp = _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",
+                new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray()))).Result;
+            var rspPkt = new JceStructs.RequestPacket();
             var data = new JceStructs.RequestDataVersion3();
-            throw new NotImplementedException();
+            rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp.Content.ReadAsByteArrayAsync().Result.AsSpan(4))));
+            data.ReadFrom(new JceStream(rspPkt.SBuffer));
+            var stream = new JceStream(data.Map["HttpServerListRes"][1..]);
+            var servers = new List<JceStructs.SsoServerInfo>();
+            stream.ReadSlice(servers,2);
+            var addresses = new List<IPEndPoint>(servers.Count);
+            foreach (var s in servers)
+            {
+                if (s.Server.Contains("com"))
+                {
+                    continue;
+                }
+                addresses.Add(new IPEndPoint(IPAddress.Parse(s.Server), s.Port));
+            }
+            return addresses;
         }
 
         public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);

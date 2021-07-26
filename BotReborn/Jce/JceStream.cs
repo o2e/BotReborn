@@ -19,6 +19,14 @@ namespace BotReborn.Jce
     }
     public class JceStream : MemoryStream
     {
+        public JceStream()
+        {
+        }
+
+        public JceStream(byte[] buffer) : base(buffer)
+        {
+        }
+
         //public JceStream Write<T>(T obj)
         //{
 
@@ -388,7 +396,7 @@ namespace BotReborn.Jce
             SkipToStructEnd();
         }
 
-        public void ReadMapF(int tag, Action<object,object> func)
+        public void ReadMapF(int tag, Action<object, object> func)
         {
             if (!SkipToTag(tag))
             {
@@ -412,7 +420,7 @@ namespace BotReborn.Jce
             throw new NotImplementedException();
         }
 
-        public void ReadSlice(object obj,int tag)
+        public void ReadSlice(object obj, int tag)
         {
             if (!SkipToTag(tag))
             {

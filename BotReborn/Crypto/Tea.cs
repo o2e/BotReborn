@@ -97,7 +97,7 @@ namespace BotReborn.Crypto
             return dst;
         }
 
-        public byte[] Decrypt(byte[] data)
+        public byte[] Decrypt(Span<byte> data)
         {
             if (data.Length < 16 || data.Length % 8 != 0)
             {
@@ -105,7 +105,7 @@ namespace BotReborn.Crypto
             }
 
             var dst = new byte[data.Length];
-            Buffer.BlockCopy(data, 0, dst, 0, data.Length);
+            data.CopyTo(dst);
             Decode(dst, dst);
             var tmp = new byte[8];
             Buffer.BlockCopy(dst, 0, tmp, 0, 8);

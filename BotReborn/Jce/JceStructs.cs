@@ -44,7 +44,11 @@ namespace BotReborn.Jce
         public class RequestDataVersion3 : IJceStruct
         {
             [JceId(0)] public Dictionary<string, byte[]> Map;
-            public void ReadFrom(JceStream r) => throw new NotImplementedException();
+            public void ReadFrom(JceStream s)
+            {
+                Map = new Dictionary<string, byte[]>();
+                s.ReadMapF(0, (k, v) => { Map[(string)k] = (byte[])v; });
+            }
         }
 
         public class RequestDataVersion2 : IJceStruct
