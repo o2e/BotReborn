@@ -108,7 +108,7 @@ namespace BotReborn
         {
             var protocol = DeviceInfo.Default.Protocol;
             var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
-            var payload = (byte[]) new JceStream().WriteInt64(0, 1).WriteInt64(0, 2).WriteByte(1, 3).WriteString("00000", 4)
+            var payload = (byte[])new JceStream().WriteInt64(0, 1).WriteInt64(0, 2).WriteByte(1, 3).WriteString("00000", 4)
                 .WriteInt32(100, 5).WriteInt32((int)protocol.AppId, 6)
                 .WriteString(DeviceInfo.Default.IMEI, 7).WriteInt64(0, 8).WriteInt64(0, 9).WriteInt64(0, 10)
                 .WriteInt64(0, 11).WriteByte(0, 12).WriteInt64(0, 13).WriteByte(1, 14).ToArray();
@@ -132,7 +132,7 @@ namespace BotReborn
             data.ReadFrom(new JceStream(rspPkt.SBuffer));
             var stream = new JceStream(data.Map["HttpServerListRes"][1..]);
             var servers = new List<JceStructs.SsoServerInfo>();
-            stream.ReadSlice(servers,2);
+            stream.ReadSlice(servers, 2);
             var addresses = new List<IPEndPoint>(servers.Count);
             foreach (var s in servers)
             {

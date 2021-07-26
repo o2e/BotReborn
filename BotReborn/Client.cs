@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using BotReborn.Crypto;
 
-[assembly:InternalsVisibleTo("BotReborn.Tests")]
+[assembly: InternalsVisibleTo("BotReborn.Tests")]
 namespace BotReborn
 {
     public partial class Client
@@ -39,16 +39,32 @@ namespace BotReborn
             //onlinePushCache: utils.NewCache(time.Second * 15),
             //version:                 genVersionInfo(DefaultDeviceInfo.Protocol),
             Servers = new List<IPEndPoint>();
-            //sso, err:= getSSOAddress()
-            //if err == nil && len(sso) > 0 {
-            //    cli.servers = append(sso, cli.servers...)
-
-            //}
+            var sso = GetSSOAddresses();
+            if (sso.Count > 0)
+            {
+                Servers.AddRange(sso);
+            }
             var addresses = Dns.GetHostAddresses("msfwifi.3g.qq.com");
             if (addresses.Length > 0)
             {
                 Servers.AddRange(addresses.Select(_ => new IPEndPoint(_, 8080)));
             }
+
+            if (Servers.Count == 0)
+            {
+                Servers = new List<IPEndPoint>()
+                {
+                    new(IPAddress.Parse("42.81.172.81"),80),
+                    new(IPAddress.Parse("114.221.148.59"),14000),
+                    new(IPAddress.Parse("42.81.172.147"),443),
+                    new(IPAddress.Parse("125.94.60.146"),80),
+                    new(IPAddress.Parse("114.221.144.215"),80),
+                    new(IPAddress.Parse("42.81.172.22"),80)
+                };
+            }
+
+            var pings = new long[Servers.Count];
+            throw new NotImplementedException();
         }
 
         public Client(Uin uin, ILogger logger, string password) : this(uin, logger)
