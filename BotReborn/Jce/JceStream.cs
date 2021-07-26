@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -387,6 +388,39 @@ namespace BotReborn.Jce
             SkipToStructEnd();
         }
 
+        public void ReadMapF(int tag, Action<object,object> func)
+        {
+            if (!SkipToTag(tag))
+            {
+                return;
+            }
+            ReadHead(out var head);
+            var s = ReadInt32(0);
+            for (int i = 0; i < s; i++)
+            {
+                var k = ReadAny(0);
+                var v = ReadAny(1);
+                if (k != null)
+                {
+                    func(k, v);
+                }
+            }
+        }
+
+        public object ReadObject(int tag)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReadSlice(object obj,int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return;
+            }
+            ReadHead(out var head);
+            throw new NotImplementedException();
+        }
         public JceStream WriteByte(byte b, int tag)
         {
             if (b == 0)
