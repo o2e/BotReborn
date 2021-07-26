@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace BotReborn.Jce
 {
@@ -86,34 +88,40 @@ namespace BotReborn.Jce
                     Skip(b);
                     break;
                 case 7:
-                    //Skip(ReadInt32());
+                    Skip(ReadInt32());
                     break;
                 case 8:
-                    //var s = ReadInt32(0)
-                    //for i := 0; i < int(s) * 2; i++ {
-                    //        r.skipNextField()
-
-                    //}
+                    var s = ReadInt32(0);
+                    for (var i = 0; i < s * 2; i++)
+                    {
+                        SkipNextField();
+                    }
                     break;
                 case 9:
-                    //s:= r.ReadInt32(0)
+                    var n = ReadInt32(0);
 
-                    //for i := 0; i < int(s); i++ {
-                    //        r.skipNextField()
-
-                    //}
+                    for (var i = 0; i < n; i++)
+                    {
+                        SkipNextField();
+                    }
                     break;
                 case 13:
-                    //    r.readHead()
+                    ReadHead(out _);
+                    var l = ReadInt32(0);
 
-                    //s:= r.ReadInt32(0)
-
-                    //r.skip(int(s))
+                    Skip(l);
                     break;
                 case 10:
-                    //r.skipToStructEnd()
+                    SkipToStructEnd();
                     break;
             }
+        }
+
+        private Span<byte> ReadBytes(int len)
+        {
+            Span<byte> span = new byte[len];
+            Read(span);
+            return span;
         }
 
         private void SkipNextField()
@@ -157,7 +165,7 @@ namespace BotReborn.Jce
             }
         }
 
-        private ushort ReadUint16()
+        private ushort ReadUInt16()
         {
             var i = ReadByte();
             var b = ReadByte();
@@ -169,6 +177,29 @@ namespace BotReborn.Jce
             Span<byte> span = stackalloc byte[4];
             Read(span);
             return (span[0] << 24) | (span[1] << 16) | (span[2] << 8) | span[3];
+        }
+
+        private long ReadInt64()
+        {
+            Span<byte> span = stackalloc byte[8];
+            Read(span);
+            return (long)(((ulong)(span[0]) << 56) | ((ulong)(span[1]) << 48) | ((ulong)(span[2]) << 40) |
+                   ((ulong)(span[3]) << 32) | ((ulong)(span[4]) << 24) | ((ulong)(span[5]) << 16) |
+                   ((ulong)(span[6]) << 8) | (span[7]));
+        }
+
+        private float ReadFloat32()
+        {
+            Span<byte> span = stackalloc byte[4];
+            Read(span);
+            return BinaryPrimitives.ReadSingleBigEndian(span);
+        }
+
+        private double ReadFloat64()
+        {
+            Span<byte> span = stackalloc byte[8];
+            Read(span);
+            return BinaryPrimitives.ReadDoubleBigEndian(span);
         }
 
         public int ReadByte(int tag)
@@ -203,8 +234,157 @@ namespace BotReborn.Jce
             {
                 12 => 0,
                 0 => (short)ReadByte(),
-                1 => (short)ReadUint16()
+                1 => (short)ReadUInt16()
             };
+        }
+
+        public int ReadInt32(int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return 0;
+            }
+            ReadHead(out var head);
+            return head.Type switch
+            {
+                12 => 0,
+                0 => ReadByte(),
+                1 => ReadUInt16(),
+                2 => ReadInt32(),
+                _ => 0
+            };
+        }
+
+        public long ReadInt64(int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return 0;
+            }
+
+            ReadHead(out var head);
+            return head.Type switch
+            {
+                12 => 0,
+                0 => ReadByte(),
+                1 => ReadUInt16(),
+                2 => ReadInt32(),
+                3 => ReadInt64(),
+                _ => 0
+            };
+        }
+
+        public float ReadFloat32(int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return 0;
+            }
+            ReadHead(out var head);
+            return head.Type switch
+            {
+                12 => 0,
+                4 => ReadFloat32(),
+                _ => 0
+            };
+        }
+
+        public double ReadFloat64(int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return 0;
+            }
+            ReadHead(out var head);
+            return head.Type switch
+            {
+                12 => 0,
+                4 => ReadFloat32(),
+                5 => ReadFloat64(),
+                _ => 0
+            };
+        }
+
+        public string ReadString(int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return string.Empty;
+            }
+            ReadHead(out var head);
+
+            return head.Type switch
+            {
+                6 => Utils.GetString(ReadBytes(ReadByte())),
+                7 => Utils.GetString(ReadBytes(ReadInt32())),
+                _ => string.Empty
+            };
+        }
+
+        public object ReadAny(int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return null;
+            }
+            ReadHead(out var head);
+            switch (head.Type)
+            {
+                case 0:
+                    return ReadByte();
+                case 1:
+                    return ReadUInt16();
+                case 2:
+                    return ReadInt32();
+                case 3:
+                    return ReadInt64();
+                case 4:
+                    return ReadFloat32();
+                case 5:
+                    return ReadFloat64();
+                case 6:
+                    return Utils.GetString(ReadBytes(ReadByte()));
+                case 7:
+                    return Utils.GetString(ReadBytes(ReadInt32()));
+                case 8:
+                    var s = ReadInt32(0);
+                    var m = new Hashtable();
+                    for (var i = 0; i < s; i++)
+                    {
+                        m[ReadAny(0)] = ReadAny(1);
+                    }
+                    return m;
+                case 9:
+                    var sl = new List<object>();
+                    var n = ReadInt32(0);
+                    for (var i = 0; i < n; i++)
+                    {
+                        sl.Add(ReadAny(0));
+                    }
+                    return sl;
+                case 12:
+                    return 0;
+                case 13:
+                    ReadHead(out _);
+                    return ReadBytes(ReadInt32(0)).ToArray();
+                default:
+                    return null;
+            }
+        }
+
+        public void ReadJceStruct(IJceStruct obj, int tag)
+        {
+            if (!SkipToTag(tag))
+            {
+                return;
+            }
+            ReadHead(out var head);
+            if (head.Type != 10)
+            {
+                return;
+            }
+            obj.ReadFrom(this);
+            SkipToStructEnd();
         }
 
         public JceStream WriteByte(byte b, int tag)

@@ -30,7 +30,7 @@ namespace BotReborn
         }
 
         public static byte[] GetBytes(string s) => Encoding.UTF8.GetBytes(s);
-        public static string GetString(byte[] b) => Encoding.UTF8.GetString(b);
+        public static string GetString(Span<byte> b) => Encoding.UTF8.GetString(b);
 
         public static byte[] PackUniRequestData(byte[] data)
         {
