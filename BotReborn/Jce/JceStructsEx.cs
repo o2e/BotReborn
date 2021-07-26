@@ -4,9 +4,9 @@
     {
         public static byte[] GetBytes(this IJceStruct s)
         {
-            var writer = new JceWriter();
+            var writer = new JceStream();
             writer.WriteJceStructRaw(s);
-            return writer.GetBytes();
+            return writer.ToArray();
         }
 
     }
