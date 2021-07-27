@@ -126,7 +126,7 @@ namespace BotReborn
             var tea = new Tea(key);
             var rsp = _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",
                 new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray()))).Result;
-            var rspPkt = new JceStructs.RequestPacket();
+            var rspPkt = new JceStruct();
             var data = new JceStructs.RequestDataVersion3();
             rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp.Content.ReadAsByteArrayAsync().Result.AsSpan(4))));
             data.ReadFrom(new JceStream(rspPkt.SBuffer));
