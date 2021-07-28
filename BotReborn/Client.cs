@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using BotReborn.Crypto;
 
 [assembly: InternalsVisibleTo("BotReborn.Tests")]
@@ -63,7 +65,25 @@ namespace BotReborn
                 };
             }
 
-            var pings = new long[Servers.Count];
+            var pingTasks = Servers.Select(async _ =>
+            {
+                var ping = new Ping();
+                var options = new PingOptions { DontFragment = true };
+                byte[] buffer = new byte[32];
+                _random.NextBytes(buffer);
+                int timeout = 5 * 1000;
+                var reply = await ping.SendPingAsync(_.Address, timeout, buffer, options);
+                return (ipEndPoint: _, reply.RoundtripTime);
+            });
+            var ping = Task.WhenAll(pingTasks).Result.OrderBy(_ => _.RoundtripTime).ToList();
+            if (Servers.Count > 3)
+            {
+                Servers = Servers.Take(Servers.Count / 2).ToList();
+            }
+            //cli.TCP.PlannedDisconnect(cli.plannedDisconnect)
+            //cli.TCP.UnexpectedDisconnect(cli.unexpectedDisconnect)
+            _random.NextBytes(RandomKey);
+
             throw new NotImplementedException();
         }
 
