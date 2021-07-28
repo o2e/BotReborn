@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
@@ -63,11 +64,6 @@ namespace BotReborn.Jce
             }
             head = h;
             return 1;
-        }
-
-        private int PeakHead(out HeadData head)
-        {
-            throw new NotImplementedException();
         }
 
         private void Skip(int count)
@@ -152,7 +148,7 @@ namespace BotReborn.Jce
         {
             while (true)
             {
-                var l = PeakHead(out var head);
+                var l = ReadHead(out var head);
                 if (tag <= head.Tag || head.Type == 11)
                 {
                     return tag == head.Tag;
@@ -417,9 +413,45 @@ namespace BotReborn.Jce
             }
         }
 
-        public object ReadObject(int tag)
+        public object ReadObject<T>(int tag)
         {
-            throw new NotImplementedException();
+            object obj;
+            switch (typeof(T))
+            {
+                case var t when typeof(byte) == t:
+                    obj = (byte)ReadByte(tag);
+                    break;
+                case var t when typeof(bool) == t:
+                    obj = ReadBool(tag);
+                    break;
+                case var t when typeof(short) == t:
+                    obj = ReadInt16(tag);
+                    break;
+                case var t when typeof(int) == t:
+                    obj = ReadInt32(tag);
+                    break;
+                case var t when typeof(int) == t:
+                    obj = ReadInt64(tag);
+                    break;
+                case var t when typeof(float) == t:
+                    obj = ReadFloat32(tag);
+                    break;
+                case var t when typeof(double) == t:
+                    obj = ReadFloat64(tag);
+                    break;
+                case var t when typeof(string) == t:
+                    obj = ReadString(tag);
+                    break;
+                case var t when t.GetInterfaces().Contains(typeof(IJceStruct)):
+                    var s = Activator.CreateInstance<T>();
+                    t?.GetMethod("ReadFrom")?.Invoke(s, new object[] {this});
+                    obj = s;
+                    break;
+                default:
+                    obj = null;
+                    break;
+            }
+            return obj;
         }
 
         public void ReadSlice(object obj, int tag)
