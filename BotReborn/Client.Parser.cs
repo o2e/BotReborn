@@ -60,5 +60,41 @@ namespace BotReborn
 
             return ret;
         }
+
+        public IMessageElement[] ParseMessageElems(Elem[] elems)
+        {
+            var res = new List<IMessageElement>();
+            foreach (var elem in elems)
+            {
+                if (elem.SrcMsg is not null && elem.SrcMsg.OrigSeqs.Count != 0)
+                {
+                    res.Add(new ReplyElement()
+                    {
+                        ReplySeq = elem.SrcMsg.OrigSeqs[0],
+                        Time = elem.SrcMsg.Time,
+                        Sender = elem.SrcMsg.SenderUin,
+                        Elements = ParseMessageElems(elem.SrcMsg.Elems.ToArray())
+                    });
+                }
+
+                if (elem.TransElemInfo is not null)
+                {
+                    if (elem.TransElemInfo.ElemType == 24)
+                    {
+                        var i3 = elem.TransElemInfo.ElemValue.Length;
+                        var r = new BinaryStream(elem.TransElemInfo.ElemValue.ToByteArray());
+                        if (i3 > 3)
+                        {
+                            if (r.ReadByte() == 1)
+                            {
+                                //todo
+                            }
+                        }
+                    }
+                }
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }

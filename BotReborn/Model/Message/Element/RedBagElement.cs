@@ -1,5 +1,12 @@
 ﻿namespace BotReborn.Model.Message.Element
 {
+    public class RedBagElement : IMessageElement
+    {
+        public RedBagMessageType MessageType { get; set; }
+        public string Title { get; set; }
+        public ElementType Type() => ElementType.RedBag;
+    }
+
     public enum RedBagMessageType
     {
         RedBagSimple = 2,
