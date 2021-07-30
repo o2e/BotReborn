@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Binary;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;

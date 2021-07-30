@@ -8,14 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.17.3" />
-    <PackageReference Include="Grpc.Tools" Version="2.38.1">
+    <PackageReference Include="Grpc.Tools" Version="2.39.0-pre1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="LazyCache" Version="2.1.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.5.21301.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.6.21352.12" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
-    <PackageReference Include="System.Binary" Version="0.1.0-alpha-001" />
   </ItemGroup>
 
   <ItemGroup>

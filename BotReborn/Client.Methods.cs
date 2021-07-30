@@ -11,7 +11,7 @@ using BotReborn.Crypto;
 using BotReborn.Jce;
 using BotReborn.Model;
 using BotReborn.Model.Exception;
-
+using BotReborn.Packets;
 using Microsoft.Extensions.Logging;
 using BinaryStream = BotReborn.BinaryStream;
 
@@ -168,7 +168,7 @@ namespace BotReborn
                 Thread.Sleep(new TimeSpan(0, 0, 1, 0));
                 var seq = NextSeq();
                 //todo
-                var sso = Packets.BuildSsoPacket(seq, 0, 0, "", "", Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>());
+                var sso = Packet.BuildSsoPacket(seq, 0, 0, "", "", Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>());
 
                 times++;
                 if (times >= 7)
