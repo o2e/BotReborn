@@ -1,6 +1,6 @@
 ﻿namespace BotReborn.Model.Message.Element
 {
-    public class VoiceElement
+    public class VoiceElement : IMessageElement
     {
         public string Name { get; set; }
         public byte[] Md5 { get; set; }
@@ -10,5 +10,7 @@
         /// 在发送时使用
         /// </summary>
         public byte[] Data { get; set; }
+
+        public ElementType Type() => ElementType.Voice;
     }
 }

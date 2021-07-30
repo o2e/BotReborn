@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
+using BotReborn.Model;
 using BotReborn.Model.Group;
+
+using Version = System.Version;
 
 namespace BotReborn
 {

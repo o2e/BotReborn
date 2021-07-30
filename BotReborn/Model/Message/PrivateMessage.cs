@@ -8,6 +8,6 @@
         public long Target { get; set; }
         public int Time { get; set; }
         public Sender Sender { get; set; }
-        public IMessageElement Elements { get; set; }
+        public IMessageElement[] Elements { get; set; }
     }
 }
