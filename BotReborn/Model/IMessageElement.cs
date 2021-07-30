@@ -2,6 +2,6 @@
 {
     public interface IMessageElement
     {
-        public ElementType ElementType { get; set; }
+        public ElementType Type();
     }
 }

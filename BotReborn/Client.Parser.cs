@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using BotReborn.Model;
 using BotReborn.Model.Message;
+using BotReborn.Model.Message.Element;
 using BotReborn.Protos;
 
 namespace BotReborn
@@ -32,6 +33,25 @@ namespace BotReborn
                 Time = m.Head.MsgTime,
                 Sender = sender,
                 Self = Uin,
+                Elements = ((Func<IMessageElement[]>)(() =>
+               {
+                   if (m.Body.RichText.Ptt != null)
+                   {
+                       return new IMessageElement[]
+                       {
+                           new VoiceElement()
+                           {
+                               Name = m.Body.RichText.Ptt?.FileName,
+                               Md5 = m.Body.RichText.Ptt?.FileMd5.ToByteArray(),
+                               Size = (int) m.Body.RichText.Ptt?.FileSize,
+                               Url = m.Body.RichText.Ptt?.DownPara.ToString()
+                           }
+                       };
+                   }
+
+                   return null;//todo
+               }))(),
+
             };
             if (m.Body.RichText.Attr is not null)
             {
