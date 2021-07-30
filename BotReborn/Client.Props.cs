@@ -26,7 +26,7 @@ namespace BotReborn
 
         public byte[] OutGoingPacketSessionId { get; set; }
         public byte[] RandomKey { get; set; }
-        public TcpListener TcpListener { get; set; }
+        public TcpClient TcpClient { get; set; }
         public DateTimeOffset ConnectTime { get; set; }
         public Hashtable Waiters { get; set; }
         public List<IPEndPoint> Servers { get; set; }

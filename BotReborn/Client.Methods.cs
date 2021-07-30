@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -11,6 +12,7 @@ using BotReborn.Model;
 using BotReborn.Model.Exception;
 
 using Microsoft.Extensions.Logging;
+using BinaryStream = BotReborn.BinaryStream;
 
 namespace BotReborn
 {
@@ -57,8 +59,8 @@ namespace BotReborn
                 _logger.LogInformation("Connect to server: {0}", ip);
                 try
                 {
-                    TcpListener = new TcpListener(ip);
-                    TcpListener.Start();
+                    TcpClient = new TcpClient();
+                    TcpClient.Connect(ip);
                     ConnectTime = DateTime.Now;
                 }
                 catch (Exception e)
@@ -79,7 +81,7 @@ namespace BotReborn
         public void Disconnect()
         {
             IsOnline = false;
-            TcpListener.Stop();
+            TcpClient.Close();
         }
 
         public void QuickReconnect()
@@ -142,6 +144,18 @@ namespace BotReborn
                 addresses.Add(new IPEndPoint(IPAddress.Parse(s.Server), s.Port));
             }
             return addresses;
+        }
+
+        private void StartNetLoop()
+        {
+            var stream = TcpClient.GetStream();
+            while (true)
+            {
+                var span = stream.ReadBytes(4);
+                var l = BinaryPrimitives.ReadInt32BigEndian(span);
+                var data = stream.ReadBytes(l - 4);
+
+            }
         }
 
         public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
