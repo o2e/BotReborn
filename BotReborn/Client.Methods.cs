@@ -159,11 +159,6 @@ namespace BotReborn
             return addresses;
         }
 
-        public void NetLoop()
-        {
-
-        }
-
         public void DoHeartBeat()
         {
             _heartbeatEnabled = true;
