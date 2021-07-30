@@ -5,12 +5,15 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+
 using BotReborn.Crypto;
 using BotReborn.Jce;
 using BotReborn.Model;
 using BotReborn.Model.Exception;
 
 using Microsoft.Extensions.Logging;
+
+using Org.BouncyCastle.Utilities;
 
 namespace BotReborn
 {
@@ -97,6 +100,16 @@ namespace BotReborn
             }
         }
 
+        public void Release()
+        {
+            if (IsOnline)
+            {
+                Disconnect();
+            }
+
+            IsOnline = false;
+        }
+
         public void RegisterClient()
         {
             var seq = NextSeq();
@@ -142,6 +155,33 @@ namespace BotReborn
                 addresses.Add(new IPEndPoint(IPAddress.Parse(s.Server), s.Port));
             }
             return addresses;
+        }
+
+        public void NetLoop()
+        {
+
+        }
+
+        public void DoHeartBeat()
+        {
+            _heartbeatEnabled = true;
+            var times = 0;
+            while (IsOnline)
+            {
+                Thread.Sleep(new TimeSpan(0, 0, 1, 0));
+                var seq = NextSeq();
+                //todo
+                var sso = Packets.BuildSsoPacket(seq, 0, 0, "", "", Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>());
+
+                times++;
+                if (times >= 7)
+                {
+                    RegisterClient();
+                    times = 0;
+                }
+            }
+
+            _heartbeatEnabled = false;
         }
 
         public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
