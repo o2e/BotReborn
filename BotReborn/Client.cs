@@ -36,7 +36,7 @@ namespace BotReborn
             _groupSeq = _random.Next(20000);
             _friendSeq = 22911; //Magic number
             _highwayApplyUpSeq = 77918; //Magic number
-            Ksid = Utils.GetBytes($"|{DeviceInfo.Default.IMEI}|A8.2.7.27f6ea96");
+            Ksid = Encoding.UTF8.GetBytes($"|{DeviceInfo.Default.IMEI}|A8.2.7.27f6ea96");
             //eventHandlers:           &eventHandlers{},
             //msgSvcCache: utils.NewCache(time.Second * 15),
             //transCache: utils.NewCache(time.Second * 15),
@@ -85,8 +85,7 @@ namespace BotReborn
             //cli.TCP.PlannedDisconnect(cli.plannedDisconnect)
             //cli.TCP.UnexpectedDisconnect(cli.unexpectedDisconnect)
             _random.NextBytes(RandomKey);
-
-            throw new NotImplementedException();
+            Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
         }
 
         public Client(Uin uin, ILogger logger, string password) : this(uin, logger)

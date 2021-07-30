@@ -13,8 +13,8 @@ namespace BotReborn.Tests.Crypto
         [Fact]
         public void TeaTwoWayTest1()
         {
-            var tea = new Tea(Utils.GetBytes("0123456789ABCDEF"));
-            var bytes = Utils.GetBytes("MiraiGO Here");
+            var tea = new Tea(Encoding.UTF8.GetBytes("0123456789ABCDEF"));
+            var bytes = (byte[]) Encoding.UTF8.GetBytes("MiraiGO Here");
             var enc1 = tea.Encrypt(bytes);
             var dec = tea.Decrypt(enc1);
             Assert.Equal(bytes, dec);
@@ -23,7 +23,7 @@ namespace BotReborn.Tests.Crypto
         [Fact]
         public void TeaTwoWayTest2()
         {
-            var tea = new Tea(Utils.GetBytes("0123456789ABCDEF"));
+            var tea = new Tea(Encoding.UTF8.GetBytes("0123456789ABCDEF"));
             var bytes = Utils.ConvertHexStringToByteArray("b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf");
             var dec1 = tea.Decrypt(bytes);
             var enc = tea.Encrypt(dec1);
@@ -48,7 +48,7 @@ namespace BotReborn.Tests.Crypto
         [InlineData("0123456789ABCDEF", new byte[] { 183, 178, 229, 42, 247, 245, 177, 251 })]
         public void TeaUnpackTest(string key,byte[] data)
         {
-            var tea = new Tea(Utils.GetBytes(key));
+            var tea = new Tea(Encoding.UTF8.GetBytes(key));
             var actual = tea.Unpack(data);
             var expected = (3081954602, 4160074235);
             Assert.Equal(expected, actual);
@@ -58,7 +58,7 @@ namespace BotReborn.Tests.Crypto
         [InlineData("0123456789ABCDEF", new byte[]{0,0,0,0,0,0,0,0}, 4206698361, 1129146738)]
         public void TeaRepackTest(string key, byte[] data,uint v0,uint v1)
         {
-            var tea = new Tea(Utils.GetBytes(key));
+            var tea = new Tea(Encoding.UTF8.GetBytes(key));
             tea.Repack(data,v0,v1);
             var expected = new byte[] {250, 189, 31, 121, 67, 77, 105, 114};
             Assert.Equal(expected,data);
@@ -68,7 +68,7 @@ namespace BotReborn.Tests.Crypto
         public void TeaEncodeTest(string key,byte[] src)
         {
             var dst = new byte[8];
-            var tea = new Tea(Utils.GetBytes(key));
+            var tea = new Tea(Encoding.UTF8.GetBytes(key));
             tea.Encode(src,dst);
             var expected = new byte[] {7, 19, 55, 116, 179, 195, 186, 143};
             Assert.Equal(expected,dst);
@@ -79,7 +79,7 @@ namespace BotReborn.Tests.Crypto
         public void TeaDecodeTest(string key, byte[] src)
         {
             var dst = new byte[8];
-            var tea = new Tea(Utils.GetBytes(key));
+            var tea = new Tea(Encoding.UTF8.GetBytes(key));
             tea.Decode(src, dst);
             var expected = new byte[] {250,189,31,121,67,77,105,114};
             Assert.Equal(expected, dst);

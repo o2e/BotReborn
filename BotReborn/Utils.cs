@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Binary;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -29,9 +31,6 @@ namespace BotReborn
             return string.Concat(bytes.Select(b => b.ToString("X2")));
         }
 
-        public static byte[] GetBytes(string s) => Encoding.UTF8.GetBytes(s);
-        public static string GetString(Span<byte> b) => Encoding.UTF8.GetString(b);
-
         public static byte[] PackUniRequestData(byte[] data)
         {
             var r = new List<byte> { 0x0A };
@@ -39,6 +38,13 @@ namespace BotReborn
             r.Add(0x0B);
             return r.ToArray();
 
+        }
+
+        public static Span<byte> ReadBytes(this Stream s,int len)
+        {
+            Span<byte> span = new byte[len];
+            s.Read(span);
+            return span;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BotReborn.Model;
+﻿using System.Text;
+using BotReborn.Model;
 
 namespace BotReborn
 {
@@ -38,34 +39,34 @@ namespace BotReborn
         {
             Default = new DeviceInfo()
             {
-                Display = Utils.GetBytes("BotReborn.114514.810"),
-                Product = Utils.GetBytes("BotReborn"),
-                Device = Utils.GetBytes("BotReborn"),
-                Board = Utils.GetBytes("BotReborn"),
-                Brand = Utils.GetBytes("BotReborn"),
-                Model = Utils.GetBytes("BotReborn"),
-                Bootloader = Utils.GetBytes("unknown"),
-                FingerPrint = Utils.GetBytes("BotReborn:10/BotReborn.114514.810/114514:user/release-keys"),
-                BootId = Utils.GetBytes("cb886ae2-00b6-4d68-a230-787f111d12c7"),
-                ProcVersion = Utils.GetBytes("Linux version 3.0.31-cb886ae2 (android-build@xxx.xxx.xxx.xxx.com)"),
+                Display = Encoding.UTF8.GetBytes("BotReborn.114514.810"),
+                Product = Encoding.UTF8.GetBytes("BotReborn"),
+                Device = Encoding.UTF8.GetBytes("BotReborn"),
+                Board = Encoding.UTF8.GetBytes("BotReborn"),
+                Brand = Encoding.UTF8.GetBytes("BotReborn"),
+                Model = Encoding.UTF8.GetBytes("BotReborn"),
+                Bootloader = Encoding.UTF8.GetBytes("unknown"),
+                FingerPrint = Encoding.UTF8.GetBytes("BotReborn:10/BotReborn.114514.810/114514:user/release-keys"),
+                BootId = Encoding.UTF8.GetBytes("cb886ae2-00b6-4d68-a230-787f111d12c7"),
+                ProcVersion = Encoding.UTF8.GetBytes("Linux version 3.0.31-cb886ae2 (android-build@xxx.xxx.xxx.xxx.com)"),
                 BaseBand = System.Array.Empty<byte>(),
-                SimInfo = Utils.GetBytes("T-Mobile"),
-                OSType = Utils.GetBytes("android"),
-                MacAddress = Utils.GetBytes("00:50:56:C0:00:08"),
+                SimInfo = Encoding.UTF8.GetBytes("T-Mobile"),
+                OSType = Encoding.UTF8.GetBytes("android"),
+                MacAddress = Encoding.UTF8.GetBytes("00:50:56:C0:00:08"),
                 IpAddress = new byte[] { 10, 0, 1, 3 }, // 10.0.1.3
-                WifiBSSID = Utils.GetBytes("00:50:56:C0:00:08"),
-                WifiSSID = Utils.GetBytes("<unknown ssid>"),
+                WifiBSSID = Encoding.UTF8.GetBytes("00:50:56:C0:00:08"),
+                WifiSSID = Encoding.UTF8.GetBytes("<unknown ssid>"),
                 IMEI = "468356291846738",
-                AndroidId = Utils.GetBytes("MIRAI.123456.001"),
-                APN = Utils.GetBytes("wifi"),
-                VendorName = Utils.GetBytes("MIUI"),
-                VendorOSName = Utils.GetBytes("mirai"),
+                AndroidId = Encoding.UTF8.GetBytes("MIRAI.123456.001"),
+                APN = Encoding.UTF8.GetBytes("wifi"),
+                VendorName = Encoding.UTF8.GetBytes("MIUI"),
+                VendorOSName = Encoding.UTF8.GetBytes("mirai"),
                 Protocol = ClientProtocol.Ipad,
                 Version = new Version()
                 {
-                    Incremental = Utils.GetBytes("5891938"),
-                    Release = Utils.GetBytes("10"),
-                    CodeName = Utils.GetBytes("REL"),
+                    Incremental = Encoding.UTF8.GetBytes("5891938"),
+                    Release = Encoding.UTF8.GetBytes("10"),
+                    CodeName = Encoding.UTF8.GetBytes("REL"),
                     Sdk = 29,
                 }
             };

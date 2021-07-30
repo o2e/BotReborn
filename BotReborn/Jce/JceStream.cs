@@ -29,11 +29,6 @@ namespace BotReborn.Jce
         {
         }
 
-        //public JceStream Write<T>(T obj)
-        //{
-
-        //}
-
         private void WriteHead(byte t, int tag)
         {
             if (tag < 15)
@@ -123,13 +118,6 @@ namespace BotReborn.Jce
             }
         }
 
-        private Span<byte> ReadBytes(int len)
-        {
-            Span<byte> span = new byte[len];
-            Read(span);
-            return span;
-        }
-
         private void SkipNextField()
         {
             _ = ReadHead(out var head);
@@ -173,32 +161,23 @@ namespace BotReborn.Jce
 
         private ushort ReadUInt16()
         {
-            var i = ReadByte();
-            var b = ReadByte();
-            return (ushort)((i << 8) + b);
+            
+            return BinaryPrimitives.ReadUInt16BigEndian(this.ReadBytes(2));
         }
 
         private int ReadInt32()
         {
-            Span<byte> span = stackalloc byte[4];
-            Read(span);
-            return (span[0] << 24) | (span[1] << 16) | (span[2] << 8) | span[3];
+            return BinaryPrimitives.ReadInt32BigEndian(this.ReadBytes(4));
         }
 
         private long ReadInt64()
         {
-            Span<byte> span = stackalloc byte[8];
-            Read(span);
-            return (long)(((ulong)(span[0]) << 56) | ((ulong)(span[1]) << 48) | ((ulong)(span[2]) << 40) |
-                   ((ulong)(span[3]) << 32) | ((ulong)(span[4]) << 24) | ((ulong)(span[5]) << 16) |
-                   ((ulong)(span[6]) << 8) | (span[7]));
+            return BinaryPrimitives.ReadInt64BigEndian(this.ReadBytes(8));
         }
 
         private float ReadFloat32()
         {
-            Span<byte> span = stackalloc byte[4];
-            Read(span);
-            return BinaryPrimitives.ReadSingleBigEndian(span);
+            return BinaryPrimitives.ReadSingleBigEndian(this.ReadBytes(4));
         }
 
         private double ReadFloat64()
@@ -322,8 +301,8 @@ namespace BotReborn.Jce
 
             return head.Type switch
             {
-                6 => Utils.GetString(ReadBytes(ReadByte())),
-                7 => Utils.GetString(ReadBytes(ReadInt32())),
+                6 => Encoding.UTF8.GetString(this.ReadBytes( ReadByte())),
+                7 => Encoding.UTF8.GetString(this.ReadBytes(ReadInt32())),
                 _ => string.Empty
             };
         }
@@ -350,9 +329,9 @@ namespace BotReborn.Jce
                 case 5:
                     return ReadFloat64();
                 case 6:
-                    return Utils.GetString(ReadBytes(ReadByte()));
+                    return Encoding.UTF8.GetString(this.ReadBytes(ReadByte()));
                 case 7:
-                    return Utils.GetString(ReadBytes(ReadInt32()));
+                    return Encoding.UTF8.GetString(this.ReadBytes(ReadInt32()));
                 case 8:
                     var s = ReadInt32(0);
                     var m = new Hashtable();
@@ -373,7 +352,7 @@ namespace BotReborn.Jce
                     return 0;
                 case 13:
                     ReadHead(out _);
-                    return ReadBytes(ReadInt32(0)).ToArray();
+                    return this.ReadBytes(ReadInt32(0)).ToArray();
                 default:
                     return null;
             }
