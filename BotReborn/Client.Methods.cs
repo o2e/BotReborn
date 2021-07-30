@@ -189,7 +189,26 @@ namespace BotReborn
                 var span = stream.ReadBytes(4);
                 var l = BinaryPrimitives.ReadInt32BigEndian(span);
                 var data = stream.ReadBytes(l - 4);
-
+                var pkt = Packet.ParseIncomingPacket(data.ToArray(), SigInfo.D2Key);
+                // if err != nil {
+                // 	c.Error("parse incoming packet error: %v", err)
+                // 	if errors.Is(err, packets.ErrSessionExpired) || errors.Is(err, packets.ErrPacketDropped) {
+                // 		c.Disconnect()
+                // 		go c.dispatchDisconnectEvent(&ClientDisconnectedEvent{Message: "session expired"})
+                // 		continue
+                // 	}
+                // 	errCount++
+                // 	if errCount > 2 {
+                // 		go c.quickReconnect()
+                // 		continue
+                // 	}
+                // 	continue
+                // }
+                var payload = pkt.Payload;
+                if (pkt.Flag2==2)
+                {
+                    
+                }
             }
         }
 

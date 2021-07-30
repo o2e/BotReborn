@@ -120,6 +120,8 @@ namespace BotReborn.Packets
             return ParseSsoFrame(decrypted.ToArray(), flag2);
         }
 
+        
+
         internal static object BuildSsoPacket(ushort seq, int v1, int v2, string v3, string v4, byte[] vs1, byte[] vs2, byte[] vs3, byte[] vs4) => throw new NotImplementedException();
     }
 }
