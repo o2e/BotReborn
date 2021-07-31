@@ -15,7 +15,6 @@ namespace BotReborn.Tests
         public void BinaryTeaTest1()
         {
             var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
-            var tea = new Tea(key);
             var payload = new byte[]
             {
                 28, 44, 48, 1, 70, 5, 48, 48, 48, 48, 48, 80, 100, 98, 32, 2, 249, 11, 118, 15, 52, 54, 56, 51, 53,
@@ -33,13 +32,14 @@ namespace BotReborn.Tests
                 SBuffer = buf.GetBytes()
             };
             var reqData =
-                tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray());
+                new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray();
             var expected = new byte[]
             {
-                183, 103, 207, 65, 78, 199, 191, 28, 207, 195, 78, 23, 243, 105, 4, 8, 240, 174, 233, 126, 6, 77,
-                197, 124, 50, 71, 205, 99, 30, 203, 97, 111, 219, 143, 222, 244, 219, 156, 193, 46, 18, 44, 111,
-                202, 191, 24, 217, 126, 178, 246, 135, 128, 208, 208, 99, 171, 59, 89, 234, 188, 135, 44, 9, 160
+                0, 0, 0, 116, 16, 3, 44, 60, 76, 86, 10, 67, 111, 110, 102, 105, 103, 72, 116, 116, 112, 102, 17,
+                72, 116, 116, 112, 83, 101, 114, 118, 101, 114, 76, 105, 115, 116, 82, 101, 113, 125, 0, 0, 71, 8,
+                0, 1, 6, 17, 72, 116, 116, 112, 83, 101, 114, 118, 101, 114, 76, 105, 115, 116, 82
             };
+
             Assert.Equal(expected,reqData);
         }
     }
