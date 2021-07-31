@@ -6,7 +6,7 @@ using System.Net.Sockets;
 
 using BotReborn.Model;
 using BotReborn.Model.Group;
-
+using Microsoft.Extensions.Logging;
 using Version = System.Version;
 
 namespace BotReborn
@@ -16,6 +16,7 @@ namespace BotReborn
         public Uin Uin { get; set; }
         public byte[] PasswordMd5 { get; set; }
         public bool AllowSlider { get; set; }
+        public ILogger Logger { get; set; }
 
         public string NickName { get; set; }
         public ushort Age { get; set; }

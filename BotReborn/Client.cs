@@ -18,9 +18,8 @@ namespace BotReborn
 {
     public partial class Client
     {
-        private Client(Uin uin, ILogger logger)
+        private Client(Uin uin)
         {
-            _logger = logger;
             _ecdh = new EncryptECDH();
             _httpClient = new HttpClient();
             _random = new Random(DateTime.Now.Second);
@@ -85,16 +84,16 @@ namespace BotReborn
             //cli.TCP.PlannedDisconnect(cli.plannedDisconnect)
             //cli.TCP.UnexpectedDisconnect(cli.unexpectedDisconnect)
             _random.NextBytes(RandomKey);
-            Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
+            //Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
         }
 
-        public Client(Uin uin, ILogger logger, string password) : this(uin, logger)
+        public Client(Uin uin , string password) : this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public Client(Uin uin, ILogger logger, byte[] passwordMd5) : this(uin, logger)
+        public Client(Uin uin, ILogger logger, byte[] passwordMd5) : this(uin)
         {
             PasswordMd5 = passwordMd5;
         }

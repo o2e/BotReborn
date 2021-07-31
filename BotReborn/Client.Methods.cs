@@ -13,9 +13,6 @@ using BotReborn.Model;
 using BotReborn.Model.Exception;
 using BotReborn.Packets;
 using Microsoft.Extensions.Logging;
-using BinaryStream = BotReborn.BinaryStream;
-
-using Org.BouncyCastle.Utilities;
 
 namespace BotReborn
 {
@@ -44,8 +41,8 @@ namespace BotReborn
             }
             catch (Exception e)
             {
-                _logger.LogTrace(e, e.Message);
-                _logger.LogError("Login failed.");
+                Logger.LogTrace(e, e.Message);
+                Logger.LogError("Login failed.");
                 return null;
             }
 
@@ -59,7 +56,7 @@ namespace BotReborn
             while (CanRetry)
             {
                 var ip = Servers[CurrentServerIndex];
-                _logger.LogInformation("Connect to server: {0}", ip);
+                Logger.LogInformation("Connect to server: {0}", ip);
                 try
                 {
                     TcpClient = new TcpClient();
@@ -68,8 +65,8 @@ namespace BotReborn
                 }
                 catch (Exception e)
                 {
-                    _logger.LogTrace(e, e.Message);
-                    _logger.LogError("Connect failed.");
+                    Logger.LogTrace(e, e.Message);
+                    Logger.LogError("Connect failed.");
                     RetryTimes++;
                     CurrentServerIndex++;
                 }
@@ -97,8 +94,8 @@ namespace BotReborn
             }
             catch (Exception e)
             {
-                _logger.LogTrace(e, e.Message);
-                _logger.LogError("Quick reconnect failed.");
+                Logger.LogTrace(e, e.Message);
+                Logger.LogError("Quick reconnect failed.");
             }
         }
 
@@ -122,10 +119,22 @@ namespace BotReborn
         {
             var protocol = DeviceInfo.Default.Protocol;
             var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
-            var payload = (byte[])new JceStream().WriteInt64(0, 1).WriteInt64(0, 2).WriteByte(1, 3).WriteString("00000", 4)
-                .WriteInt32(100, 5).WriteInt32((int)protocol.AppId, 6)
-                .WriteString(DeviceInfo.Default.IMEI, 7).WriteInt64(0, 8).WriteInt64(0, 9).WriteInt64(0, 10)
-                .WriteInt64(0, 11).WriteByte(0, 12).WriteInt64(0, 13).WriteByte(1, 14).ToArray();
+            var payload = new JceStream()
+                .WriteInt64(0, 1)
+                .WriteInt64(0, 2)
+                .WriteByte(1, 3)
+                .WriteString("00000", 4)
+                .WriteInt32(100, 5)
+                .WriteInt32((int)protocol.AppId, 6)
+                .WriteString(DeviceInfo.Default.IMEI, 7)
+                .WriteInt64(0, 8)
+                .WriteInt64(0, 9)
+                .WriteInt64(0, 10)
+                .WriteInt64(0, 11)
+                .WriteByte(0, 12)
+                .WriteInt64(0, 13)
+                .WriteByte(1, 14)
+                .ToArray();
             var buf = new JceStructs.RequestDataVersion3()
             {
                 Map = new Dictionary<string, byte[]>() { ["HttpServerListReq"] = Utils.PackUniRequestData(payload) }
@@ -138,11 +147,21 @@ namespace BotReborn
                 SBuffer = buf.GetBytes()
             };
             var tea = new Tea(key);
-            var rsp = _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",
-                new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray()))).Result;
+            var reqData =
+                new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray()));
+            HttpResponseMessage rsp;
+            try
+            {
+                rsp = _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",reqData).Result;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                throw new Exception("Unable to fetch server list.");
+            }
             var rspPkt = new JceStructs.RequestPacket();
             var data = new JceStructs.RequestDataVersion3();
-            rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp.Content.ReadAsByteArrayAsync().Result.AsSpan(4))));
+            rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp.Content.ReadAsByteArrayAsync().Result)[4..]));
             data.ReadFrom(new JceStream(rspPkt.SBuffer));
             var stream = new JceStream(data.Map["HttpServerListRes"][1..]);
             var servers = new List<JceStructs.SsoServerInfo>();

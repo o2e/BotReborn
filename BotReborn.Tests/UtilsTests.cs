@@ -23,5 +23,23 @@ namespace BotReborn.Tests
             var actual = Utils.ConvertByteArrayToHexString(bytes);
             Assert.Equal(expected, actual,StringComparer.InvariantCultureIgnoreCase);
         }
+
+        [Fact]
+        public void PackUniRequestDataTest()
+        {
+            var payload = new byte[]
+            {
+                28, 44, 48, 1, 70, 5, 48, 48, 48, 48, 48, 80, 100, 98, 32, 2, 249, 11, 118, 15, 52, 54, 56, 51, 53,
+                54, 50, 57, 49, 56, 52, 54, 55, 51, 56, 140, 156, 172, 188, 204, 220, 224, 1
+            };
+
+            var expected = new byte[]
+            {
+                10, 28, 44, 48, 1, 70, 5, 48, 48, 48, 48, 48, 80, 100, 98, 32, 2, 249, 11, 118, 15, 52, 54, 56, 51,
+                53, 54, 50, 57, 49, 56, 52, 54, 55, 51, 56, 140, 156, 172, 188, 204, 220, 224, 1, 11
+            };
+            var actual = Utils.PackUniRequestData(payload);
+            Assert.Equal(expected,actual);
+        }
     }
 }

@@ -464,7 +464,7 @@ namespace BotReborn.Jce
 
         public JceStream WriteInt16(short n, int tag)
         {
-            if (n is >= -128 and <= 127)
+            if (n is >= 0 and <= 255)
             {
                 WriteByte((byte)(n), tag);
                 return this;
@@ -589,22 +589,47 @@ namespace BotReborn.Jce
 
         private void WriteObject(object value, int tag)
         {
-            _ = value switch
+            switch (value)
             {
-                IDictionary map => WriteMap(map, tag),
-                byte[] bytes => WriteBytes(bytes, tag),
-                Array arr => WriteSlice(arr, tag),
-                byte b => WriteByte(b, tag),
-                bool b => WriteBool(b, tag),
-                short n => WriteInt16(n, tag),
-                int n => WriteInt32(n, tag),
-                long n => WriteInt64(n, tag),
-                float f => WriteFloat32(f, tag),
-                double d => WriteFloat64(d, tag),
-                string s => WriteString(s, tag),
-                IJceStruct s => WriteJceStruct(s, tag),
-                _ => throw new Exception()
-            };
+                case IDictionary map:
+                    _ = WriteMap(map, tag);
+                    break;
+                case byte[] bytes:
+                    _ = WriteBytes(bytes, tag);
+                    break;
+                case Array arr:
+                    _ = WriteSlice(arr, tag);
+                    break;
+                case byte b:
+                    _ = WriteByte(b, tag);
+                    break;
+                case bool b:
+                    _ = WriteBool(b, tag);
+                    break;
+                case short n:
+                    _ = WriteInt16(n, tag);
+                    break;
+                case int n:
+                    _ = WriteInt32(n, tag);
+                    break;
+                case long n:
+                    _ = WriteInt64(n, tag);
+                    break;
+                case float f:
+                    _ = WriteFloat32(f, tag);
+                    break;
+                case double d:
+                    _ = WriteFloat64(d, tag);
+                    break;
+                case string s:
+                    _ = WriteString(s, tag);
+                    break;
+                case IJceStruct s:
+                    _ = WriteJceStruct(s, tag);
+                    break;
+                default:
+                    throw new Exception();
+            }
         }
 
         private JceStream WriteJceStruct(IJceStruct s, int tag)
@@ -639,7 +664,10 @@ namespace BotReborn.Jce
             {
                 var attribute = fieldInfo.GetCustomAttribute<JceIdAttribute>();
                 var value = fieldInfo.GetValue(s);
-                WriteObject(value, attribute!.Id);
+                if (value is not null)
+                {
+                    WriteObject(value, attribute!.Id);
+                }
             }
 
         }

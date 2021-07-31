@@ -28,7 +28,6 @@ namespace BotReborn.Jce
                 Context = new Dictionary<string, string>();
                 Status = new Dictionary<string, string>();
                 IVersion = s.ReadInt16(1);
-                IVersion = s.ReadInt16(1);
                 CPacketType = (byte)s.ReadByte(2);
                 IMessageType = s.ReadInt32(3);
                 IRequestId = s.ReadInt32(4);
