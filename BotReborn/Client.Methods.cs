@@ -164,8 +164,7 @@ namespace BotReborn
             rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp.Content.ReadAsByteArrayAsync().Result)[4..]));
             data.ReadFrom(new JceStream(rspPkt.SBuffer));
             var stream = new JceStream(data.Map["HttpServerListRes"][1..]);
-            var servers = new List<JceStructs.SsoServerInfo>();
-            stream.ReadSlice(servers, 2);
+            var servers = (List<JceStructs.SsoServerInfo>)stream.ReadSlice<JceStructs.SsoServerInfo>( 2);
             var addresses = new List<IPEndPoint>(servers.Count);
             foreach (var s in servers)
             {

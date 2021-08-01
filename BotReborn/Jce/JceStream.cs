@@ -11,6 +11,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace BotReborn.Jce
 {
@@ -433,15 +434,32 @@ namespace BotReborn.Jce
             return obj;
         }
 
-        public void ReadSlice(object obj, int tag)
+        public IEnumerable ReadSlice<T>(int tag)
         {
+            var list = new List<T>();
             if (!SkipToTag(tag))
             {
-                return;
+                return null;
             }
             ReadHead(out var head);
-            throw new NotImplementedException();
+            if (head.Type == 9)
+            {
+                var l = ReadInt32(0);
+                for (int i = 0; i < l; i++)
+                {
+                    list.Add((T)ReadObject<T>(0));
+                }
+                return list;
+            }
+            if (head.Type==13)
+            {
+                ReadHead(out _);
+                var arr = this.ReadBytes(ReadInt32(0));
+                return arr.ToArray();
+            }
+            throw new Exception();
         }
+
         public JceStream WriteByte(byte b, int tag)
         {
             if (b == 0)

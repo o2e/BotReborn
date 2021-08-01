@@ -24,7 +24,6 @@ namespace BotReborn.Jce
 
             public void ReadFrom(JceStream s)
             {
-                SBuffer = Array.Empty<byte>();
                 Context = new Dictionary<string, string>();
                 Status = new Dictionary<string, string>();
                 IVersion = s.ReadInt16(1);
@@ -33,7 +32,7 @@ namespace BotReborn.Jce
                 IRequestId = s.ReadInt32(4);
                 SServantName = s.ReadString(5);
                 SFuncName = s.ReadString(6);
-                s.ReadSlice(SBuffer, 7);
+                SBuffer = (byte[])s.ReadSlice<byte>( 7);
                 ITimeout = s.ReadInt32(8);
                 s.ReadMapF(9, (k, v) => { Context[(string)k] = (string)v; });
                 s.ReadMapF(10, (k, v) => { Status[(string)k] = (string)v; });

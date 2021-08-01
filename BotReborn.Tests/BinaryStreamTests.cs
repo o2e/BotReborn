@@ -24,15 +24,17 @@ namespace BotReborn.Tests
             {
                 Map = new Dictionary<string, byte[]>() { ["HttpServerListReq"] = Utils.PackUniRequestData(payload) }
             };
+            var sBuffer = buf.GetBytes(); 
             var pkt = new JceStructs.RequestPacket
             {
                 IVersion = 3,
                 SServantName = "ConfigHttp",
                 SFuncName = "HttpServerListReq",
-                SBuffer = buf.GetBytes()
+                SBuffer = sBuffer
             };
+            var data = pkt.GetBytes();
             var reqData =
-                new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray();
+                new BinaryStream().WriteIntLvPacket(0, data).ToArray();
             var expected = new byte[]
             {
                 0, 0, 0, 116, 16, 3, 44, 60, 76, 86, 10, 67, 111, 110, 102, 105, 103, 72, 116, 116, 112, 102, 17,
