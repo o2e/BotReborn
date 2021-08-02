@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -51,11 +52,14 @@ namespace BotReborn
 
         public static byte[] PostBytes(this HttpClient httpClient,string url, byte[] bytes)
         {
-            var req = new HttpRequestMessage(HttpMethod.Post, url) {Content = new ByteArrayContent(bytes)};
+            var req = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new ByteArrayContent(bytes)
+            };
             req.Headers.UserAgent.Add(new ProductInfoHeaderValue("QQ", "8.2.0.1296"));
             req.Headers.UserAgent.Add(new ProductInfoHeaderValue("CFNetwork", "1126"));
             req.Headers.Add("Net-Type", new string[] { "Wifi" });
-            var rsp = httpClient.Send(req);
+            var rsp = httpClient.SendAsync(req).Result;
             var body = rsp.Content.ReadAsByteArrayAsync().Result;
             if (rsp.Content.Headers.TryGetValues("Encoding",out var headers)&&headers.Contains("gzip"))
             {

@@ -21,7 +21,10 @@ namespace BotReborn
         private Client(Uin uin)
         {
             _ecdh = new EncryptECDH();
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient()
+            {
+                DefaultRequestVersion = new Version(2,0),
+            };
             _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
 
