@@ -482,7 +482,7 @@ namespace BotReborn.Jce
 
         public JceStream WriteInt16(short n, int tag)
         {
-            if (n is >= 0 and <= 255)
+            if (n is >= -128 and <= 127)
             {
                 WriteByte((byte)(n), tag);
                 return this;
