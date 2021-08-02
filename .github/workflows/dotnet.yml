@@ -8,10 +8,11 @@ on:
 
 jobs:
   build:
+  
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
-    steps:
+    steps:    
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -22,4 +23,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
+      env:
+        BotAccount: ${{secrets.account}}
+        BotPassword: ${{secrets.passwd}}
       run: dotnet test --no-build --verbosity normal
