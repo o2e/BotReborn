@@ -682,10 +682,7 @@ namespace BotReborn.Jce
             {
                 var attribute = fieldInfo.GetCustomAttribute<JceIdAttribute>();
                 var value = fieldInfo.GetValue(s);
-                if (value is not null)
-                {
-                    WriteObject(value, attribute!.Id);
-                }
+                WriteObject(value??Activator.CreateInstance(fieldInfo.FieldType), attribute!.Id);
             }
 
         }
