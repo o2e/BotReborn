@@ -13,8 +13,8 @@ namespace BotReborn.Tests
         [Fact]
         public void LoginTest()
         {
-            var uin = int.Parse(Environment.GetEnvironmentVariable("BotAccount",EnvironmentVariableTarget.User)!);
-            var passwd = Environment.GetEnvironmentVariable("BotPassword", EnvironmentVariableTarget.User);
+            var uin = int.Parse((Environment.GetEnvironmentVariable("BotAccount",EnvironmentVariableTarget.User)??Environment.GetEnvironmentVariable("BotAccount"))!);
+            var passwd = Environment.GetEnvironmentVariable("BotPassword", EnvironmentVariableTarget.User)??Environment.GetEnvironmentVariable("BotPassword");
             var client = new Client(uin, passwd);
         }
 
