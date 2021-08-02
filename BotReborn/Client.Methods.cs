@@ -148,11 +148,11 @@ namespace BotReborn
             };
             var tea = new Tea(key);
             var reqData =
-                new ByteArrayContent(tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray()));
-            HttpResponseMessage rsp;
+                tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray());
+            byte[] rsp;
             try
             {
-                rsp = _httpClient.PostAsync("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp",reqData).Result;
+                rsp = _httpClient.PostBytes("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp", reqData);
             }
             catch (Exception e)
             {
@@ -161,7 +161,7 @@ namespace BotReborn
             }
             var rspPkt = new JceStructs.RequestPacket();
             var data = new JceStructs.RequestDataVersion3();
-            rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp.Content.ReadAsByteArrayAsync().Result)[4..]));
+            rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp)[4..]));
             data.ReadFrom(new JceStream(rspPkt.SBuffer));
             var stream = new JceStream(data.Map["HttpServerListRes"][1..]);
             var servers = (List<JceStructs.SsoServerInfo>)stream.ReadSlice<JceStructs.SsoServerInfo>( 2);

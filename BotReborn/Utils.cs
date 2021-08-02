@@ -3,7 +3,10 @@ using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace BotReborn
@@ -44,6 +47,25 @@ namespace BotReborn
             Span<byte> span = new byte[len];
             s.Read(span);
             return span;
+        }
+
+        public static byte[] PostBytes(this HttpClient httpClient,string url, byte[] bytes)
+        {
+            var req = new HttpRequestMessage(HttpMethod.Post, url) {Content = new ByteArrayContent(bytes)};
+            req.Headers.UserAgent.Add(new ProductInfoHeaderValue("QQ", "8.2.0.1296"));
+            req.Headers.UserAgent.Add(new ProductInfoHeaderValue("CFNetwork", "1126"));
+            req.Headers.Add("Net-Type", new string[] { "Wifi" });
+            var rsp = httpClient.Send(req);
+            var body = rsp.Content.ReadAsByteArrayAsync().Result;
+            if (rsp.Content.Headers.GetValues("Encoding").Contains("gzip"))
+            {
+                var stream = new MemoryStream(body);
+                var gzip = new GZipStream(stream,CompressionMode.Decompress);
+                byte[] arr = new byte[gzip.Length];
+                gzip.Read(arr);
+                return arr;
+            }
+            return body;
         }
     }
 }
