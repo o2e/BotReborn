@@ -147,8 +147,10 @@ namespace BotReborn
                 SBuffer = buf.GetBytes()
             };
             var tea = new Tea(key);
+            var req = pkt.GetBytes();
+            var tempData = new BinaryStream().WriteIntLvPacket(0, req).ToArray();
             var reqData =
-                tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray());
+                tea.Encrypt(tempData);
             byte[] rsp;
             try
             {
