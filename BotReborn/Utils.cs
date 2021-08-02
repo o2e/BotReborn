@@ -57,7 +57,7 @@ namespace BotReborn
             req.Headers.Add("Net-Type", new string[] { "Wifi" });
             var rsp = httpClient.Send(req);
             var body = rsp.Content.ReadAsByteArrayAsync().Result;
-            if (rsp.Content.Headers.GetValues("Encoding").Contains("gzip"))
+            if (rsp.Content.Headers.TryGetValues("Encoding",out var headers)&&headers.Contains("gzip"))
             {
                 var stream = new MemoryStream(body);
                 var gzip = new GZipStream(stream,CompressionMode.Decompress);
