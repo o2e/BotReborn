@@ -32,7 +32,7 @@ namespace BotReborn.Jce
                 IRequestId = s.ReadInt32(4);
                 SServantName = s.ReadString(5);
                 SFuncName = s.ReadString(6);
-                SBuffer = (byte[])s.ReadSlice<byte>( 7);
+                SBuffer = (byte[])s.ReadSlice(typeof(byte), 7);
                 ITimeout = s.ReadInt32(8);
                 s.ReadMapF(9, (k, v) => { Context[(string)k] = (string)v; });
                 s.ReadMapF(10, (k, v) => { Status[(string)k] = (string)v; });

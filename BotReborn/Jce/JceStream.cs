@@ -388,10 +388,10 @@ namespace BotReborn.Jce
             }
         }
 
-        public object ReadObject<T>(int tag)
+        public object ReadObject(Type type,int tag)
         {
             object obj;
-            switch (typeof(T))
+            switch (type)
             {
                 case var t when typeof(byte) == t:
                     obj = (byte)ReadByte(tag);
@@ -418,7 +418,7 @@ namespace BotReborn.Jce
                     obj = ReadString(tag);
                     break;
                 case var t when t.GetInterfaces().Contains(typeof(IJceStruct)):
-                    var s = Activator.CreateInstance<T>();
+                    var s = Activator.CreateInstance(type);
                     t?.GetMethod("ReadFrom")?.Invoke(s, new object[] {this});
                     obj = s;
                     break;
@@ -429,9 +429,9 @@ namespace BotReborn.Jce
             return obj;
         }
 
-        public IEnumerable ReadSlice<T>(int tag)
+        public IEnumerable ReadSlice(Type type,int tag)
         {
-            var list = new List<T>();
+            var list = new List<object>();
             if (!SkipToTag(tag))
             {
                 return null;
@@ -442,7 +442,7 @@ namespace BotReborn.Jce
                 var l = ReadInt32(0);
                 for (int i = 0; i < l; i++)
                 {
-                    list.Add((T)ReadObject<T>(0));
+                    list.Add(ReadObject(type,0));
                 }
                 return list;
             }
