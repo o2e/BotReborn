@@ -60,6 +60,10 @@ namespace BotReborn.Jce
                 r.ReadMapF(0, (k, v) =>
                 {
                     Map[(string)k] = new Dictionary<string, byte[]>();
+                    foreach (var (key, value) in (Dictionary<string, byte[]>)v)
+                    {
+                        Map[(string)k][key] = value;
+                    }
                 });
             }
         }
@@ -94,33 +98,31 @@ namespace BotReborn.Jce
 
             public void ReadFrom(JceStream r)
             {
-                UploadList = new FileStorageServerInfo[] { };
-                PicDownloadList = new FileStorageServerInfo[] { };
-                GPicDownloadList = new FileStorageServerInfo[] { };
-                QZoneProxyServiceList = new FileStorageServerInfo[] { };
-                UrlEncodeServiceList = new FileStorageServerInfo[] { };
-                VipEmotionList = new FileStorageServerInfo[] { };
-                C2CPicDownList = new FileStorageServerInfo[] { };
                 BigDataChannel = new BigDataChannel();
-                r.ReadSlice(typeof(FileStorageServerInfo[]), 0);
-                r.ReadSlice(typeof(FileStorageServerInfo[]), 1);
-                r.ReadSlice(typeof(FileStorageServerInfo[]), 2);
-                r.ReadSlice(typeof(FileStorageServerInfo[]), 3);
-                r.ReadSlice(typeof(FileStorageServerInfo[]), 4);
-                r.ReadSlice(typeof(BigDataChannel), 5);
-                r.ReadSlice(typeof(FileStorageServerInfo[]), 6);
-                r.ReadSlice(typeof(FileStorageServerInfo[]), 7);
+                UploadList = (FileStorageServerInfo[])r.ReadSlice(typeof(FileStorageServerInfo[]), 0);
+                PicDownloadList = (FileStorageServerInfo[])r.ReadSlice(typeof(FileStorageServerInfo[]), 1);
+                GPicDownloadList = (FileStorageServerInfo[])r.ReadSlice(typeof(FileStorageServerInfo[]), 2);
+                QZoneProxyServiceList = (FileStorageServerInfo[])r.ReadSlice(typeof(FileStorageServerInfo[]), 3);
+                UrlEncodeServiceList = (FileStorageServerInfo[])r.ReadSlice(typeof(FileStorageServerInfo[]), 4);
+                r.ReadJceStruct(BigDataChannel, 5);
+                VipEmotionList = (FileStorageServerInfo[])r.ReadSlice(typeof(FileStorageServerInfo[]), 6);
+                C2CPicDownList = (FileStorageServerInfo[])r.ReadSlice(typeof(FileStorageServerInfo[]), 7);
                 PttList = (byte[])r.ReadAny(10);
             }
         }
 
-        public class FileStorageServerInfo
+        public class FileStorageServerInfo : IJceStruct
         {
             [JceId(1)] public string Server;
             [JceId(2)] public int Port;
+            public void ReadFrom(JceStream r)
+            {
+                Server = r.ReadString(1);
+                Port = r.ReadInt32(2);
+            }
         }
 
-        public class BigDataChannel
+        public class BigDataChannel : IJceStruct
         {
             [JceId(0)] public BigDataIPList[] IPLists;
             [JceId(1)] public byte[] SigSession;
@@ -128,20 +130,42 @@ namespace BotReborn.Jce
             [JceId(3)] public long SigUin;
             [JceId(4)] public int ConnectFlag;
             [JceId(5)] public byte[] PbBuf;
+            public void ReadFrom(JceStream r)
+            {
+                IPLists = (BigDataIPList[])r.ReadSlice(typeof(BigDataIPList[]), 0);
+                SigSession = (byte[])r.ReadAny(1);
+                KeySession = (byte[])r.ReadAny(2);
+                SigUin = r.ReadInt64(3);
+                ConnectFlag = r.ReadInt32(4);
+                PbBuf = (byte[])r.ReadAny(5);
+            }
         }
 
-        public class BigDataIPList
+        public class BigDataIPList : IJceStruct
         {
             [JceId(0)] public long ServiceType;
             [JceId(1)] public BigDataIPInfo[] IPList;
             [JceId(3)] public long FragmentSize;
+
+            public void ReadFrom(JceStream r)
+            {
+                ServiceType = r.ReadInt64(0);
+                IPList = (BigDataIPInfo[])r.ReadSlice(typeof(BigDataIPInfo[]), 1);
+                FragmentSize = r.ReadInt64(3);
+            }
         }
 
-        public class BigDataIPInfo
+        public class BigDataIPInfo : IJceStruct
         {
             [JceId(0)] public long Type;
             [JceId(1)] public string Server;
-            [JceId(2)] public string Port;
+            [JceId(2)] public long Port;
+            public void ReadFrom(JceStream r)
+            {
+                Type = r.ReadInt64(0);
+                Server = r.ReadString(1);
+                Port = r.ReadInt64(2);
+            }
         }
 
         public class SvcReqRegister : IJceStruct
