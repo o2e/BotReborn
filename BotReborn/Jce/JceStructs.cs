@@ -56,11 +56,18 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r) => throw new NotImplementedException();
         }
 
-        public class SsoServerInfo
+        public class SsoServerInfo : IJceStruct
         {
             [JceId(1)] public string Server;
             [JceId(2)] public int Port;
             [JceId(8)] public string Location;
+
+            public void ReadFrom(JceStream r)
+            {
+                Server = r.ReadString(1);
+                Port = r.ReadInt32(2);
+                Location = r.ReadString(8);
+            }
         }
 
         public class FileStoragePushFSSvcList

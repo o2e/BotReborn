@@ -30,7 +30,7 @@ namespace BotReborn.Jce
         {
         }
 
-        
+
 
         private int ReadHead(out HeadData head)
         {
@@ -157,7 +157,7 @@ namespace BotReborn.Jce
 
         private ushort ReadUInt16()
         {
-            
+
             return BinaryPrimitives.ReadUInt16BigEndian(this.ReadBytes(2));
         }
 
@@ -297,7 +297,7 @@ namespace BotReborn.Jce
 
             return head.Type switch
             {
-                6 => Encoding.UTF8.GetString(this.ReadBytes( ReadByte())),
+                6 => Encoding.UTF8.GetString(this.ReadBytes(ReadByte())),
                 7 => Encoding.UTF8.GetString(this.ReadBytes(ReadInt32())),
                 _ => string.Empty
             };
@@ -388,7 +388,7 @@ namespace BotReborn.Jce
             }
         }
 
-        public object ReadObject(Type type,int tag)
+        public object ReadObject(Type type, int tag)
         {
             object obj;
             switch (type)
@@ -419,7 +419,7 @@ namespace BotReborn.Jce
                     break;
                 case var t when t.GetInterfaces().Contains(typeof(IJceStruct)):
                     var s = Activator.CreateInstance(type);
-                    t?.GetMethod("ReadFrom")?.Invoke(s, new object[] {this});
+                    t?.GetMethod("ReadFrom")?.Invoke(s, new object[] { this });
                     obj = s;
                     break;
                 default:
@@ -429,7 +429,7 @@ namespace BotReborn.Jce
             return obj;
         }
 
-        public IEnumerable ReadSlice(Type type,int tag)
+        public IEnumerable ReadSlice(Type type, int tag)
         {
             var list = new List<object>();
             if (!SkipToTag(tag))
@@ -442,11 +442,11 @@ namespace BotReborn.Jce
                 var l = ReadInt32(0);
                 for (int i = 0; i < l; i++)
                 {
-                    list.Add(ReadObject(type,0));
+                    list.Add(ReadObject(type, 0));
                 }
                 return list;
             }
-            if (head.Type==13)
+            if (head.Type == 13)
             {
                 ReadHead(out _);
                 var arr = this.ReadBytes(ReadInt32(0));
@@ -692,7 +692,7 @@ namespace BotReborn.Jce
             {
                 var attribute = fieldInfo.GetCustomAttribute<JceIdAttribute>();
                 var value = fieldInfo.GetValue(s);
-                WriteObject(value??Activator.CreateInstance(fieldInfo.FieldType), attribute!.Id);
+                WriteObject(value ?? Activator.CreateInstance(fieldInfo.FieldType), attribute!.Id);
             }
 
         }
