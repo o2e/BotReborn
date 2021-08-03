@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -166,7 +167,7 @@ namespace BotReborn
             rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp)[4..]));
             data.ReadFrom(new JceStream(rspPkt.SBuffer));
             var stream = new JceStream(data.Map["HttpServerListRes"][1..]);
-            var servers = (List<JceStructs.SsoServerInfo>)stream.ReadSlice(typeof(JceStructs.SsoServerInfo), 2);
+            var servers = stream.ReadSlice(typeof(JceStructs.SsoServerInfo), 2).Cast<JceStructs.SsoServerInfo>().ToList();
             var addresses = new List<IPEndPoint>(servers.Count);
             foreach (var s in servers)
             {
