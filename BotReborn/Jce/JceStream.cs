@@ -30,20 +30,7 @@ namespace BotReborn.Jce
         {
         }
 
-        private void WriteHead(byte t, int tag)
-        {
-            if (tag < 15)
-            {
-                var b = (byte)((tag << 4) | t);
-                base.WriteByte(b);
-            }
-            else
-            {
-                var b = (byte)(0xF0 | t);
-                base.WriteByte(b);
-                base.WriteByte((byte)tag);
-            }
-        }
+        
 
         private int ReadHead(out HeadData head)
         {
@@ -60,6 +47,14 @@ namespace BotReborn.Jce
             }
             head = h;
             return 1;
+        }
+
+        private int PeekHead(out HeadData head)
+        {
+            var length = ReadHead(out var h);
+            Seek(-length, SeekOrigin.Current);
+            head = h;
+            return length;
         }
 
         private void Skip(int count)
@@ -137,7 +132,7 @@ namespace BotReborn.Jce
         {
             while (true)
             {
-                var l = ReadHead(out var head);
+                var l = PeekHead(out var head);
                 if (tag <= head.Tag || head.Type == 11)
                 {
                     return tag == head.Tag;
@@ -221,7 +216,7 @@ namespace BotReborn.Jce
                 12 => 0,
                 0 => (short)ReadByte(),
                 1 => (short)ReadUInt16(),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => 0
             };
         }
 
@@ -460,6 +455,21 @@ namespace BotReborn.Jce
             throw new Exception();
         }
 
+
+        private void WriteHead(byte t, int tag)
+        {
+            if (tag < 15)
+            {
+                var b = (byte)((tag << 4) | t);
+                base.WriteByte(b);
+            }
+            else
+            {
+                var b = (byte)(0xF0 | t);
+                base.WriteByte(b);
+                base.WriteByte((byte)tag);
+            }
+        }
         public JceStream WriteByte(byte b, int tag)
         {
             if (b == 0)
