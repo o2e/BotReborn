@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace BotReborn.Jce
@@ -53,7 +54,14 @@ namespace BotReborn.Jce
         {
             [JceId(0)] public Dictionary<string, Dictionary<string, byte[]>> Map;
 
-            public void ReadFrom(JceStream r) => throw new NotImplementedException();
+            public void ReadFrom(JceStream r)
+            {
+                Map = new Dictionary<string, Dictionary<string, byte[]>>();
+                r.ReadMapF(0, (k, v) =>
+                {
+                    Map[(string)k] = new Dictionary<string, byte[]>();
+                });
+            }
         }
 
         public class SsoServerInfo : IJceStruct
@@ -70,7 +78,7 @@ namespace BotReborn.Jce
             }
         }
 
-        public class FileStoragePushFSSvcList
+        public class FileStoragePushFSSvcList : IJceStruct
         {
             [JceId(0)] public FileStorageServerInfo[] UploadList;
             [JceId(1)] public FileStorageServerInfo[] PicDownloadList;
@@ -78,11 +86,32 @@ namespace BotReborn.Jce
             [JceId(3)] public FileStorageServerInfo[] QZoneProxyServiceList;
             [JceId(4)] public FileStorageServerInfo[] UrlEncodeServiceList;
             [JceId(5)] public BigDataChannel BigDataChannel;
-            [JceId(6)] public FileStorageServerInfo VipEmotionList;
+            [JceId(6)] public FileStorageServerInfo[] VipEmotionList;
             [JceId(7)] public FileStorageServerInfo[] C2CPicDownList;
             // FmtIPInfo             *FmtIPInfo `jceId:"8"`
             // DomainIPChannel       *DomainIPChannel `jceId:"9"`
             [JceId(10)] public byte[] PttList;
+
+            public void ReadFrom(JceStream r)
+            {
+                UploadList = new FileStorageServerInfo[] { };
+                PicDownloadList = new FileStorageServerInfo[] { };
+                GPicDownloadList = new FileStorageServerInfo[] { };
+                QZoneProxyServiceList = new FileStorageServerInfo[] { };
+                UrlEncodeServiceList = new FileStorageServerInfo[] { };
+                VipEmotionList = new FileStorageServerInfo[] { };
+                C2CPicDownList = new FileStorageServerInfo[] { };
+                BigDataChannel = new BigDataChannel();
+                r.ReadSlice(typeof(FileStorageServerInfo[]), 0);
+                r.ReadSlice(typeof(FileStorageServerInfo[]), 1);
+                r.ReadSlice(typeof(FileStorageServerInfo[]), 2);
+                r.ReadSlice(typeof(FileStorageServerInfo[]), 3);
+                r.ReadSlice(typeof(FileStorageServerInfo[]), 4);
+                r.ReadSlice(typeof(BigDataChannel), 5);
+                r.ReadSlice(typeof(FileStorageServerInfo[]), 6);
+                r.ReadSlice(typeof(FileStorageServerInfo[]), 7);
+                PttList = (byte[])r.ReadAny(10);
+            }
         }
 
         public class FileStorageServerInfo
