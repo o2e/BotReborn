@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BotReborn
 {
-    public partial class Client
+    public partial class OicqClient
     {
         public bool TryLogin(out LoginResponse resp)
         {

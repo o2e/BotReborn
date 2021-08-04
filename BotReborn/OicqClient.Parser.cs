@@ -11,7 +11,7 @@ using BotReborn.Protos;
 
 namespace BotReborn
 {
-    partial class Client
+    partial class OicqClient
     {
         public PrivateMessage ParsePrivateMessage(Message m)
         {

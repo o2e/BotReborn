@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BotReborn
 {
-    partial class Client
+    partial class OicqClient
     {
         public (ushort, byte[]) BuildLoginPacket()
         {

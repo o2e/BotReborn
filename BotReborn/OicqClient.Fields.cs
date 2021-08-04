@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BotReborn
 {
-    public partial class Client
+    public partial class OicqClient
     {
         private EncryptECDH _ecdh;
         private Random _random;

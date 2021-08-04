@@ -16,9 +16,9 @@ using BotReborn.Crypto;
 [assembly: InternalsVisibleTo("BotReborn.Tests")]
 namespace BotReborn
 {
-    public partial class Client
+    public partial class OicqClient
     {
-        private Client(Uin uin)
+        private OicqClient(Uin uin)
         {
             _ecdh = new EncryptECDH();
             _httpClient = new HttpClient()
@@ -89,13 +89,13 @@ namespace BotReborn
             _random.NextBytes(RandomKey);
         }
 
-        public Client(Uin uin , string password) : this(uin)
+        public OicqClient(Uin uin , string password) : this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);
         }
 
-        public Client(Uin uin, ILogger logger, byte[] passwordMd5) : this(uin)
+        public OicqClient(Uin uin, ILogger logger, byte[] passwordMd5) : this(uin)
         {
             PasswordMd5 = passwordMd5;
         }

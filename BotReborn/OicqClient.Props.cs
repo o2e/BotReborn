@@ -11,7 +11,7 @@ using Version = System.Version;
 
 namespace BotReborn
 {
-    public partial class Client
+    public partial class OicqClient
     {
         public Uin Uin { get; set; }
         public byte[] PasswordMd5 { get; set; }
