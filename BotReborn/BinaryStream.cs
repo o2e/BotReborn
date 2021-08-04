@@ -23,6 +23,24 @@ namespace BotReborn
         {
         }
 
+        public new BinaryStream Write(byte[] buffer, int offset, int count)
+        {
+            base.Write(buffer, offset, count);
+            return this;
+        }
+
+        public new BinaryStream Write(ReadOnlySpan<byte> buffer)
+        {
+            base.Write(buffer);
+            return this;
+        }
+
+        public new BinaryStream WriteByte(byte value)
+        {
+            base.WriteByte(value);
+            return this;
+        }
+
         public int ReadInt32()
         {
             return BinaryPrimitives.ReadInt32BigEndian(this.ReadBytes(4));
@@ -44,23 +62,26 @@ namespace BotReborn
         }
 
 
-        public void WriteHexString(string s)
+        public BinaryStream WriteHexString(string s)
         {
             var b = Utils.ConvertHexStringToByteArray(s);
             Write(b);
+            return this;
         }
 
-        public void WriteUInt32(uint n)
+        public BinaryStream WriteUInt32(uint n)
         {
             Span<byte> span = stackalloc byte[4];
             BinaryPrimitives.WriteUInt32BigEndian(span, n);
             Write(span);
+            return this;
         }
 
-        public void WriteUInt16(ushort n)
+        public BinaryStream WriteUInt16(ushort n)
         {
             Span<byte> span = stackalloc byte[2];
             BinaryPrimitives.WriteUInt16BigEndian(span, n);
+            return this;
         }
 
         public BinaryStream WriteIntLvPacket(int offset, byte[] data)
@@ -74,6 +95,13 @@ namespace BotReborn
         {
             var tea = new Tea(key);
             Write(tea.Encrypt(data));
+            return this;
+        }
+
+        public BinaryStream WriteBytesShort(byte[] data)
+        {
+            WriteUInt16((ushort)data.Length);
+            Write(data);
             return this;
         }
     }
