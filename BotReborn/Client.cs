@@ -87,7 +87,6 @@ namespace BotReborn
             //cli.TCP.PlannedDisconnect(cli.plannedDisconnect)
             //cli.TCP.UnexpectedDisconnect(cli.unexpectedDisconnect)
             _random.NextBytes(RandomKey);
-            //Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
         }
 
         public Client(Uin uin , string password) : this(uin)

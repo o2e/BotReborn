@@ -18,6 +18,7 @@ namespace BotReborn.Tests
             var uin = int.Parse((Environment.GetEnvironmentVariable("BotAccount",EnvironmentVariableTarget.User)??Environment.GetEnvironmentVariable("BotAccount"))!);
             var passwd = Environment.GetEnvironmentVariable("BotPassword", EnvironmentVariableTarget.User)??Environment.GetEnvironmentVariable("BotPassword");
             var client = new Client(uin, passwd);
+            client.Login();
         }
 
         [Fact]
