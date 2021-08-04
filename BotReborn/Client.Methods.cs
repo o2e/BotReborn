@@ -119,6 +119,7 @@ namespace BotReborn
 
         public List<IPEndPoint> GetSSOAddresses()
         {
+            Logger.LogInformation("Fetching server list...");
             var protocol = DeviceInfo.Default.Protocol;
             var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
             var payload = new JceStream()
@@ -160,7 +161,7 @@ namespace BotReborn
             }
             catch (Exception e)
             {
-                Logger.LogError(e.Message);
+                Logger.LogTrace(e, e.Message);
                 throw new Exception("Unable to fetch server list.");
             }
             var rspPkt = new JceStructs.RequestPacket();
@@ -178,6 +179,7 @@ namespace BotReborn
                     addresses.Add(new IPEndPoint(server, 80));
                 }
             }
+            Logger.LogInformation("Success fetch: {0} entries.", addresses.Count);
             return addresses;
         }
 
