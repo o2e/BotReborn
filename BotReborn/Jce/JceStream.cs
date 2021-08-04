@@ -183,7 +183,7 @@ namespace BotReborn.Jce
             return BinaryPrimitives.ReadDoubleBigEndian(span);
         }
 
-        public int ReadByte(int tag)
+        public byte ReadByte(int tag)
         {
             if (!SkipToTag(tag))
             {
@@ -194,7 +194,7 @@ namespace BotReborn.Jce
             return head.Type switch
             {
                 12 => 0,
-                0 => ReadByte(),
+                0 => Convert.ToByte(ReadByte()),
                 _ => 0
             };
         }

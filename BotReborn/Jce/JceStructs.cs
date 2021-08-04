@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using BotReborn.Protos;
+
+using static BotReborn.Jce.JceStructs;
+
 namespace BotReborn.Jce
 {
     public interface IJceStruct
@@ -168,9 +172,8 @@ namespace BotReborn.Jce
             }
         }
 
-        public class SvcReqRegister : IJceStruct
+        public class SvcReqRegister
         {
-
             [JceId(0)] public long Uin;
             [JceId(1)] public long Bid;
             [JceId(2)] public byte ConnType;
@@ -209,11 +212,9 @@ namespace BotReborn.Jce
             [JceId(36)] public byte SetMute;
             [JceId(38)] public long ExtOnlineStatus;
             [JceId(39)] public int BatteryStatus;
-
-            public void ReadFrom(JceStream r) => throw new NotImplementedException();
         }
 
-        public class SvcRespRegister
+        public class SvcRespRegister : IJceStruct
         {
             [JceId(0)] public long Uin;
             [JceId(1)] public long Bid;
@@ -235,6 +236,27 @@ namespace BotReborn.Jce
             [JceId(17)] public long ExtOnlineStatus;
             [JceId(18)] public long ClientBatteryGetInterval;
             [JceId(19)] public long ClientAutoStatusInterval;
+            public void ReadFrom(JceStream r)
+            {
+                Uin = r.ReadInt64(0);
+                Bid = r.ReadInt64(1);
+                ReplyCode = r.ReadByte(2);
+                Result = r.ReadString(3);
+                ServerTime = r.ReadInt64(4);
+                LogQQ = r.ReadByte(5);
+                NeedKik = r.ReadByte(6);
+                UpdateFlag = r.ReadByte(7);
+                Timestamp = r.ReadInt64(8);
+                CrashFlag = r.ReadByte(9);
+                ClientIp = r.ReadString(10);
+                ClientPort = r.ReadInt32(11);
+                HelloInterval = r.ReadInt32(12);
+                LargeSeq = r.ReadInt32(13);
+                LargeSeqUpdate = r.ReadByte(14);
+                D769RspBody = (byte[])r.ReadAny(15);
+                Status = r.ReadInt32(16);
+                ExtOnlineStatus = r.ReadInt64(17);
+            }
         }
 
         public class SvcReqRegisterNew : IJceStruct
@@ -285,7 +307,7 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r) => throw new NotImplementedException();
         }
 
-        public class SvcRespParam
+        public class SvcRespParam : IJceStruct
         {
             [JceId(0)] public int PCStat;
             [JceId(1)] public int IsSupportC2CRoamMsg;
@@ -296,9 +318,21 @@ namespace BotReborn.Jce
             [JceId(6)] public long RoamFlag;
             [JceId(7)] public OnlineInfo[] OnlineInfos;
             [JceId(8)] public int PCClientType;
+            public void ReadFrom(JceStream r)
+            {
+                PCStat = r.ReadInt32(0);
+                IsSupportC2CRoamMsg = r.ReadInt32(1);
+                IsSupportDataLine = r.ReadInt32(2);
+                IsSupportPrintable = r.ReadInt32(3);
+                IsSupportViewPCFile = r.ReadInt32(4);
+                PcVersion = r.ReadInt32(5);
+                RoamFlag = r.ReadInt64(6);
+                OnlineInfos = (OnlineInfo[])r.ReadSlice(typeof(OnlineInfo[]), 7);
+                PCClientType = r.ReadInt32(8);
+            }
         }
 
-        public class RequestPushNotify
+        public class RequestPushNotify : IJceStruct
         {
             [JceId(0)] public long Uin;
             [JceId(1)] public byte Type;
@@ -309,9 +343,21 @@ namespace BotReborn.Jce
             [JceId(6)] public int UserActive;
             [JceId(7)] public int GeneralFlag;
             [JceId(8)] public long BindedUin;
+            public void ReadFrom(JceStream r)
+            {
+                Uin = r.ReadInt64(0);
+                Type = r.ReadByte(1);
+                Service = r.ReadString(2);
+                Cmd = r.ReadString(3);
+                NotifyCookie = (byte[])r.ReadAny(4);
+                MsgType = r.ReadInt32(5);
+                UserActive = r.ReadInt32(6);
+                GeneralFlag = r.ReadInt32(7);
+                BindedUin = r.ReadInt64(8);
+            }
         }
 
-        public class OnlineInfo
+        public class OnlineInfo : IJceStruct
         {
             [JceId(0)] public int InstanceId;
             [JceId(1)] public int ClientType;
@@ -319,9 +365,18 @@ namespace BotReborn.Jce
             [JceId(3)] public int PlatformId;
             [JceId(4)] public string SubPlatform;
             [JceId(5)] public long UClientType;
+            public void ReadFrom(JceStream r)
+            {
+                InstanceId = r.ReadInt32(0);
+                ClientType = r.ReadInt32(1);
+                OnlineStatus = r.ReadInt32(2);
+                PlatformId = r.ReadInt32(3);
+                SubPlatform = Convert.ToString((byte[])r.ReadAny(4));
+                UClientType = r.ReadInt64(5);
+            }
         }
 
-        public class SvcReqMSFLoginNotify
+        public class SvcReqMSFLoginNotify : IJceStruct
         {
             [JceId(0)] public long AppId;
             [JceId(1)] public byte Status;
@@ -332,18 +387,39 @@ namespace BotReborn.Jce
             [JceId(6)] public long ProductType;
             [JceId(7)] public long ClientType;
             [JceId(8)] public InstanceInfo[] InstanceList;
+            public void ReadFrom(JceStream r)
+            {
+
+                AppId = r.ReadInt64(0);
+                Status = r.ReadByte(1);
+                Tablet = r.ReadByte(2);
+                Platform = r.ReadInt64(3);
+                Title = r.ReadString(4);
+                Info = r.ReadString(5);
+                ProductType = r.ReadInt64(6);
+                ClientType = r.ReadInt64(7);
+                InstanceList = (InstanceInfo[])r.ReadSlice(typeof(InstanceInfo[]), 8);
+            }
         }
 
-        public class InstanceInfo
+        public class InstanceInfo : IJceStruct
         {
             [JceId(0)] public int AppId;
             [JceId(1)] public byte Tablet;
             [JceId(2)] public long Platform;
             [JceId(3)] public long ProductType;
             [JceId(4)] public long ClientType;
+            public void ReadFrom(JceStream r)
+            {
+                AppId = r.ReadInt32(0);
+                Tablet = r.ReadByte(1);
+                Platform = r.ReadInt64(2);
+                ProductType = r.ReadInt64(3);
+                ClientType = r.ReadInt64(4);
+            }
         }
 
-        public class PushMessageInfo
+        public class PushMessageInfo : IJceStruct
         {
             [JceId(0)] public long FromUin;
             [JceId(1)] public long MsgTime;
@@ -361,6 +437,19 @@ namespace BotReborn.Jce
             [JceId(15)] public byte[] RemarkOfSender;
             [JceId(16)] public string FromMobile;
             [JceId(17)] public string FromName;
+            public void ReadFrom(JceStream r)
+            {
+                FromUin = r.ReadInt64(0);
+                MsgTime = r.ReadInt64(1);
+                MsgType = r.ReadInt16(2);
+                MsgSeq = r.ReadInt16(3);
+                Msg = r.ReadString(4);
+                VMsg = (byte[])r.ReadAny(6);
+                MsgCookies = (byte[])r.ReadAny(8);
+                MsgUid = r.ReadInt64(10);
+                FromMobile = r.ReadString(16);
+                FromName = r.ReadString(17);
+            }
         }
 
         public class SvcRespPushMsg : IJceStruct
@@ -387,7 +476,7 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r) => throw new NotImplementedException();
         }
 
-        public class SvcDevLoginInfo
+        public class SvcDevLoginInfo : IJceStruct
         {
             public long AppId;
             public byte[] Guid;
@@ -399,6 +488,19 @@ namespace BotReborn.Jce
             public long TerType;
             public long ProductType;
             public long CanBeKicked;
+            public void ReadFrom(JceStream r)
+            {
+                AppId = r.ReadInt64(0);
+                Guid = (byte[])r.ReadSlice(typeof(byte[]), 1);
+                LoginTime = r.ReadInt64(2);
+                LoginPlatform = r.ReadInt64(3);
+                LoginLocation = r.ReadString(4);
+                DeviceName = r.ReadString(5);
+                DeviceTypeInfo = r.ReadString(6);
+                TerType = r.ReadInt64(8);
+                ProductType = r.ReadInt64(9);
+                CanBeKicked = r.ReadInt64(10);
+            }
         }
 
         public class DelMsgInfo : IJceStruct
@@ -443,7 +545,7 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r) => throw new NotImplementedException();
         }
 
-        public class FriendInfo
+        public class FriendInfo : IJceStruct
         {
             [JceId(0)] public long FriendUin;
             [JceId(1)] public byte GroupId;
@@ -501,6 +603,19 @@ namespace BotReborn.Jce
             [JceId(54)] public byte NewLoverDiamondFlag;
             [JceId(55)] public byte[] ExtSnsFrdData;
             [JceId(56)] public byte[] MutualMarkData;
+            public void ReadFrom(JceStream r)
+            {
+                FriendUin = r.ReadInt64(0);
+                GroupId = r.ReadByte(1);
+                FaceId = r.ReadInt16(2);
+                Remark = r.ReadString(3);
+                Status = r.ReadByte(5);
+                MemberLevel = r.ReadByte(6);
+                Nick = r.ReadString(14);
+                Network = r.ReadByte(20);
+                NetworkType = r.ReadInt32(24);
+                CardID = (byte[])r.ReadObject(typeof(byte[]), 41);
+            }
         }
 
         public class TroopListRequest : IJceStruct
@@ -518,7 +633,7 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r) => throw new NotImplementedException();
         }
 
-        public class TroopNumber
+        public class TroopNumber : IJceStruct
         {
             [JceId(0)] public long GroupUin;
             [JceId(1)] public long GroupCode;
@@ -555,6 +670,16 @@ namespace BotReborn.Jce
             [JceId(32)] public long GuildSubType;
             [JceId(33)] public long CmdUinRingtoneID;
             [JceId(34)] public long CmdUinFlagEx2;
+            public void ReadFrom(JceStream r)
+            {
+                GroupUin = r.ReadInt64(0);
+                GroupCode = r.ReadInt64(1);
+                GroupName = r.ReadString(4);
+                GroupMemo = r.ReadString(5);
+                MemberNum = r.ReadInt64(19);
+                GroupOwnerUin = r.ReadInt64(23);
+                MaxGroupMemberNum = r.ReadInt64(29);
+            }
         }
 
         public class TroopMemberListRequest : IJceStruct
@@ -571,7 +696,7 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r) => throw new NotImplementedException();
         }
 
-        public class TroopMemberInfo
+        public class TroopMemberInfo : IJceStruct
         {
             [JceId(0)] public long MemberUin;
             [JceId(1)] public short FaceId;
@@ -608,6 +733,22 @@ namespace BotReborn.Jce
             [JceId(37)] public long BigClubFlag;
             [JceId(38)] public long Nameplate;
             [JceId(39)] public byte[] GroupHonor;
+            public void ReadFrom(JceStream r)
+            {
+                MemberUin = r.ReadInt64(0);
+                FaceId = r.ReadInt16(1);
+                Gender = r.ReadByte(3);
+                Nick = r.ReadString(4);
+                ShowName = r.ReadString(6);
+                Name = r.ReadString(8);
+                AutoRemark = r.ReadString(13);
+                MemberLevel = r.ReadInt64(14);
+                JoinTime = r.ReadInt64(15);
+                LastSpeakTime = r.ReadInt64(16);
+                Flag = r.ReadInt64(18);
+                SpecialTitle = r.ReadString(23);
+                SpecialTitleExpireTime = r.ReadInt64(24);
+            }
         }
 
         public class ModifyGroupCardRequest : IJceStruct
