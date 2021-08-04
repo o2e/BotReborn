@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
+
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -12,7 +13,7 @@ namespace BotReborn.Crypto
 {
 
 
-    public class EncryptECDH
+    public class EncryptECDH : IEncryptMethod
     {
         // ReSharper disable once UnusedMember.Local
         private const string ServerPublicKey =
@@ -76,5 +77,21 @@ namespace BotReborn.Crypto
         {
             _ = GenerateKey(null);
         }
+
+        public byte[] DoEncrypt(byte[] b1, byte[] b2)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteByte(0x02);
+            binaryStream.WriteByte(0x01);
+            binaryStream.Write(b2);
+            binaryStream.WriteUInt16(0x01_31);
+            binaryStream.WriteUInt16(PublicKeyVersion);
+            binaryStream.WriteUInt16((ushort)PublicKey.Length);
+            binaryStream.Write(PublicKey);
+            binaryStream.EncryptAndWrite(ShareKey, b1);
+            return binaryStream.ToArray();
+        }
+
+        public byte Id() => 0x87;
     }
 }

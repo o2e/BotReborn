@@ -6,11 +6,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+
+using BotReborn.Crypto;
+
 using Org.BouncyCastle.Crypto;
 
 namespace BotReborn
 {
-    public class BinaryStream:MemoryStream
+    public class BinaryStream : MemoryStream
     {
         public BinaryStream()
         {
@@ -50,14 +53,27 @@ namespace BotReborn
         public void WriteUInt32(uint n)
         {
             Span<byte> span = stackalloc byte[4];
-            BinaryPrimitives.WriteUInt32BigEndian(span,n);
+            BinaryPrimitives.WriteUInt32BigEndian(span, n);
             Write(span);
+        }
+
+        public void WriteUInt16(ushort n)
+        {
+            Span<byte> span = stackalloc byte[2];
+            BinaryPrimitives.WriteUInt16BigEndian(span, n);
         }
 
         public BinaryStream WriteIntLvPacket(int offset, byte[] data)
         {
             WriteUInt32((uint)(data.Length + offset));
             Write(data);
+            return this;
+        }
+
+        public BinaryStream EncryptAndWrite(byte[] key, byte[] data)
+        {
+            var tea = new Tea(key);
+            Write(tea.Encrypt(data));
             return this;
         }
     }
