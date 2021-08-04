@@ -240,19 +240,19 @@ namespace BotReborn.Jce
             {
                 Uin = r.ReadInt64(0);
                 Bid = r.ReadInt64(1);
-                ReplyCode = r.ReadByte(2);
+                ReplyCode = (byte)r.ReadByte(2);
                 Result = r.ReadString(3);
                 ServerTime = r.ReadInt64(4);
-                LogQQ = r.ReadByte(5);
-                NeedKik = r.ReadByte(6);
-                UpdateFlag = r.ReadByte(7);
+                LogQQ = (byte)r.ReadByte(5);
+                NeedKik = (byte)r.ReadByte(6);
+                UpdateFlag = (byte)r.ReadByte(7);
                 Timestamp = r.ReadInt64(8);
-                CrashFlag = r.ReadByte(9);
+                CrashFlag = (byte)r.ReadByte(9);
                 ClientIp = r.ReadString(10);
                 ClientPort = r.ReadInt32(11);
                 HelloInterval = r.ReadInt32(12);
                 LargeSeq = r.ReadInt32(13);
-                LargeSeqUpdate = r.ReadByte(14);
+                LargeSeqUpdate = (byte)r.ReadByte(14);
                 D769RspBody = (byte[])r.ReadAny(15);
                 Status = r.ReadInt32(16);
                 ExtOnlineStatus = r.ReadInt64(17);
@@ -346,7 +346,7 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r)
             {
                 Uin = r.ReadInt64(0);
-                Type = r.ReadByte(1);
+                Type = (byte)r.ReadByte(1);
                 Service = r.ReadString(2);
                 Cmd = r.ReadString(3);
                 NotifyCookie = (byte[])r.ReadAny(4);
@@ -391,8 +391,8 @@ namespace BotReborn.Jce
             {
 
                 AppId = r.ReadInt64(0);
-                Status = r.ReadByte(1);
-                Tablet = r.ReadByte(2);
+                Status = (byte)r.ReadByte(1);
+                Tablet = (byte)r.ReadByte(2);
                 Platform = r.ReadInt64(3);
                 Title = r.ReadString(4);
                 Info = r.ReadString(5);
@@ -412,7 +412,7 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r)
             {
                 AppId = r.ReadInt32(0);
-                Tablet = r.ReadByte(1);
+                Tablet = (byte)r.ReadByte(1);
                 Platform = r.ReadInt64(2);
                 ProductType = r.ReadInt64(3);
                 ClientType = r.ReadInt64(4);
@@ -606,13 +606,13 @@ namespace BotReborn.Jce
             public void ReadFrom(JceStream r)
             {
                 FriendUin = r.ReadInt64(0);
-                GroupId = r.ReadByte(1);
+                GroupId = (byte)r.ReadByte(1);
                 FaceId = r.ReadInt16(2);
                 Remark = r.ReadString(3);
-                Status = r.ReadByte(5);
-                MemberLevel = r.ReadByte(6);
+                Status = (byte)r.ReadByte(5);
+                MemberLevel = (byte)r.ReadByte(6);
                 Nick = r.ReadString(14);
-                Network = r.ReadByte(20);
+                Network = (byte)r.ReadByte(20);
                 NetworkType = r.ReadInt32(24);
                 CardID = (byte[])r.ReadObject(typeof(byte[]), 41);
             }
@@ -737,7 +737,7 @@ namespace BotReborn.Jce
             {
                 MemberUin = r.ReadInt64(0);
                 FaceId = r.ReadInt16(1);
-                Gender = r.ReadByte(3);
+                Gender = (byte)r.ReadByte(3);
                 Nick = r.ReadString(4);
                 ShowName = r.ReadString(6);
                 Name = r.ReadString(8);

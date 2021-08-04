@@ -183,7 +183,7 @@ namespace BotReborn.Jce
             return BinaryPrimitives.ReadDoubleBigEndian(span);
         }
 
-        public byte ReadByte(int tag)
+        public int ReadByte(int tag)
         {
             if (!SkipToTag(tag))
             {
@@ -194,7 +194,7 @@ namespace BotReborn.Jce
             return head.Type switch
             {
                 12 => 0,
-                0 => Convert.ToByte(ReadByte()),
+                0 => ReadByte(),
                 _ => 0
             };
         }
@@ -395,7 +395,9 @@ namespace BotReborn.Jce
             {
                 case var t when t.GetInterfaces().Contains(typeof(IJceStruct)):
                     var s = Activator.CreateInstance(type);
+                    ReadHead(out _);
                     t?.GetMethod("ReadFrom")?.Invoke(s, new object[] { this });
+                    SkipToStructEnd();
                     obj = s;
                     break;
                 case var t when typeof(byte) == t:

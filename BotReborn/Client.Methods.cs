@@ -165,7 +165,8 @@ namespace BotReborn
             }
             var rspPkt = new JceStructs.RequestPacket();
             var data = new JceStructs.RequestDataVersion3();
-            rspPkt.ReadFrom(new JceStream(tea.Decrypt(rsp)[4..]));
+            var dec = tea.Decrypt(rsp)[4..];
+            rspPkt.ReadFrom(new JceStream(dec));
             data.ReadFrom(new JceStream(rspPkt.SBuffer));
             var stream = new JceStream(data.Map["HttpServerListRes"][1..]);
             var servers = stream.ReadSlice(typeof(JceStructs.SsoServerInfo), 2).Cast<JceStructs.SsoServerInfo>().ToList();
