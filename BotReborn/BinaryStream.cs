@@ -81,6 +81,7 @@ namespace BotReborn
         {
             Span<byte> span = stackalloc byte[2];
             BinaryPrimitives.WriteUInt16BigEndian(span, n);
+            Write(span);
             return this;
         }
 
