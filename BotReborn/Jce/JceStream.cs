@@ -393,6 +393,11 @@ namespace BotReborn.Jce
             object obj;
             switch (type)
             {
+                case var t when t.GetInterfaces().Contains(typeof(IJceStruct)):
+                    var s = Activator.CreateInstance(type);
+                    t?.GetMethod("ReadFrom")?.Invoke(s, new object[] { this });
+                    obj = s;
+                    break;
                 case var t when typeof(byte) == t:
                     obj = (byte)ReadByte(tag);
                     break;
@@ -416,11 +421,6 @@ namespace BotReborn.Jce
                     break;
                 case var t when typeof(string) == t:
                     obj = ReadString(tag);
-                    break;
-                case var t when t.GetInterfaces().Contains(typeof(IJceStruct)):
-                    var s = Activator.CreateInstance(type);
-                    t?.GetMethod("ReadFrom")?.Invoke(s, new object[] { this });
-                    obj = s;
                     break;
                 default:
                     obj = null;

@@ -13,6 +13,7 @@ using BotReborn.Jce;
 using BotReborn.Model;
 using BotReborn.Model.Exception;
 using BotReborn.Packets;
+
 using Microsoft.Extensions.Logging;
 
 namespace BotReborn
@@ -171,7 +172,7 @@ namespace BotReborn
             var addresses = new List<IPEndPoint>(servers.Count);
             foreach (var s in servers)
             {
-                if (IPAddress.TryParse(s.Server,out var server))
+                if (IPAddress.TryParse(s.Server, out var server))
                 {
                     addresses.Add(new IPEndPoint(server, 80));
                 }
@@ -225,9 +226,9 @@ namespace BotReborn
                 // 	continue
                 // }
                 var payload = pkt.Payload;
-                if (pkt.Flag2==2)
+                if (pkt.Flag2 == 2)
                 {
-                    
+
                 }
             }
         }
