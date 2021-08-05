@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BotReborn
 {
@@ -295,139 +298,480 @@ namespace BotReborn
             return binaryStream.ToArray();
         }
 
-        public static byte[] T106()
+        public static byte[] T106(uint uin, uint salt, uint appId, uint ssoVer, byte[] passwordMd5, bool guidAvailable, byte[] guid, byte[] tgtgtKey, uint wtf)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x106);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var a = new byte[4];
+                BinaryPrimitives.WriteUInt32BigEndian(a, salt != 0 ? salt : uin);
+                var c = passwordMd5.ToList();
+                c.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+                c.AddRange(a);
+                var key = MD5.Create().ComputeHash(c.ToArray());
+                var s = new BinaryStream();
+                s.EncryptAndWrite(key, new Func<byte[]>(() =>
+                 {
+                     var b = new BinaryStream();
+                     b.WriteUInt16(4)
+                         .WriteUInt32((uint)new Random().Next())
+                         .WriteUInt32(ssoVer)
+                         .WriteUInt32(16) // appId
+                         .WriteUInt32(0);  // app client version
+
+                     if (uin == 0)
+                     {
+                         b.WriteUInt64(salt);
+                     }
+                     else
+                     {
+                         b.WriteUInt64(uin);
+                     }
+
+                     b.WriteUInt32((uint)DateTimeOffset.UtcNow.Millisecond)
+                         .Write(new byte[] { 0x00, 0x00, 0x00, 0x00 }) // fake ip
+                         .WriteByte(0x01)
+                         .Write(passwordMd5)
+                         .Write(tgtgtKey)
+                         .WriteUInt32(wtf)
+                         .WriteBool(guidAvailable);
+
+                     if (guid.Length == 0)
+                     {
+                         for (int i = 0; i < 4; i++)
+                         {
+                             b.WriteUInt32((uint)new Random().Next());
+                         }
+                     }
+                     else
+                     {
+                         b.Write(guid);
+                     }
+
+                     b.WriteUInt32(appId)
+                         .WriteUInt32(1); // password login
+
+                     b.WriteBytesShort(Encoding.UTF8.GetBytes(uin.ToString("D10")))
+                         .WriteUInt16(0);
+                     return b.ToArray();
+                 })());
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T107()
+        public static byte[] T107(ushort picType)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x107);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(picType)
+                    .WriteByte(0x00)
+                    .WriteUInt16(0)
+                    .WriteByte(0x01);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T108()
+        public static byte[] T108(string imei)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x108);
+            binaryStream.WriteStringShort(imei);
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T109()
+        public static byte[] T109(byte[] androidId)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x109);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(MD5.Create().ComputeHash(androidId));
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T116()
+        public static byte[] T116(uint miscBitmap, uint subSigMap)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x116);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteByte(0x00)
+                    .WriteUInt32(miscBitmap)
+                    .WriteUInt32(subSigMap)
+                    .WriteByte(0x01)
+                    .WriteUInt32(1600000226); // app id list
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T124()
+        public static byte[] T124(byte[] osType, byte[] osVersion, byte[] simInfo, byte[] apn)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x124);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteTlvLimitedSize(osType, 16)
+                    .WriteTlvLimitedSize(osVersion, 16)
+                    .WriteUInt16(2) // Network type wifi
+                    .WriteTlvLimitedSize(simInfo, 16)
+                    .WriteTlvLimitedSize(new byte[0], 16)
+                    .WriteTlvLimitedSize(apn, 16);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T128()
+        public static byte[] T128(bool isGuidFromFileNull, bool isGuidAvailable, bool isGuidChanged, uint guidFlag, byte[] buildModel, byte[] guid, byte[] buildBrand)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x128);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(0)
+                    .WriteBool(isGuidFromFileNull)
+                    .WriteBool(isGuidAvailable)
+                    .WriteBool(isGuidChanged)
+                    .WriteUInt32(guidFlag)
+                    .WriteTlvLimitedSize(buildModel, 32)
+                    .WriteTlvLimitedSize(guid, 16)
+                    .WriteTlvLimitedSize(buildBrand, 16);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T141()
+        public static byte[] T141(byte[] simInfo, byte[] apn)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x141);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(1)
+                    .WriteBytesShort(simInfo)
+                    .WriteUInt16(2) // network type wifi
+                    .WriteBytesShort(apn);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T142()
+        public static byte[] T142(string apkId)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x142);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(0)
+                    .WriteTlvLimitedSize(Encoding.UTF8.GetBytes(apkId), 32);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T143()
+        public static byte[] T143(byte[] arr)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x143);
+            binaryStream.WriteBytesShort(arr);
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T144()
+        public static byte[] T144(byte[] imei, byte[] devInfo, byte[] osType, byte[] osVersion, byte[] simInfo, byte[] apn,
+                                    bool isGuidFromFileNull, bool isGuidAvailable, bool isGuidChanged,
+                                    uint guidFlag,
+                                    byte[] buildModel, byte[] guid, byte[] buildBrand, byte[] tgtgtKey)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x144);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.EncryptAndWrite(tgtgtKey, new Func<byte[]>(() =>
+                 {
+                     var b = new BinaryStream();
+                     b.WriteUInt16(5)
+                         .Write(T109(imei))
+                         .Write(T52D(devInfo))
+                         .Write(T124(osType, osVersion, simInfo, apn))
+                         .Write(T128(isGuidFromFileNull, isGuidAvailable, isGuidChanged, guidFlag, buildModel, guid,
+                             buildBrand))
+                         .Write(T16E(buildModel));
+
+                     return b.ToArray();
+                 })());
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T145()
+        public static byte[] T145(byte[] guid)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x145);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(guid);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T147()
+        public static byte[] T147(uint appId, byte[] apkVersionName, byte[] apkSignatureMd5)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x147);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(appId)
+                    .WriteTlvLimitedSize(apkVersionName, 32)
+                    .WriteTlvLimitedSize(apkSignatureMd5, 32);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T154()
+        public static byte[] T154(ushort seq)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x154);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(seq);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T166()
+        public static byte[] T166(byte imageType)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x166);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteByte(imageType);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T174()
+        public static byte[] T174(byte[] data)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x174);
+            binaryStream.WriteBytesShort(data);
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T177()
+        public static byte[] T177(uint buildTime, string sdkVersion)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x177);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteByte(0x01)
+                    .WriteUInt32(buildTime)
+                    .WriteStringShort(sdkVersion);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T187()
+        public static byte[] T187(byte[] macAddress)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x187);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(MD5.Create().ComputeHash(macAddress));
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T188()
+        public static byte[] T188(byte[] androidId)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x188);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(MD5.Create().ComputeHash(androidId));
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T191()
+        public static byte[] T191(byte k)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x191);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteByte(k);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T193()
+        public static byte[] T193(string ticket)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x193);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(Encoding.UTF8.GetBytes(ticket));
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T194()
+        public static byte[] T194(byte[] imsiMd5)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x194);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(imsiMd5);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
         public static byte[] T197()
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x197);
+            binaryStream.WriteBytesShort(new byte[] { 0 });
+
+            return binaryStream.ToArray();
         }
 
         public static byte[] T198()
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x198);
+            binaryStream.WriteBytesShort(new byte[] { 0 });
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T202()
+        public static byte[] T202(byte[] wifiBssid, byte[] wifiSsid)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x202);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteTlvLimitedSize(wifiBssid, 16)
+                    .WriteTlvLimitedSize(wifiSsid, 32);
+
+                return s.ToArray();
+            })());
+
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T400()
+        public static byte[] T400(byte[] g, long uin, byte[] guid, byte[] dpwd, long j2, long j3, byte[] randSeed)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x400);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteBytesShort(new Func<byte[]>(() =>
+                {
+                    var b = new BinaryStream();
+                    b.WriteUInt16(1) // version
+                        .WriteUInt64((ulong)uin)
+                        .Write(guid)
+                        .Write(dpwd)
+                        .WriteUInt32((uint)j2)
+                        .WriteUInt32((uint)j3)
+                        .WriteUInt32((uint)DateTimeOffset.UtcNow.Second)
+                        .Write(randSeed);
+
+                    return b.ToArray();
+                })());
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T401()
+        public static byte[] T401(byte[] d)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x401);
+            binaryStream.WriteBytesShort(d);
+
+            return binaryStream.ToArray();
         }
 
         public static byte[] T511(IEnumerable<string> domains)
@@ -452,7 +796,18 @@ namespace BotReborn
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        if (int.TryParse(str[(index1 + 1)..index2], out var i))
+                        {
+                            var z2 = (1048576 & i) > 0;
+                            var z = (i & 134217728) > 0;
+                            var b = z2 ? (byte)1 : (byte)0;
+                            if (z)
+                            {
+                                b |= 2;
+                            }
+                            s.WriteByte(b);
+                            s.WriteStringShort(str[(index2 + 1)..]);
+                        }
                     }
                 });
 

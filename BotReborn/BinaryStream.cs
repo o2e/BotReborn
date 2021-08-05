@@ -85,6 +85,20 @@ namespace BotReborn
             return this;
         }
 
+        public BinaryStream WriteUInt64(ulong n)
+        {
+            Span<byte> span = stackalloc byte[8];
+            BinaryPrimitives.WriteUInt64BigEndian(span, n);
+            Write(span);
+            return this;
+        }
+
+        public BinaryStream WriteBool(bool b)
+        {
+            WriteByte(b ? (byte)0x01 : (byte)0x00);
+            return this;
+        }
+
         public BinaryStream WriteIntLvPacket(int offset, byte[] data)
         {
             WriteUInt32((uint)(data.Length + offset));
@@ -109,6 +123,17 @@ namespace BotReborn
         public BinaryStream WriteStringShort(string str)
         {
             WriteBytesShort(Encoding.UTF8.GetBytes(str));
+            return this;
+        }
+
+        public BinaryStream WriteTlvLimitedSize(byte[] data, int limit)
+        {
+            if (data.Length <= limit)
+            {
+                WriteBytesShort(data);
+                return this;
+            }
+            WriteBytesShort(data[..limit]);
             return this;
         }
     }
