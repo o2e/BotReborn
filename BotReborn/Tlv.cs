@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BotReborn
 {
@@ -249,19 +251,48 @@ namespace BotReborn
             return binaryStream.ToArray();
         }
 
-        public static byte[] T52D()
+        public static byte[] T52D(byte[] devInfo)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x52d);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(devInfo);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T100()
+        public static byte[] T100(uint ssoVersion, uint protocol, uint mainSigMap)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x100);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(1)
+                    .WriteUInt32(ssoVersion)
+                    .WriteUInt32(16)
+                    .WriteUInt32(protocol)
+                    .WriteUInt32(0)          // App client version
+                    .WriteUInt32(mainSigMap); // 34869472
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T104()
+        public static byte[] T104(byte[] data)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x104);
+            binaryStream.WriteBytesShort(data);
+
+            return binaryStream.ToArray();
         }
 
         public static byte[] T106()
@@ -399,29 +430,97 @@ namespace BotReborn
             var binaryStream = new BinaryStream(); return binaryStream.ToArray();
         }
 
-        public static byte[] T511()
+        public static byte[] T511(IEnumerable<string> domains)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var list = domains.ToList().Where(_ => _ != "").ToList();
+
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x511);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16((ushort)list.Count);
+                list.ForEach(str =>
+                {
+                    var index1 = str.IndexOf("(", StringComparison.Ordinal);
+                    var index2 = str.IndexOf(")", StringComparison.Ordinal);
+
+                    if (index1 != 0 || index2 <= 0)
+                    {
+                        s.WriteByte(0x01)
+                            .WriteStringShort(str);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                });
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
         public static byte[] T516()
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x516);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(0);
+
+                return s.ToArray();
+            })());
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T521()
+        public static byte[] T521(uint i)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x521);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(i)
+                    .WriteUInt16(0);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T525()
+        public static byte[] T525(byte[] t536)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x525);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(1)
+                    .Write(t536);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
 
-        public static byte[] T536()
+        public static byte[] T536(byte[] loginExtraData)
         {
-            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x536);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(loginExtraData);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
         }
     }
 }
