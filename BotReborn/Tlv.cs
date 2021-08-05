@@ -9,7 +9,16 @@ namespace BotReborn
 {
     public static class Tlv
     {
-        const uint GuidFlag = 16777216;
+        public static uint GuidFlag
+        {
+            get
+            {
+                uint flag = 0;
+                flag |= 1 << 24 & 0xFF000000;
+                flag |= 0 << 8 & 0xFF00;
+                return flag;
+            }
+        }
 
         public static byte[] T1(Uin uin, byte[] ip)
         {
