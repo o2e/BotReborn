@@ -39,7 +39,9 @@ namespace BotReborn
             var req = BuildOicqRequestPacket(Uin, 0x0801, _ecdh, RandomKey, w =>
             {
                 w.WriteUInt16(9)
-                    .WriteUInt16(AllowSlider ? (ushort)0x17 : (ushort)0x16);
+                    .WriteUInt16(AllowSlider ? (ushort)0x17 : (ushort)0x16)
+                    .Write(Tlv.T18(16, Uin))
+                    .Write(Tlv.T1(Uin, DeviceInfo.IpAddress));
 
             });
             throw new NotImplementedException();

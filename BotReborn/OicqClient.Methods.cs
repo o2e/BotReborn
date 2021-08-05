@@ -67,7 +67,7 @@ namespace BotReborn
         public List<IPEndPoint> GetSSOAddresses()
         {
             Logger.LogInformation("Fetching server list...");
-            var protocol = DeviceInfo.Default.Protocol;
+            var protocol = DeviceInfo.Protocol;
             var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
             var payload = new JceStream()
                 .WriteInt64(0, 1)
@@ -76,7 +76,7 @@ namespace BotReborn
                 .WriteString("00000", 4)
                 .WriteInt32(100, 5)
                 .WriteInt32((int)protocol.AppId, 6)
-                .WriteString(DeviceInfo.Default.IMEI, 7)
+                .WriteString(DeviceInfo.IMEI, 7)
                 .WriteInt64(0, 8)
                 .WriteInt64(0, 9)
                 .WriteInt64(0, 10)
