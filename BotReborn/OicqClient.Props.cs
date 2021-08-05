@@ -16,7 +16,8 @@ namespace BotReborn
         public Uin Uin { get; set; }
         public byte[] PasswordMd5 { get; set; }
         public bool AllowSlider { get; set; }
-        public ILogger Logger { get; set; }
+        public ILogger<OicqClient> Logger { get; set; }
+        public Statistics Statistics { get; set; }
 
         public string NickName { get; set; }
         public ushort Age { get; set; }

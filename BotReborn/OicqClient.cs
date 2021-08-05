@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using BotReborn.Crypto;
+using Microsoft.Extensions.Logging.Abstractions;
 
 [assembly: InternalsVisibleTo("BotReborn.Tests")]
 namespace BotReborn
@@ -27,6 +28,7 @@ namespace BotReborn
             };
             _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
+            Logger = new NullLogger<OicqClient>();
 
             Uin = uin;
             AllowSlider = true;

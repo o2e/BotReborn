@@ -52,54 +52,6 @@ namespace BotReborn
             throw new LoginException("Unknown exception!");
         }
 
-        public void Connect()
-        {
-            if (CurrentServerIndex == Servers.Count) CurrentServerIndex = 0;
-            while (CanRetry)
-            {
-                var ip = Servers[CurrentServerIndex];
-                Logger.LogInformation("Connect to server: {0}", ip);
-                try
-                {
-                    TcpClient = new TcpClient();
-                    TcpClient.Connect(ip);
-                    ConnectTime = DateTime.Now;
-                }
-                catch (Exception e)
-                {
-                    Logger.LogTrace(e, e.Message);
-                    Logger.LogError("Connect failed.");
-                    RetryTimes++;
-                    CurrentServerIndex++;
-                }
-            }
-
-            if (!CanRetry)
-            {
-                throw new HttpListenerException();
-            }
-        }
-
-        public void Disconnect()
-        {
-            IsOnline = false;
-            TcpClient.Close();
-        }
-
-        public void QuickReconnect()
-        {
-            Disconnect();
-            Thread.Sleep(200);
-            try
-            {
-                Connect();
-            }
-            catch (Exception e)
-            {
-                Logger.LogTrace(e, e.Message);
-                Logger.LogError("Quick reconnect failed.");
-            }
-        }
 
         public void Release()
         {
@@ -150,10 +102,8 @@ namespace BotReborn
                 SBuffer = buf.GetBytes()
             };
             var tea = new Tea(key);
-            var req = pkt.GetBytes();
-            var tempData = new BinaryStream().WriteIntLvPacket(0, req).ToArray();
             var reqData =
-                tea.Encrypt(tempData);
+                tea.Encrypt(new BinaryStream().WriteIntLvPacket(0, pkt.GetBytes()).ToArray());
             byte[] rsp;
             try
             {
@@ -205,36 +155,7 @@ namespace BotReborn
             _heartbeatEnabled = false;
         }
 
-        private void StartNetLoop()
-        {
-            var stream = TcpClient.GetStream();
-            while (true)
-            {
-                var span = stream.ReadBytes(4);
-                var l = BinaryPrimitives.ReadInt32BigEndian(span);
-                var data = stream.ReadBytes(l - 4);
-                var pkt = Packet.ParseIncomingPacket(data.ToArray(), SigInfo.D2Key);
-                // if err != nil {
-                // 	c.Error("parse incoming packet error: %v", err)
-                // 	if errors.Is(err, packets.ErrSessionExpired) || errors.Is(err, packets.ErrPacketDropped) {
-                // 		c.Disconnect()
-                // 		go c.dispatchDisconnectEvent(&ClientDisconnectedEvent{Message: "session expired"})
-                // 		continue
-                // 	}
-                // 	errCount++
-                // 	if errCount > 2 {
-                // 		go c.quickReconnect()
-                // 		continue
-                // 	}
-                // 	continue
-                // }
-                var payload = pkt.Payload;
-                if (pkt.Flag2 == 2)
-                {
-
-                }
-            }
-        }
+        
 
         public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
         public int NextPacketSeq() => Interlocked.Add(ref _requestPacketRequestId, 2);
