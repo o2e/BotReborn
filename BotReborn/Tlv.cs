@@ -23,7 +23,7 @@ namespace BotReborn
                     .Write(ip)
                     .WriteUInt16(0);
                return stream.ToArray();
-           }).Invoke());
+           })());
 
             return b.ToArray();
         }
@@ -44,7 +44,7 @@ namespace BotReborn
                     .WriteUInt32(hint)
                     .WriteUInt16(0);
                 return binaryStream.ToArray();
-            }).Invoke());
+            })());
 
             return stream.ToArray();
         }
@@ -62,57 +62,366 @@ namespace BotReborn
                     .WriteByte(0)
                     .WriteUInt32(0);
                 return stream.ToArray();
-            }).Invoke());
+            })());
 
             return binaryStream.ToArray();
         }
 
-        public static byte[] T1F() => throw new NotImplementedException();
-        public static byte[] T2() => throw new NotImplementedException();
-        public static byte[] T8() => throw new NotImplementedException();
-        public static byte[] T10A() => throw new NotImplementedException();
-        public static byte[] T16() => throw new NotImplementedException();
-        public static byte[] T16A() => throw new NotImplementedException();
-        public static byte[] T16E() => throw new NotImplementedException();
-        public static byte[] T17A() => throw new NotImplementedException();
-        public static byte[] T17C() => throw new NotImplementedException();
-        public static byte[] T18() => throw new NotImplementedException();
-        public static byte[] T33() => throw new NotImplementedException();
-        public static byte[] T35() => throw new NotImplementedException();
-        public static byte[] T52D() => throw new NotImplementedException();
-        public static byte[] T100() => throw new NotImplementedException();
-        public static byte[] T104() => throw new NotImplementedException();
-        public static byte[] T106() => throw new NotImplementedException();
-        public static byte[] T107() => throw new NotImplementedException();
-        public static byte[] T108() => throw new NotImplementedException();
-        public static byte[] T109() => throw new NotImplementedException();
-        public static byte[] T116() => throw new NotImplementedException();
-        public static byte[] T124() => throw new NotImplementedException();
-        public static byte[] T128() => throw new NotImplementedException();
-        public static byte[] T141() => throw new NotImplementedException();
-        public static byte[] T142() => throw new NotImplementedException();
-        public static byte[] T143() => throw new NotImplementedException();
-        public static byte[] T144() => throw new NotImplementedException();
-        public static byte[] T145() => throw new NotImplementedException();
-        public static byte[] T147() => throw new NotImplementedException();
-        public static byte[] T154() => throw new NotImplementedException();
-        public static byte[] T166() => throw new NotImplementedException();
-        public static byte[] T174() => throw new NotImplementedException();
-        public static byte[] T177() => throw new NotImplementedException();
-        public static byte[] T187() => throw new NotImplementedException();
-        public static byte[] T188() => throw new NotImplementedException();
-        public static byte[] T191() => throw new NotImplementedException();
-        public static byte[] T193() => throw new NotImplementedException();
-        public static byte[] T194() => throw new NotImplementedException();
-        public static byte[] T197() => throw new NotImplementedException();
-        public static byte[] T198() => throw new NotImplementedException();
-        public static byte[] T202() => throw new NotImplementedException();
-        public static byte[] T400() => throw new NotImplementedException();
-        public static byte[] T401() => throw new NotImplementedException();
-        public static byte[] T511() => throw new NotImplementedException();
-        public static byte[] T516() => throw new NotImplementedException();
-        public static byte[] T521() => throw new NotImplementedException();
-        public static byte[] T525() => throw new NotImplementedException();
-        public static byte[] T536() => throw new NotImplementedException();
+        public static byte[] T1F(bool isRoot, byte[] osName, byte[] osVersion, byte[] simOperatorName, byte[] apn, ushort networkType)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x1F);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteByte(isRoot ? Convert.ToByte(1) : Convert.ToByte(0))
+                    .WriteBytesShort(osName)
+                    .WriteBytesShort(osVersion)
+                    .WriteUInt16(networkType)
+                    .WriteBytesShort(simOperatorName)
+                    .WriteBytesShort(new byte[0])
+                    .WriteBytesShort(apn);
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T2(string result, byte[] sign)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x02);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(0)
+                    .WriteStringShort(result)
+                    .WriteBytesShort(sign);
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T8(uint localId)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x8);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(0)
+                    .WriteUInt32(localId)
+                    .WriteUInt16(0);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T10A(byte[] arr)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x10A)
+                .WriteBytesShort(arr);
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T16(uint ssoVersion, uint appId, uint subAppId, byte[] guid, byte[] apkId, byte[] apkVersionName, byte[] apkSign)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x16);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(ssoVersion)
+                    .WriteUInt32(appId)
+                    .WriteUInt32(subAppId)
+                    .Write(guid)
+                    .WriteBytesShort(apkId)
+                    .WriteBytesShort(apkVersionName)
+                    .WriteBytesShort(apkSign);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T16A(byte[] arr)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x16A)
+                .WriteBytesShort(arr);
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T16E(byte[] buildModel)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x16e);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(buildModel);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T17A(int value)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x17a);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32((uint)value);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T17C(string code)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x17c);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteStringShort(code);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T18(uint appId, uint uin)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x18);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt16(1)
+                    .WriteUInt32(1536)
+                    .WriteUInt32(appId)
+                    .WriteUInt32(0)
+                    .WriteUInt32(uin)
+                    .WriteUInt16(0)
+                    .WriteUInt16(0);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T33(byte[] guid)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x33);
+            binaryStream.WriteBytesShort(guid);
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T35(uint productType)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteUInt16(0x35);
+            binaryStream.WriteBytesShort(new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(productType);
+
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] T52D()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T100()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T104()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T106()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T107()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T108()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T109()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T116()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T124()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T128()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T141()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T142()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T143()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T144()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T145()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T147()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T154()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T166()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T174()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T177()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T187()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T188()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T191()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T193()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T194()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T197()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T198()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T202()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T400()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T401()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T511()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T516()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T521()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T525()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
+
+        public static byte[] T536()
+        {
+            var binaryStream = new BinaryStream(); return binaryStream.ToArray();
+        }
     }
 }

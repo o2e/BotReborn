@@ -105,5 +105,11 @@ namespace BotReborn
             Write(data);
             return this;
         }
+
+        public BinaryStream WriteStringShort(string str)
+        {
+            WriteBytesShort(Encoding.UTF8.GetBytes(str));
+            return this;
+        }
     }
 }
