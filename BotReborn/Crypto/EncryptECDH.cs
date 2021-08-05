@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
-using BotReborn.Packets;
+
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -14,7 +14,7 @@ namespace BotReborn.Crypto
 {
 
 
-    public class EncryptECDH
+    public class EncryptECDH : IEncryptMethod
     {
         // ReSharper disable once UnusedMember.Local
         private const string ServerPublicKey =
@@ -77,40 +77,6 @@ namespace BotReborn.Crypto
         public void GenerateKey()
         {
             _ = GenerateKey(null);
-        }
-
-        public byte[] DecryptPayload(byte[] random, byte[] sessionKey, IncomingPacket incomingPacket)
-        {
-            var stream = new BinaryStream(incomingPacket.Payload);
-            if (stream.ReadByte() != 2)
-            {
-                throw new Exception("Unknown flag.");
-            }
-
-            stream.ReadBytes(2);
-            stream.ReadBytes(2);
-            stream.ReadUInt16();
-            stream.ReadUInt16();
-            stream.ReadInt32();
-            var encryptType = stream.ReadUInt16();
-            stream.ReadByte();
-            if (encryptType == 0)
-            {
-                var d = stream.ReadBytes((int)(stream.Length - stream.Position - 1));
-                return new Tea(this.ShareKey).Decrypt(d);
-            }
-
-            if (encryptType == 3)
-            {
-                var d = stream.ReadBytes((int)(stream.Length - stream.Position - 1));
-                return new Tea(sessionKey).Decrypt(d);
-            }
-
-            if (encryptType==4)
-            {
-                throw new NotImplementedException();
-            }
-            throw new Exception("Unknown flag.");
         }
     }
 }
