@@ -155,6 +155,105 @@ namespace BotReborn.Packets
             throw new Exception("Unknown flag.");
         }
 
-        internal static object BuildSsoPacket(ushort seq, int v1, int v2, string v3, string v4, byte[] vs1, byte[] vs2, byte[] vs3, byte[] vs4) => throw new NotImplementedException();
+        public static byte[] BuildSsoPacket(ushort seq, uint appID, uint subAppID, string commandName, string imei, byte[] extData, byte[] outPacketSessionId, byte[] body, byte[] ksid)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteIntLvPacket(4, new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(seq)
+                    .WriteUInt32(appID)
+                    .WriteUInt32(subAppID)
+                    .Write(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 });
+
+                if (extData.Length == 0 || extData.Length == 4)
+                {
+                    s.WriteUInt32(0x04);
+                }
+                else
+                {
+                    s.WriteUInt32((uint)(extData.Length + 4))
+                        .Write(extData);
+
+                }
+
+                s.WriteString(commandName);
+
+                s.WriteIntLvPacket(4, new Func<byte[]>(() =>
+                {
+                    var b = new BinaryStream();
+                    b.Write(outPacketSessionId);
+                    return b.ToArray();
+                })());
+                s.WriteString(imei)
+                    .WriteUInt32(0x04)
+                    .WriteUInt16((ushort)(ksid.Length + 2))
+                    .Write(ksid)
+                    .WriteUInt32(0x04);
+                return s.ToArray();
+            })());
+
+            binaryStream.WriteIntLvPacket(4, new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.Write(body);
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] BuildLoginPacket(Uin uin, byte bodyType, byte[] key, byte[] body, byte[] extraData)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteIntLvPacket(4, new Func<byte[]>(() =>
+            {
+                var s = new BinaryStream();
+                s.WriteUInt32(0x00_00_00_0A)
+                    .WriteByte(bodyType);
+                s.WriteIntLvPacket(4, new Func<byte[]>(() =>
+                {
+                    var b = new BinaryStream();
+                    b.Write(extraData);
+                    return b.ToArray();
+                })());
+                s.WriteByte(0x00)
+                    .WriteString(uin.ToString());
+                if (key.Length == 0)
+                {
+                    s.Write(body);
+                }
+                else
+                {
+                    s.EncryptAndWrite(key, body);
+                }
+                return s.ToArray();
+            })());
+
+            return binaryStream.ToArray();
+        }
+
+        public static byte[] BuildOicqRequestPacket(long uin, ushort commandId, EncryptEcdh ecdh, byte[] key, Action<BinaryStream> bodyFunc)
+        {
+            var stream = new BinaryStream();
+            bodyFunc.Invoke(stream);
+            var body = ecdh.DoEncrypt(stream.ToArray(), key);
+            var result = new BinaryStream();
+            result.WriteByte(0x02)
+                .WriteUInt16((ushort)(27 + 2 + body.Length))
+                .WriteUInt16(8001)
+                .WriteUInt16(commandId)
+                .WriteUInt16(1)
+                .WriteUInt32((uint)uin)
+                .WriteByte(3)
+                .WriteByte(ecdh.Id)
+                .WriteByte(0)
+                .WriteUInt32(2)
+                .WriteUInt32(0)
+                .WriteUInt32(0)
+                .Write(body)
+                .WriteByte(0x03);
+            return result.ToArray();
+        }
     }
 }

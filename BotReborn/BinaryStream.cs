@@ -130,6 +130,14 @@ namespace BotReborn
             return this;
         }
 
+        public BinaryStream WriteString(string s)
+        {
+            var b = Encoding.UTF8.GetBytes(s);
+            WriteUInt32((uint)(b.Length + 4));
+            Write(b);
+            return this;
+        }
+
         public BinaryStream WriteIntLvPacket(int offset, byte[] data)
         {
             WriteUInt32((uint)(data.Length + offset));
