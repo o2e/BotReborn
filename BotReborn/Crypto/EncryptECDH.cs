@@ -14,23 +14,24 @@ namespace BotReborn.Crypto
 {
 
 
-    public class EncryptECDH : IEncryptMethod
+    public class EncryptEcdh
     {
         // ReSharper disable once UnusedMember.Local
         private const string ServerPublicKey =
             "04EBCA94D733E399B2DB96EACDD3F69A8BB0F74224E2B44E3357812211D2E62EFBC91BB553098E25E33A799ADC7F76FEB208DA7C6522CDB0719A305180CC54A82E";
         private readonly HttpClient _httpClient;
+        public byte Id => 0x87;
 
         public byte[] ShareKey { get; set; }
         public byte[] PublicKey { get; set; }
         public byte[] PrivateKey { get; set; }
         public ushort PublicKeyVersion { get; private set; }
-        public EncryptECDH()
+        public EncryptEcdh()
         {
             _httpClient = new HttpClient();
             PublicKeyVersion = 1;
         }
-        ~EncryptECDH()
+        ~EncryptEcdh()
         {
             _httpClient.Dispose();
         }
@@ -77,6 +78,20 @@ namespace BotReborn.Crypto
         public void GenerateKey()
         {
             _ = GenerateKey(null);
+        }
+
+        public byte[] DoEncrypt(byte[] b1, byte[] b2)
+        {
+            var binaryStream = new BinaryStream();
+            binaryStream.WriteByte(0x02);
+            binaryStream.WriteByte(0x01);
+            binaryStream.Write(b2);
+            binaryStream.WriteUInt16(0x01_31);
+            binaryStream.WriteUInt16(PublicKeyVersion);
+            binaryStream.WriteUInt16((ushort)PublicKey.Length);
+            binaryStream.Write(PublicKey);
+            binaryStream.EncryptAndWrite(ShareKey, b1);
+            return binaryStream.ToArray();
         }
     }
 }

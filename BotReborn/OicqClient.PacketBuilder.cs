@@ -10,11 +10,11 @@ namespace BotReborn
 {
     partial class OicqClient
     {
-        public byte[] BuildOicqRequestPacket(long uin, ushort commandId, IEncryptMethod method, byte[] key, Action<BinaryStream> bodyFunc)
+        public byte[] BuildOicqRequestPacket(long uin, ushort commandId, EncryptEcdh ecdh, byte[] key, Action<BinaryStream> bodyFunc)
         {
             var stream = new BinaryStream();
             bodyFunc.Invoke(stream);
-            var body = method.DoEncrypt(stream.ToArray(), key);
+            var body = ecdh.DoEncrypt(stream.ToArray(), key);
             var result = new BinaryStream();
             result.WriteByte(0x02)
                 .WriteUInt16((ushort)(27 + 2 + body.Length))
@@ -23,7 +23,7 @@ namespace BotReborn
                 .WriteUInt16(1)
                 .WriteUInt32((uint)uin)
                 .WriteByte(3)
-                .WriteByte(method.Id())
+                .WriteByte(ecdh.Id)
                 .WriteByte(0)
                 .WriteUInt32(2)
                 .WriteUInt32(0)
@@ -36,7 +36,7 @@ namespace BotReborn
         public (ushort, byte[]) BuildLoginPacket()
         {
             var seq = NextSeq();
-            var req = BuildOicqRequestPacket((long)Uin, 0x0801, new EncryptECDH(), RandomKey, w =>
+            var req = BuildOicqRequestPacket((long)Uin, 0x0801, _ecdh, RandomKey, w =>
             {
                 w.WriteUInt16(9)
                     .WriteUInt16(AllowSlider ? (ushort)0x17 : (ushort)0x16);

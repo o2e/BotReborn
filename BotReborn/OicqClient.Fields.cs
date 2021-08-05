@@ -8,7 +8,7 @@ namespace BotReborn
 {
     public partial class OicqClient
     {
-        private EncryptECDH _ecdh;
+        private EncryptEcdh _ecdh;
         private Random _random;
         private MD5 _md5;
         private HttpClient _httpClient;

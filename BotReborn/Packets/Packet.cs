@@ -120,7 +120,7 @@ namespace BotReborn.Packets
             return ParseSsoFrame(decrypted.ToArray(), flag2);
         }
 
-        public static byte[] DecryptPayload(EncryptECDH ecdh , byte[] payload, byte[] random, byte[] sessionKey)
+        public static byte[] DecryptPayload(EncryptEcdh ecdh , byte[] payload, byte[] random, byte[] sessionKey)
         {
             var stream = new BinaryStream(payload);
             if (stream.ReadByte() != 2)
