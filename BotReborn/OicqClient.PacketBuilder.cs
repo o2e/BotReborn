@@ -5,38 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BotReborn.Crypto;
+using BotReborn.Packets;
 
 namespace BotReborn
 {
     partial class OicqClient
     {
-        public byte[] BuildOicqRequestPacket(long uin, ushort commandId, EncryptEcdh ecdh, byte[] key, Action<BinaryStream> bodyFunc)
-        {
-            var stream = new BinaryStream();
-            bodyFunc.Invoke(stream);
-            var body = ecdh.DoEncrypt(stream.ToArray(), key);
-            var result = new BinaryStream();
-            result.WriteByte(0x02)
-                .WriteUInt16((ushort)(27 + 2 + body.Length))
-                .WriteUInt16(8001)
-                .WriteUInt16(commandId)
-                .WriteUInt16(1)
-                .WriteUInt32((uint)uin)
-                .WriteByte(3)
-                .WriteByte(ecdh.Id)
-                .WriteByte(0)
-                .WriteUInt32(2)
-                .WriteUInt32(0)
-                .WriteUInt32(0)
-                .Write(body)
-                .WriteByte(0x03);
-            return result.ToArray();
-        }
-
-        public (ushort, byte[]) BuildLoginPacket()
+        public byte[] BuildLoginPacket(out ushort seqOut)
         {
             var seq = NextSeq();
-            var req = BuildOicqRequestPacket(Uin, 0x0801, _ecdh, RandomKey, w =>
+            var req = Packet.BuildOicqRequestPacket(Uin, 0x0801, _ecdh, RandomKey, w =>
             {
                 w.WriteUInt16(9)
                     .WriteUInt16(AllowSlider ? (ushort)0x17 : (ushort)0x16)
@@ -91,32 +69,34 @@ namespace BotReborn
                     .Write(Tlv.T521(0))
                     .Write(Tlv.T525(Tlv.T536(new byte[] { 0x01, 0x00 })));
             });
+            var sso = Packet.BuildSsoPacket(seq, Version.AppId, Version.SubAppId, "wtlogin.login", DeviceInfo.IMEI, Array.Empty<byte>(), OutGoingPacketSessionId, req, Ksid);
+            var packet = Packet.BuildLoginPacket(0, 2, new byte[16], sso, new byte[0]);
 
-
-            throw new NotImplementedException();
+            seqOut = seq;
+            return packet;
         }
 
-        public (ushort, byte[]) BuildDeviceLockLoginPacket()
+        public byte[] BuildDeviceLockLoginPacket(out ushort seqOut)
         {
             throw new NotImplementedException();
         }
 
-        public (ushort, byte[]) BuildQrCodeFetchRequestPacket()
+        public byte[] BuildQrCodeFetchRequestPacket(out ushort seqOut)
         {
             throw new NotImplementedException();
         }
 
-        public (ushort, byte[]) BuildQrCodeResultQueryRequestPacket()
+        public byte[] BuildQrCodeResultQueryRequestPacket(out ushort seqOut)
         {
             throw new NotImplementedException();
         }
 
-        public (ushort, byte[]) BuildQrCodeLoginPacket()
+        public byte[] BuildQrCodeLoginPacket(out ushort seqOut)
         {
             throw new NotImplementedException();
         }
 
-        public (ushort, byte[]) BuildCaptchaPacket()
+        public byte[] BuildCaptchaPacket(out ushort seqOut)
         {
             throw new NotImplementedException();
         }
