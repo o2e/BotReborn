@@ -78,7 +78,22 @@ namespace BotReborn
 
         public byte[] BuildDeviceLockLoginPacket(out ushort seqOut)
         {
-            throw new NotImplementedException();
+            var seq = NextSeq();
+
+            var req = Packet.BuildOicqRequestPacket(Uin, 0x0810, _ecdh, RandomKey, w =>
+             {
+                 w.WriteUInt16(20)
+                     .WriteUInt16(4)
+                     .Write(Tlv.T8(2052))
+                     .Write(Tlv.T104(T104))
+                     .Write(Tlv.T116(Version.MiscBitmap, Version.SubSigmap))
+                     .Write(Tlv.T401(G));
+             });
+            var sso = Packet.BuildSsoPacket(seq, Version.AppId, Version.SubAppId, "wtlogin.login", DeviceInfo.IMEI,
+                Array.Empty<byte>(), OutGoingPacketSessionId, req, Ksid);
+            var packet = Packet.BuildLoginPacket(Uin, 2, new byte[16], sso, new byte[0]);
+            seqOut = seq;
+            return packet;
         }
 
         public byte[] BuildQrCodeFetchRequestPacket(out ushort seqOut)

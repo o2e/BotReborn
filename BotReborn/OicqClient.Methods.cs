@@ -38,9 +38,17 @@ namespace BotReborn
             }
             catch (Exception e)
             {
-                Logger.LogTrace(e, e.Message);
-                Logger.LogError("Login failed.");
+                Logger.LogError(e, e.Message);
                 return null;
+            }
+
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, e.Message);
             }
 
 
