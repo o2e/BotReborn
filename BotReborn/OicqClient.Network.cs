@@ -16,30 +16,39 @@ namespace BotReborn
     {
         public void Connect()
         {
-            if (CurrentServerIndex == Servers.Count) CurrentServerIndex = 0;
-            while (CanRetry)
+            var ip = Servers[CurrentServerIndex];
+            Logger.LogInformation("Connect to server: {0}", ip);
+            try
             {
-                var ip = Servers[CurrentServerIndex];
-                Logger.LogInformation("Connect to server: {0}", ip);
-                try
+                TcpClient.Connect(ip);
+                ConnectTime = DateTime.Now;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError("connect server {0} error : {1}", ip, e);
+                RetryTimes++;
+                if (RetryTimes > Servers.Count)
                 {
-                    TcpClient = new TcpClient();
-                    TcpClient.Connect(ip);
-                    ConnectTime = DateTime.Now;
+                    throw new Exception("All servers are unreachable.");
                 }
-                catch (Exception e)
+            }
+            finally
+            {
+                CurrentServerIndex++;
+                if (CurrentServerIndex >= Servers.Count)
                 {
-                    Logger.LogTrace(e, e.Message);
-                    Logger.LogError("Connect failed.");
-                    RetryTimes++;
-                    CurrentServerIndex++;
+                    CurrentServerIndex = 0;
                 }
             }
 
-            if (!CanRetry)
+            Task.Run(() =>
             {
-                throw new HttpListenerException();
-            }
+                _once.Wait();//Use a Semaphore which will never be released to simulate a once.
+                // TODO event handlers
+                Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
+            });
+            RetryTimes = 0;
+            ConnectTime = DateTimeOffset.Now;
         }
 
         public void QuickReconnect()
@@ -95,14 +104,15 @@ namespace BotReborn
                     }
                     catch (Exception e)
                     {
-                        Logger.LogError("decrypt payload error.");
+                        Logger.LogError("Decrypt payload error: {0} ", e);
                         continue;
                     }
                 }
-                Logger.LogDebug("rev pkt: {0} seq: {1}", pkt.CommandName, pkt.SequenceId);
+                Logger.LogDebug("Receive pkt: {0} seq: {1}", pkt.CommandName, pkt.SequenceId);
                 Interlocked.Increment(ref Statistics.PacketReceived);
                 Task.Run(() =>
                 {
+
                     throw new NotImplementedException();
                 }).Wait();
             }

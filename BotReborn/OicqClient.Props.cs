@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using BotReborn.Model;
 using BotReborn.Model.Group;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Version = System.Version;
 
 namespace BotReborn
@@ -15,8 +16,8 @@ namespace BotReborn
     {
         public Uin Uin { get; set; }
         public byte[] PasswordMd5 { get; set; }
-        public bool AllowSlider { get; set; }
-        public ILogger<OicqClient> Logger { get; set; }
+        public bool AllowSlider { get; set; } = true;
+        public ILogger<OicqClient> Logger { get; set; } = new NullLogger<OicqClient>();
         public Statistics Statistics { get; set; }
 
         public string NickName { get; set; }
@@ -29,18 +30,14 @@ namespace BotReborn
         //public QiDianAccountInfo QiDianAccountInfo { get; set; }
         //public bool NetLooping { get; set; }
 
-        public byte[] OutGoingPacketSessionId { get; set; }
-        public byte[] RandomKey { get; set; }
-        public TcpClient TcpClient { get; set; }
+        public byte[] OutGoingPacketSessionId { get; set; } = new byte[] { 0x02, 0xB0, 0x5B, 0x8B };
+        public byte[] RandomKey { get; set; } = new byte[16];
+        public TcpClient TcpClient { get; set; } = new TcpClient();
         public DateTimeOffset ConnectTime { get; set; }
         public Hashtable Waiters { get; set; }
         public List<IPEndPoint> Servers { get; set; }
         public int CurrentServerIndex { get; set; }
         public int RetryTimes { get; set; }
-        public bool CanRetry
-        {
-            get => RetryTimes <= Servers.Count;
-        }
         public Version Version { get; set; }
 
         public byte[] Dpwd { get; set; }
@@ -59,7 +56,7 @@ namespace BotReborn
         public byte[] RollbackSig { get; set; }
         public byte[] RandSeed { get; set; }
         public long TimeDiff { get; set; }
-        public LogInSigInfo SigInfo { get; set; }
+        public LogInSigInfo SigInfo { get; set; } = new LogInSigInfo();
         public BigDataSessionInfo BigDataSession { get; set; }
         public string[] SrvSsoAddresses { get; set; }
         public string[] OtherSrvAddresses { get; set; }

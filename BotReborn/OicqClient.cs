@@ -26,20 +26,10 @@ namespace BotReborn
             {
                 DefaultRequestVersion = new Version(2,0),
             };
+            Uin = uin;
             _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
-            Logger = new NullLogger<OicqClient>();
-
-            Uin = uin;
-            AllowSlider = true;
-            RandomKey = new byte[16];
-            OutGoingPacketSessionId = new byte[] { 0x02, 0xB0, 0x5B, 0x8B }; //Magic number
-            //TCP: &utils.TCPListener{ },
-            SigInfo = new LogInSigInfo();
-            _requestPacketRequestId = 1921334513; //Magic number
             _groupSeq = _random.Next(20000);
-            _friendSeq = 22911; //Magic number
-            _highwayApplyUpSeq = 77918; //Magic number
             Ksid = Encoding.UTF8.GetBytes($"|{DeviceInfo.Default.IMEI}|A8.2.7.27f6ea96");
             //eventHandlers:           &eventHandlers{},
             //msgSvcCache: utils.NewCache(time.Second * 15),
