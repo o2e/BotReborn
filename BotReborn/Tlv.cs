@@ -9,6 +9,8 @@ namespace BotReborn
 {
     public static class Tlv
     {
+        const uint GuidFlag = 16777216;
+
         public static byte[] T1(Uin uin, byte[] ip)
         {
             if (ip.Length != 4)
