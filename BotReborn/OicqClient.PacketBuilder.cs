@@ -70,10 +70,4 @@ namespace BotReborn
             throw new NotImplementedException();
         }
     }
-
-    public interface IEncryptMethod
-    {
-        byte[] DoEncrypt(byte[] b1, byte[] b2);
-        byte Id();
-    }
 }
