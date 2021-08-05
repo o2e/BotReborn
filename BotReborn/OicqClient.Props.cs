@@ -40,7 +40,7 @@ namespace BotReborn
         public List<IPEndPoint> Servers { get; set; }
         public int CurrentServerIndex { get; set; }
         public int RetryTimes { get; set; }
-        public Version Version { get; set; }
+        public VersionInfo Version { get; set; }
 
         public byte[] Dpwd { get; set; }
         public byte[] SyncCookie { get; set; }

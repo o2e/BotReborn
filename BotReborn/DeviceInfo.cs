@@ -1,6 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
-using BotReborn.Model;
+using Version = BotReborn.Model.Version;
 
 namespace BotReborn
 {
@@ -35,6 +36,11 @@ namespace BotReborn
         public Version Version { get; set; }
 
         public static DeviceInfo Default { get; }
+
+        public byte[] GenDeviceInfoData()
+        {
+            throw new NotImplementedException();
+        }
 
         static DeviceInfo()
         {
