@@ -37,7 +37,14 @@ namespace BotReborn
 
         public static DeviceInfo Default { get; }
 
-        public byte[] GenDeviceInfoData()
+        public static DeviceInfo Current { get; set; } = Default;
+
+        public byte[] GetDeviceInfoData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GenerateRandomDeviceInfo()
         {
             throw new NotImplementedException();
         }

@@ -48,7 +48,7 @@ namespace BotReborn
                     .Write(Tlv.T107(0))
                     .Write(Tlv.T142(Version.ApkId))
                     .Write(Tlv.T144(Encoding.UTF8.GetBytes(DeviceInfo.IMEI),
-                        DeviceInfo.GenDeviceInfoData(),
+                        DeviceInfo.GetDeviceInfoData(),
                         DeviceInfo.OSType,
                         DeviceInfo.Version.Release,
                         DeviceInfo.SimInfo,

@@ -5,11 +5,13 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace BotReborn
 {
     public static class Utils
     {
+        private static Random s_random = new Random();
         public static byte[] ConvertHexStringToByteArray(string hex)
         {
             static int GetHexVal(char hex) => hex - (hex < 58 ? 48 : hex < 97 ? 55 : 87);
@@ -39,6 +41,20 @@ namespace BotReborn
 
         }
 
+        public static string GetRandomString(int len)
+        {
+            return GetRandomString(len, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
+        }
+
+        public static string GetRandomString(int len, ReadOnlySpan<char> range)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < len; i++)
+            {
+                sb.Append(range[s_random.Next(range.Length)]);
+            }
+            return sb.ToString();
+        }
         public static Span<byte> ReadBytes(this Stream s, int len)
         {
             Span<byte> span = new byte[len];

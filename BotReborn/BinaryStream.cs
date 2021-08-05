@@ -46,7 +46,7 @@ namespace BotReborn
             return BinaryPrimitives.ReadInt32BigEndian(this.ReadBytes(4));
         }
 
-        public int ReadUInt16()
+        public ushort ReadUInt16()
         {
             return BinaryPrimitives.ReadUInt16BigEndian(this.ReadBytes(2));
         }
@@ -59,6 +59,37 @@ namespace BotReborn
         public Span<byte> ReadAvailable()
         {
             return this.ReadBytes((int)(Length - Position));
+        }
+
+        public Dictionary<ushort, byte[]> ReadTlvMap(int tagSize)
+        {
+            var map = new Dictionary<ushort, byte[]>();
+            while (true)
+            {
+                if (Length-Position<tagSize)
+                {
+                    return map;
+                }
+                ushort k =0;
+                if (tagSize==1)
+                {
+                    k = (ushort)ReadByte();
+                }
+                else if(tagSize==2)
+                {
+                    k = ReadUInt16();
+                }
+                else if(tagSize==4)
+                {
+                    k = (ushort)ReadInt32();
+                }
+
+                if (k==255)
+                {
+                    return map;
+                }
+                map[k] = this.ReadBytes(ReadUInt16()).ToArray();
+            }
         }
 
 

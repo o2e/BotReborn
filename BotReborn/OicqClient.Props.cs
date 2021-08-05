@@ -10,8 +10,6 @@ using BotReborn.Model.Group;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-using Version = System.Version;
-
 namespace BotReborn
 {
     public partial class OicqClient
@@ -65,7 +63,7 @@ namespace BotReborn
         //fileStorageInfo  *jce.FileStoragePushFSSvcList
         public bool PwdFlag { get; set; }
         public int LastMessageSeq { get; set; }
-        public DeviceInfo DeviceInfo { get; set; } = DeviceInfo.Default;
+        public DeviceInfo DeviceInfo { get; set; } = DeviceInfo.Current;
         //lastMessageSeq int32
         //// lastMessageSeqTmp      sync.Map
         //msgSvcCache* utils.Cache
