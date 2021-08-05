@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using BotReborn.Crypto;
 
 namespace BotReborn.Packets
@@ -14,16 +15,16 @@ namespace BotReborn.Packets
         private static IncomingPacket ParseSsoFrame(byte[] payload, byte flag2)
         {
             var stream = new BinaryStream(payload);
-            if (stream.ReadInt32()-4>(stream.Length-stream.Position))
+            if (stream.ReadInt32() - 4 > (stream.Length - stream.Position))
             {
                 throw new Exception("Packet dropped.");
             }
 
             var seqId = stream.ReadInt32();
             var retCode = stream.ReadInt32();
-            if (retCode!=0)
+            if (retCode != 0)
             {
-                if (retCode==-10008)
+                if (retCode == -10008)
                 {
                     throw new Exception("Session expired.");
                 }
@@ -85,7 +86,7 @@ namespace BotReborn.Packets
                 Payload = packet
             };
         }
-        public  static IncomingPacket ParseIncomingPacket(byte[] payload, byte[] d2key)
+        public static IncomingPacket ParseIncomingPacket(byte[] payload, byte[] d2key)
         {
             if (payload.Length < 6)
             {
@@ -106,7 +107,7 @@ namespace BotReborn.Packets
                 0 => stream.ReadAvailable(),
                 1 => new Tea(d2key).Decrypt(stream.ReadAvailable()),
                 2 => new Tea(new byte[16]).Decrypt(stream.ReadAvailable()),
-                _=>null
+                _ => null
             };
             if (decrypted.Length == 0)
             {
@@ -120,7 +121,7 @@ namespace BotReborn.Packets
             return ParseSsoFrame(decrypted.ToArray(), flag2);
         }
 
-        public static byte[] DecryptPayload(EncryptEcdh ecdh , byte[] payload, byte[] random, byte[] sessionKey)
+        public static byte[] DecryptPayload(EncryptEcdh ecdh, byte[] payload, byte[] random, byte[] sessionKey)
         {
             var stream = new BinaryStream(payload);
             if (stream.ReadByte() != 2)

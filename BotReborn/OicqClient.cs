@@ -7,12 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using BotReborn.Crypto;
-using Microsoft.Extensions.Logging.Abstractions;
 
 [assembly: InternalsVisibleTo("BotReborn.Tests")]
 namespace BotReborn
@@ -24,7 +21,7 @@ namespace BotReborn
             _ecdh = new EncryptEcdh();
             _httpClient = new HttpClient()
             {
-                DefaultRequestVersion = new Version(2,0),
+                DefaultRequestVersion = new Version(2, 0),
             };
             Uin = uin;
             _random = new Random(DateTime.Now.Second);
@@ -81,7 +78,7 @@ namespace BotReborn
             _random.NextBytes(RandomKey);
         }
 
-        public OicqClient(Uin uin , string password) : this(uin)
+        public OicqClient(Uin uin, string password) : this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             PasswordMd5 = _md5.ComputeHash(bytes);

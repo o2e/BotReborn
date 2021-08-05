@@ -6,8 +6,10 @@ using System.Net.Sockets;
 
 using BotReborn.Model;
 using BotReborn.Model.Group;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+
 using Version = System.Version;
 
 namespace BotReborn

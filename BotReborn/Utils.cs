@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Buffers.Binary;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace BotReborn
 {
@@ -43,14 +39,14 @@ namespace BotReborn
 
         }
 
-        public static Span<byte> ReadBytes(this Stream s,int len)
+        public static Span<byte> ReadBytes(this Stream s, int len)
         {
             Span<byte> span = new byte[len];
             s.Read(span);
             return span;
         }
 
-        public static byte[] PostBytes(this HttpClient httpClient,string url, byte[] bytes)
+        public static byte[] PostBytes(this HttpClient httpClient, string url, byte[] bytes)
         {
             var req = new HttpRequestMessage(HttpMethod.Post, url)
             {
@@ -64,7 +60,7 @@ namespace BotReborn
             if (rsp.Content.Headers.ContentEncoding.Contains("gzip"))
             {
                 var stream = new MemoryStream(body);
-                var gzip = new GZipStream(stream,CompressionMode.Decompress);
+                var gzip = new GZipStream(stream, CompressionMode.Decompress);
                 byte[] arr = new byte[gzip.Length];
                 gzip.Read(arr);
                 return arr;

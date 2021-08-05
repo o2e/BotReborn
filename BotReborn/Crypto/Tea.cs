@@ -68,7 +68,7 @@ namespace BotReborn.Crypto
             {
                 src[..(16 - fill)].CopyTo(dst.AsSpan(fill));
                 Xor(dst.AsSpan(8, 8), dst.AsSpan(0, 8), dst.AsSpan(8, 8));
-                dst.AsSpan(8,8).CopyTo(tmp1);
+                dst.AsSpan(8, 8).CopyTo(tmp1);
                 Encode(dst.AsSpan(8), dst.AsSpan(8));
                 Xor(dst.AsSpan(8), tmp2, dst.AsSpan(8));
                 tmp1.CopyTo(tmp2.AsSpan());

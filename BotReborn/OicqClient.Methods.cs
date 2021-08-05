@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 
 using BotReborn.Crypto;
 using BotReborn.Jce;
-using BotReborn.Model;
 using BotReborn.Model.Exception;
 using BotReborn.Packets;
 
@@ -155,7 +150,7 @@ namespace BotReborn
             _heartbeatEnabled = false;
         }
 
-        
+
 
         public ushort NextSeq() => (ushort)(Interlocked.Increment(ref _sequenceId) & 0x7FFF);
         public int NextPacketSeq() => Interlocked.Add(ref _requestPacketRequestId, 2);

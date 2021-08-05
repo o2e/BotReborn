@@ -2,7 +2,9 @@
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
+
 using BotReborn.Crypto;
+
 using Microsoft.Extensions.Logging;
 
 namespace BotReborn
