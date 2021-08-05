@@ -9,7 +9,7 @@ namespace BotReborn
 {
     public static class Tlv
     {
-        public static byte[] T1(uint uin, byte[] ip)
+        public static byte[] T1(Uin uin, byte[] ip)
         {
             if (ip.Length != 4)
             {
@@ -23,7 +23,7 @@ namespace BotReborn
                var stream = new BinaryStream();
                stream.WriteUInt16(1)
                     .WriteUInt32((uint)new Random().Next())
-                    .WriteUInt32(uin)
+                    .WriteUInt32((uint)uin)
                     .WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     .Write(ip)
                     .WriteUInt16(0);
@@ -209,7 +209,7 @@ namespace BotReborn
             return binaryStream.ToArray();
         }
 
-        public static byte[] T18(uint appId, uint uin)
+        public static byte[] T18(uint appId, Uin uin)
         {
             var binaryStream = new BinaryStream();
             binaryStream.WriteUInt16(0x18);
@@ -298,7 +298,7 @@ namespace BotReborn
             return binaryStream.ToArray();
         }
 
-        public static byte[] T106(uint uin, uint salt, uint appId, uint ssoVer, byte[] passwordMd5, bool guidAvailable, byte[] guid, byte[] tgtgtKey, uint wtf)
+        public static byte[] T106(Uin uin, uint salt, uint appId, uint ssoVer, byte[] passwordMd5, bool guidAvailable, byte[] guid, byte[] tgtgtKey, uint wtf)
         {
             var binaryStream = new BinaryStream();
             binaryStream.WriteUInt16(0x106);
@@ -352,7 +352,7 @@ namespace BotReborn
                      b.WriteUInt32(appId)
                          .WriteUInt32(1); // password login
 
-                     b.WriteBytesShort(Encoding.UTF8.GetBytes(uin.ToString("D10")))
+                     b.WriteBytesShort(Encoding.UTF8.GetBytes(uin.ToString()))
                          .WriteUInt16(0);
                      return b.ToArray();
                  })());
@@ -737,7 +737,7 @@ namespace BotReborn
             return binaryStream.ToArray();
         }
 
-        public static byte[] T400(byte[] g, long uin, byte[] guid, byte[] dpwd, long j2, long j3, byte[] randSeed)
+        public static byte[] T400(byte[] g, Uin uin, byte[] guid, byte[] dpwd, long j2, long j3, byte[] randSeed)
         {
             var binaryStream = new BinaryStream();
             binaryStream.WriteUInt16(0x400);
@@ -748,7 +748,7 @@ namespace BotReborn
                 {
                     var b = new BinaryStream();
                     b.WriteUInt16(1) // version
-                        .WriteUInt64((ulong)uin)
+                        .WriteUInt64(uin)
                         .Write(guid)
                         .Write(dpwd)
                         .WriteUInt32((uint)j2)
