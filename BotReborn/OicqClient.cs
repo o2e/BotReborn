@@ -27,6 +27,7 @@ namespace BotReborn
             _random = new Random(DateTime.Now.Second);
             _md5 = MD5.Create();
             _groupSeq = _random.Next(20000);
+            DeviceInfo = DeviceInfo.Current;
             Ksid = Encoding.UTF8.GetBytes($"|{DeviceInfo.IMEI}|A8.2.7.27f6ea96");
             //eventHandlers:           &eventHandlers{},
             //msgSvcCache: utils.NewCache(time.Second * 15),
