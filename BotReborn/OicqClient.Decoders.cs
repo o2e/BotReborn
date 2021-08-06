@@ -17,6 +17,15 @@ namespace BotReborn
 {
     public partial class OicqClient
     {
+
+        private Func<OicqClient, IncomingPacketInfo, byte[], object> GetDecoderByName(string name)
+        {
+            return name switch
+            {
+                "wtlogin.login" => DecodeLoginResponse,
+                _ => throw new Exception()
+            };
+        }
         //private  Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], object>> _decoders = new Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], object>>()
         //{
         //    ["wtlogin.login"] = DecodeLoginResponse,

@@ -39,18 +39,25 @@ namespace BotReborn
             catch (Exception e)
             {
                 Logger.LogError(e, e.Message);
-                return null;
+                throw;
             }
 
+            LoginResponse rsp;
             try
             {
-
+                rsp = (LoginResponse)SendAndWait(BuildLoginPacket(out var seq), seq);
             }
             catch (Exception e)
             {
+                Disconnect();
                 Logger.LogError(e, e.Message);
+                throw;
             }
 
+            if (rsp.IsSuccessful)
+            {
+                
+            }
 
             throw new LoginException("Unknown exception!");
         }
