@@ -36,6 +36,7 @@ namespace BotReborn
                 VendorName = Encoding.UTF8.GetBytes("MIUI"),
                 VendorOSName = Encoding.UTF8.GetBytes("mirai"),
                 Protocol = ClientProtocol.Ipad,
+                Guid = System.Guid.NewGuid().ToByteArray(),
                 Version = new Version()
                 {
                     Incremental = Encoding.UTF8.GetBytes("5891938"),

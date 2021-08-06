@@ -75,11 +75,17 @@ namespace BotReborn
             TcpClient.Close();
         }
 
+        internal void Send(byte[] pkt)
+        {
+            var stream = TcpClient.GetStream();
+            stream.Write(pkt);
+        }
+
         internal object SendAndWait(byte[] pkt, ushort seq)
         {
             try
             {
-                TcpClient.GetStream().Write(pkt);
+                Send(pkt);
             }
             catch (Exception e)
             {
