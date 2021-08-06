@@ -50,6 +50,19 @@ namespace BotReborn
                 Dpwd = Encoding.UTF8.GetBytes(Utils.GetRandomString(16));
                 T402 = map[0x402];
                 var h = _md5.ComputeHash(DeviceInfo.Guid.Concat(Dpwd).Concat(T402).ToArray());
+                G = h[..];
+            }
+
+            if (t==0)
+            {
+                if (map.TryGetValue(0x150,out var t150))
+                {
+                    T150 = t150;
+                }
+                if (map.TryGetValue(0x161, out var t161))
+                {
+                    T150 = t150;
+                }
             }
             throw new NotImplementedException();
         }
@@ -179,6 +192,7 @@ namespace BotReborn
             throw new NotImplementedException();
         }
 
+        
         private  LoginResponse DecodeTranslateResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
@@ -194,6 +208,17 @@ namespace BotReborn
         private  LoginResponse DecodeAppInfoResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
+        }
+
+        private void DecodeT161(byte[] data)
+        {
+            var stream = new BinaryStream(data);
+            stream.ReadBytes(2);
+            var t = stream.ReadTlvMap(2);
+            if (t.TryGetValue(0x172,out var t172))
+            {
+                RollbackSig = t172;
+            }
         }
     }
 }
