@@ -23,6 +23,8 @@ namespace BotReborn
             return name switch
             {
                 "wtlogin.login" => DecodeLoginResponse,
+                "SummaryCard.ReqSummaryCard" => DecodeSummaryCardResponse,
+                "LightAppSvc.mini_app_info.GetAppInfoById" => DecodeAppInfoResponse,
                 _ => throw new Exception()
             };
         }
@@ -179,19 +181,19 @@ namespace BotReborn
                 }
             }
 
-            if (t==162)
+            if (t == 162)
             {
                 return new LoginResponse() { ErrorMessage = "TooManySMSRequestError" };
             }
 
-            if (t==204)
+            if (t == 204)
             {// drive lock
                 T104 = map[0x104];
                 RandSeed = map[0x403];
                 return SendAndWait(BuildDeviceLockLoginPacket(out var seq), seq);
             }
 
-            if (map.TryGetValue(0x149,out var t149))
+            if (map.TryGetValue(0x149, out var t149))
             {
                 var s = new BinaryStream(t149);
                 s.ReadBytes(2);
@@ -207,9 +209,9 @@ namespace BotReborn
                 return new LoginResponse() { IsSuccessful = false, ErrorMessage = s.ReadStringShort() };
             }
             Logger.LogDebug("Unknown login response:{0}", t);
-            foreach (var (k,v) in map)
+            foreach (var (k, v) in map)
             {
-                Logger.LogDebug("Type: {0} Value: {1}",k.ToString("X16"),Utils.ConvertByteArrayToHexString(v));
+                Logger.LogDebug("Type: {0} Value: {1}", k.ToString("X16"), Utils.ConvertByteArrayToHexString(v));
             }
             throw new Exception($"Unknown login response:{t}");
         }
