@@ -56,6 +56,12 @@ namespace BotReborn
             return Encoding.UTF8.GetString(this.ReadBytes(ReadInt32() - 4));
         }
 
+        public string ReadStringShort()
+        {
+            var data = this.ReadBytes(ReadUInt16());
+            return Encoding.UTF8.GetString(data);
+        }
+
         public Span<byte> ReadAvailable()
         {
             return this.ReadBytes((int)(Length - Position));
@@ -66,25 +72,25 @@ namespace BotReborn
             var map = new Dictionary<ushort, byte[]>();
             while (true)
             {
-                if (Length-Position<tagSize)
+                if (Length - Position < tagSize)
                 {
                     return map;
                 }
-                ushort k =0;
-                if (tagSize==1)
+                ushort k = 0;
+                if (tagSize == 1)
                 {
                     k = (ushort)ReadByte();
                 }
-                else if(tagSize==2)
+                else if (tagSize == 2)
                 {
                     k = ReadUInt16();
                 }
-                else if(tagSize==4)
+                else if (tagSize == 4)
                 {
                     k = (ushort)ReadInt32();
                 }
 
-                if (k==255)
+                if (k == 255)
                 {
                     return map;
                 }
@@ -92,6 +98,16 @@ namespace BotReborn
             }
         }
 
+        public string ReadStringLimit(int limit)
+        {
+            var data = this.ReadBytes(limit);
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public byte[] ReadBytesShort()
+        {
+            return this.ReadBytes(ReadUInt16()).ToArray();
+        }
 
         public BinaryStream WriteHexString(string s)
         {
