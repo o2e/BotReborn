@@ -21,7 +21,7 @@ namespace BotReborn
                     .Write(Tlv.T18(16, Uin))
                     .Write(Tlv.T1(Uin, DeviceInfo.IpAddress))
                     .Write(Tlv.T106(Uin, 0, Version.AppId, Version.SSOVersion, PasswordMd5, true, DeviceInfo.Guid, DeviceInfo.TgtgtKey, 0))
-                    .Write(Tlv.T116(Version.MiscBitmap, Version.SubSigmap))
+                    .Write(Tlv.T116(Version.MiscBitmap, Version.SubSigMap))
                     .Write(Tlv.T100(Version.SSOVersion, Version.SubAppId, Version.MainSigMap))
                     .Write(Tlv.T107(0))
                     .Write(Tlv.T142(Version.ApkId))
@@ -86,7 +86,7 @@ namespace BotReborn
                      .WriteUInt16(4)
                      .Write(Tlv.T8(2052))
                      .Write(Tlv.T104(T104))
-                     .Write(Tlv.T116(Version.MiscBitmap, Version.SubSigmap))
+                     .Write(Tlv.T116(Version.MiscBitmap, Version.SubSigMap))
                      .Write(Tlv.T401(G));
              });
             var sso = Packet.BuildSsoPacket(seq, Version.AppId, Version.SubAppId, "wtlogin.login", DeviceInfo.IMEI,
