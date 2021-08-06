@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
@@ -9,10 +10,11 @@ namespace BotReborn.Sample
     {
         static void Main(string[] args)
         {
-            var uin = int.Parse((Environment.GetEnvironmentVariable("BotAccount", EnvironmentVariableTarget.User) ?? Environment.GetEnvironmentVariable("BotAccount"))!);
+            var uin = long.Parse((Environment.GetEnvironmentVariable("BotAccount", EnvironmentVariableTarget.User) ?? Environment.GetEnvironmentVariable("BotAccount"))!);
             var passwd = Environment.GetEnvironmentVariable("BotPassword", EnvironmentVariableTarget.User) ?? Environment.GetEnvironmentVariable("BotPassword");
             var client = new OicqClient(uin, passwd)
             {
+                Version = ClientProtocol.AndroidPhone,
                 Logger = LoggerFactory.Create(builder =>
                 {
                     builder.AddConsole();

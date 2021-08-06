@@ -39,7 +39,7 @@ namespace BotReborn
         public List<IPEndPoint> Servers { get; set; }
         public int CurrentServerIndex { get; set; }
         public int RetryTimes { get; set; }
-        public VersionInfo Version { get; set; }
+        public ClientProtocol Version { get; set; }
 
         public byte[] Dpwd { get; set; }
         public byte[] SyncCookie { get; set; }
@@ -64,7 +64,7 @@ namespace BotReborn
         //fileStorageInfo  *jce.FileStoragePushFSSvcList
         public bool PwdFlag { get; set; }
         public int LastMessageSeq { get; set; }
-        public DeviceInfo DeviceInfo =>DeviceInfo.Current;
+        public DeviceInfo DeviceInfo => DeviceInfo.Current;
         //lastMessageSeq int32
         //// lastMessageSeqTmp      sync.Map
         //msgSvcCache* utils.Cache
