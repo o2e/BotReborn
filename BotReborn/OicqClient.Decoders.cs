@@ -59,9 +59,9 @@ namespace BotReborn
                 G = h[..];
             }
 
-            if (t==0)
+            if (t == 0)
             {
-                if (map.TryGetValue(0x150,out var t150))
+                if (map.TryGetValue(0x150, out var t150))
                 {
                     T150 = t150;
                 }
@@ -74,11 +74,11 @@ namespace BotReborn
                 {
                     RandSeed = map[0x403];
                 }
-                DecodeT119(map[0x119],DeviceInfo.TgtgtKey);
+                DecodeT119(map[0x119], DeviceInfo.TgtgtKey);
                 return new LoginResponse() { IsSuccessful = true };
             }
 
-            if (t==2)
+            if (t == 2)
             {
                 T104 = map[0x104];
                 if (map.ContainsKey(0x192))
@@ -109,16 +109,63 @@ namespace BotReborn
                 {
                     return new LoginResponse() { IsSuccessful = false, ErrorMessage = "UnknownLoginError" };
                 }
-            }
+            }// need captcha
 
-            if (t==40)
+            if (t == 40)
             {
                 return new LoginResponse() { IsSuccessful = false, ErrorMessage = "账号被冻结", };
             }
 
-            if (t==160||t==239)
+            if (t == 160 || t == 239)
             {
-                
+                if (map.TryGetValue(0x174, out var t174))
+                { // 短信验证
+                    T104 = map[0x104];
+                    T174 = t174;
+                    RandSeed = map[0x403];
+                    var phone = ((Func<string>)(() =>
+                    {
+                        var s = new BinaryStream(map[0x178]);
+                        return s.ReadStringLimit(s.ReadInt32());
+                    }))();
+
+
+                    if (map.TryGetValue(0x204, out var tt204))
+                    { // 同时支持扫码验证 ?
+                        return new LoginResponse
+                        {
+                            IsSuccessful = false,
+                            ErrorMessage = Encoding.UTF8.GetString(map[0x17e]),
+                            VerifyUrl = Encoding.UTF8.GetString(tt204),
+                            SmsPhone = phone
+                        };
+                    }
+
+                    return new LoginResponse
+                    {
+                        IsSuccessful = false,
+                        ErrorMessage = Encoding.UTF8.GetString(map[0x17e]),
+                        SmsPhone = phone
+                    };
+                }
+
+                if (map.ContainsKey(0x17b))
+                { // 二次验证
+                    T104 = map[0x104];
+                    return new LoginResponse { IsSuccessful = false, ErrorMessage = "SMS Needed" };
+                }
+
+                if (map.TryGetValue(0x204, out var t204))
+                { // 扫码验证
+                    return new LoginResponse
+                    {
+                        IsSuccessful = false,
+                        VerifyUrl = Encoding.UTF8.GetString(t204),
+                        ErrorMessage = "UnsafeDeviceError"
+                    };
+
+
+                }
             }
 
 
