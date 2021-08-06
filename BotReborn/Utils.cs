@@ -14,10 +14,10 @@ namespace BotReborn
 {
     public static class Utils
     {
-        public static Random Random = new Random();
-        public static MD5 Md5 = MD5.Create();
+        public static readonly Random Random = new();
+        public static readonly MD5 Md5 = MD5.Create();
 
-        public static string UInt32ToIPV4Address(uint i)
+        public static string UInt32ToIpv4Address(uint i)
         {
             var ip = new byte[4];
             BinaryPrimitives.WriteUInt32LittleEndian(ip, i);
