@@ -74,9 +74,17 @@ namespace BotReborn
             TcpClient.Close();
         }
 
-        internal object Send(ushort seq,byte[] pkt)
+        internal void SendAndWait(ushort seq, byte[] pkt)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TcpClient.GetStream().Write(pkt);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, e.Message);
+                throw;
+            }
         }
 
         private void StartNetLoop()
