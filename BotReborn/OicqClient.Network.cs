@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using BotReborn.Packets;
@@ -81,19 +82,64 @@ namespace BotReborn
             stream.Write(pkt);
         }
 
-        internal object SendAndWait(byte[] pkt, ushort seq)
+        internal object SendAndWait(byte[] pkt, ushort seq, params Dictionary<string, object>[] param)
         {
+            Dictionary<string, object> para;
+            var ch = Channel.CreateUnbounded<ChannelData>();
+
+            if (param.Length != 0)
+            {
+                para = param[0];
+            }
+            else
+            {
+                para = new Dictionary<string, object>();
+            }
+
+            _handlers.TryAdd(seq, new HandlerInfo()
+            {
+                Func = async (i, e) =>
+                {
+                    await ch.Writer.WriteAsync(new ChannelData()
+                    {
+                        Err = e,
+                        Response = i
+                    });
+                },
+                Param = para
+            });
+
             try
             {
                 Send(pkt);
             }
             catch (Exception e)
             {
+                _handlers.Remove(seq, out _);
                 Logger.LogError(e, e.Message);
                 throw;
             }
 
-            throw new NotImplementedException();
+            var retry = 0;
+
+            while (true)
+            {
+                if (ch.Reader.TryRead(out var rsp))
+                {
+                    return rsp.Response;
+                }
+
+                Thread.Sleep(new TimeSpan(0, 0, 0, 15));
+                retry++;
+                if (retry < 2)
+                {
+                    Send(pkt);
+                    continue;
+                }
+
+                _handlers.Remove(seq, out _);
+                return null;
+            }
         }
 
         private void StartNetLoop()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace BotReborn
         private Random _random;
         private SemaphoreSlim _once = new(0, 1);
         private HttpClient _httpClient;
+        private ConcurrentDictionary<ushort, HandlerInfo> _handlers = new();
         private int _sequenceId;
         private int _requestPacketRequestId = 1921334513;
         private int _groupSeq;
