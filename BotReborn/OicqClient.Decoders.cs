@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BotReborn.Jce;
+using BotReborn.Model;
 using BotReborn.Packets;
 using BotReborn.Protos;
 
@@ -58,26 +60,22 @@ namespace BotReborn
             throw new NotImplementedException();
         }
 
-        private object DecodeExchangeEmpResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeExchangeEmpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeTransEmpResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeTransEmpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeClientRegisterResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeClientRegisterResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeMsfOfflinePacket(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeMsfOfflinePacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
@@ -87,14 +85,12 @@ namespace BotReborn
             throw new NotImplementedException();
         }
 
-        private object DecodeOnlinePushReqPacket(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeOnlinePushReqPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeOnlinePushTransPacket(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeOnlinePushTransPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
@@ -104,95 +100,136 @@ namespace BotReborn
             throw new NotImplementedException();
         }
 
-        private object DecodeMessageSvcPacket(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeMessageSvcPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeForceOfflinePacket(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeForceOfflinePacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeMsgWithDrawResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeMsgWithDrawResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeFriendGroupListResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeFriendGroupListResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeFriendDeleteResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeFriendDeleteResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeGroupListResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeGroupListResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeGroupMemberListResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeGroupMemberListResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeGroupMemberInfoResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeGroupMemberInfoResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeGroupPttStoreResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeGroupPttStoreResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
 
         }
 
-        private object DecodeOffPicUpResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeOffPicUpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeSystemMsgGroupPacket(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeSystemMsgGroupPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeSystemMsgFriendPacket(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeSystemMsgFriendPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeWordSegmentation(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeWordSegmentation(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private object DecodeTranslateResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeTranslateResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+
         }
 
-        private object DecodeSummaryCardResponse(OicqClient client, IncomingPacketInfo packet,
-            byte[] payload)
+        private object DecodeSummaryCardResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+            var request = new JceStructs.RequestPacket();
+            request.ReadFrom(new JceStream(payload));
+            var data = new JceStructs.RequestDataVersion2();
+            data.ReadFrom(new JceStream(request.SBuffer));
+            JceStream rsp = new Func<JceStream>(() =>
+            {
+                if (data.Map.TryGetValue("RespSummaryCard", out var d1))
+                {
+                    if (d1.TryGetValue("SummaryCard.RespSummaryCard", out var b))
+                    {
+                        return new JceStream(b[1..]);
+                    }
+                }
+
+                return new JceStream(data.Map["RespSummaryCard"]["SummaryCard_Old.RespSummaryCard"][1..]);
+            })();
+
+            var info = new SummaryCardInfo
+            {
+                Sex = (byte)rsp.ReadByte(1),
+                Age = (byte)rsp.ReadByte(2),
+                Nickname = rsp.ReadString(3),
+                Level = rsp.ReadInt32(5),
+                City = rsp.ReadString(7),
+                Sign = rsp.ReadString(8),
+                Mobile = rsp.ReadString(11),
+                Uin = rsp.ReadInt64(23),
+                LoginDays = rsp.ReadInt64(36),
+            };
+
+            var services = (byte[][])rsp.ReadSlice(typeof(byte[][]), 46);
+            var readService = new Func<byte[], (BusiComm, byte[])>(buf =>
+              {
+                  var b = new BinaryStream(buf);
+                  b.ReadByte();
+                  var l1 = b.ReadInt32();
+                  var l2 = b.ReadInt32();
+                  var comm = b.ReadBytes(l1);
+                  var d = b.ReadBytes(l2);
+                  var c = BusiComm.Parser.ParseFrom(comm);
+                  return (c, d.ToArray());
+              });
+
+            foreach (var service in services)
+            {
+                var (comm, p) = readService(service);
+                if (comm.Service == 16)
+                {
+                    var r = GateVaProfileGateRsp.Parser.ParseFrom(p);
+                    if (r is not null)
+                    {
+                        info.Qid = r.QidInfo.Qid;
+                    }
+                }
+            }
+
+            return info;
         }
 
         private object DecodeAppInfoResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
