@@ -67,9 +67,61 @@ namespace BotReborn
                 }
                 if (map.TryGetValue(0x161, out var t161))
                 {
-                    T150 = t150;
+                    DecodeT161(t161);
+                }
+
+                if (map.ContainsKey(0x403))
+                {
+                    RandSeed = map[0x403];
+                }
+                DecodeT119(map[0x119],DeviceInfo.TgtgtKey);
+                return new LoginResponse() { IsSuccessful = true };
+            }
+
+            if (t==2)
+            {
+                T104 = map[0x104];
+                if (map.ContainsKey(0x192))
+                {
+                    return new LoginResponse()
+                    {
+                        IsSuccessful = false,
+                        VerifyUrl = Encoding.UTF8.GetString(map[0x192]),
+                        ErrorMessage = "Slider Needed Error"
+                    };
+                }
+
+                if (map.ContainsKey(0x165))
+                {
+                    var imgData = new BinaryStream(map[0x105]);
+                    var signLen = imgData.ReadUInt16();
+                    imgData.ReadUInt16();
+                    var sign = imgData.ReadBytes(signLen);
+                    return new LoginResponse()
+                    {
+                        IsSuccessful = false,
+                        ErrorMessage = "NeedCaptcha",
+                        CaptchaImage = imgData.ReadAvailable().ToArray(),
+                        CaptchaSign = sign.ToArray()
+                    };
+                }
+                else
+                {
+                    return new LoginResponse() { IsSuccessful = false, ErrorMessage = "UnknownLoginError" };
                 }
             }
+
+            if (t==40)
+            {
+                return new LoginResponse() { IsSuccessful = false, ErrorMessage = "账号被冻结", };
+            }
+
+            if (t==160||t==239)
+            {
+                
+            }
+
+
             throw new NotImplementedException();
         }
 

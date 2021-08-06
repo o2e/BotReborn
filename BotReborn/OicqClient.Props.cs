@@ -63,7 +63,7 @@ namespace BotReborn
         //fileStorageInfo  *jce.FileStoragePushFSSvcList
         public bool PwdFlag { get; set; }
         public int LastMessageSeq { get; set; }
-        public DeviceInfo DeviceInfo { get; set; }
+        public DeviceInfo DeviceInfo =>DeviceInfo.Current;
         //lastMessageSeq int32
         //// lastMessageSeqTmp      sync.Map
         //msgSvcCache* utils.Cache
