@@ -163,12 +163,23 @@ namespace BotReborn
 
         private object DecodeWordSegmentation(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+            var pkg = OIDBSSOPkg.Parser.ParseFrom(payload);
+            var rsp = D79RspBody.Parser.ParseFrom(pkg.Bodybuffer);
+            if (rsp.Content is not null)
+            {
+                return rsp.Content;
+            }
+
+            Logger.LogError("No word received.");
+            return null;
         }
 
         private object DecodeTranslateResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
+            var pkg = OIDBSSOPkg.Parser.ParseFrom(payload);
+            var rsp = TranslateRspBody.Parser.ParseFrom(pkg.Bodybuffer);
 
+            return rsp.BatchTranslateRsp;
         }
 
         private object DecodeSummaryCardResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
