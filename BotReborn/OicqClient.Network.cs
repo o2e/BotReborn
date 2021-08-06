@@ -85,6 +85,7 @@ namespace BotReborn
                 Logger.LogError(e, e.Message);
                 throw;
             }
+
         }
 
         private void StartNetLoop()

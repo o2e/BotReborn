@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace BotReborn.Model
+﻿namespace BotReborn.Model.Entities
 {
-    public class SummaryCardInfo
+    public struct SummaryCardInfo
     {
         public long Uin { get; set; }
         public byte Sex { get; set; }
