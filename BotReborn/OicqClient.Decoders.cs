@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -208,8 +209,33 @@ namespace BotReborn
 
         private object DecodeGroupPttStoreResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+            var pkt = D388RespBody.Parser.ParseFrom(payload);
+            var rsp = pkt.MsgTryUpPttRsp[0];
 
+            if (rsp.Result != 0)
+            {
+                return new PttUploadResponse { ResultCode = rsp.Result, Message = rsp.FailMsg };
+            }
+
+            if (rsp.BoolFileExit)
+            {
+                return new PttUploadResponse { IsExists = true };
+            }
+
+            var ips = new List<string>();
+            foreach (var i in rsp.Uint32UpIp)
+            {
+                ips.Add(Utils.UInt32ToIPV4Address((uint)i));
+            }
+
+            return new PttUploadResponse
+            {
+                UploadKey = rsp.UpUkey.ToByteArray(),
+                UploadIp = ips.ToArray(),
+                UploadPort = rsp.Uint32UpPort.ToArray(),
+                FileKey = rsp.FileKey.ToByteArray(),
+                FileId = rsp.FileId
+            };
         }
 
         private object DecodeOffPicUpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)

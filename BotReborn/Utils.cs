@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,6 +14,14 @@ namespace BotReborn
     public static class Utils
     {
         private static Random s_random = new Random();
+
+        public static string UInt32ToIPV4Address(uint i)
+        {
+            var ip = new byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(ip, i);
+            return new IPAddress(ip).ToString();
+        }
+
         public static byte[] ConvertHexStringToByteArray(string hex)
         {
             static int GetHexVal(char hex) => hex - (hex < 58 ? 48 : hex < 97 ? 55 : 87);
