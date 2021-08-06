@@ -56,6 +56,12 @@ namespace BotReborn
             return Encoding.UTF8.GetString(this.ReadBytes(ReadInt32() - 4));
         }
 
+        public string ReadStringShort()
+        {
+            var data = this.ReadBytes(ReadUInt16());
+            return Encoding.UTF8.GetString(data);
+        }
+
         public Span<byte> ReadAvailable()
         {
             return this.ReadBytes((int)(Length - Position));

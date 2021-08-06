@@ -64,7 +64,63 @@ namespace BotReborn
 
                 if (m.TryGetValue(0x512, out var v3))
                 {
-                    var r = Read512();
+                    var r = ReadT512(v3);
+                    psKeyMap = r.psKeyMap;
+                    pt4TokenMap = r.pt4TokenMap;
+                }
+
+                //if _, ok:= m[0x531]; ok {
+                //    // a1, noPicSig = readT531(t531)
+                //}
+
+                //if _, ok:= m[0x138]; ok {
+                //    // readT138(t138) // chg time
+                //}
+
+                SigInfo =
+                    new LogInSigInfo()
+                    {
+                        LoginBitmap = 0,
+                        SrmToken = m[0x16a] ?? SigInfo.SrmToken,
+                        T133 = m[0x133] ?? SigInfo.T133,
+                        EncryptedA1 = m[0x106] ?? SigInfo.EncryptedA1,
+                        Tgt = m[0x10a],
+                        TgtKey = m[0x10d],
+                        UserStKey = m[0x10e],
+                        UserStWebSig = m[0x103],
+                        SKey = m[0x120],
+                        SKeyExpiredTime = DateTimeOffset.UtcNow.Second + 21600,
+                        D2 = m[0x143],
+                        D2Key = m[0x305],
+                        WtSessionTicketKey = m[0x134] ?? SigInfo.WtSessionTicketKey,
+                        DeviceToken = m[0x322],
+
+                        PsKeyMap = psKeyMap,
+                        Pt4TokenMap = pt4TokenMap
+                    };
+
+                if (PasswordMd5.Length > 0)
+                {
+                    var key = new List<byte>();
+                    key.AddRange(PasswordMd5);
+                    key.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+                    key.AddRange(new Func<byte[]>(() =>
+                    {
+                        var b = new BinaryStream();
+                        b.WriteUInt32(Uin);
+                        return b.ToArray();
+                    })());
+                    var decrypted = new Tea(key.ToArray()).Decrypt(SigInfo.EncryptedA1);
+                    if (decrypted.Length > 51 + 16)
+                    {
+                        var dr = new BinaryStream();
+                        dr.ReadBytes(51);
+                        DeviceInfo.TgtgtKey = dr.ReadBytes(16).ToArray();
+                    }
+
+                    NickName = nick;
+                    Age = age;
+                    Gender = gender;
                 }
             }
         }
@@ -115,6 +171,49 @@ namespace BotReborn
         {
             var s = new BinaryStream(data);
             return (s.ReadBytesShort(), s.ReadBytesShort());
+        }
+
+        public (Dictionary<string, byte[]> psKeyMap, Dictionary<string, byte[]> pt4TokenMap) ReadT512(byte[] data)
+        {
+            var s = new BinaryStream(data);
+            var length = (int)s.ReadUInt16();
+
+            Dictionary<string, byte[]> psKeyMap = new(), pt4TokenMap = new();
+
+            for (int i = 0; i < length; i++)
+            {
+                var domain = s.ReadStringShort();
+                var psKey = s.ReadBytesShort();
+                var pt4Token = s.ReadBytesShort();
+
+                if (psKey.Length > 0)
+                {
+                    psKeyMap.Add(domain, psKey);
+                }
+
+                if (pt4Token.Length > 0)
+                {
+                    pt4TokenMap.Add(domain, pt4Token);
+                }
+            }
+
+            return (psKeyMap, pt4TokenMap);
+        }
+
+        public (byte[] a1, byte[] noPicSig) ReadT531(byte[] data)
+        {
+            var s = new BinaryStream(data);
+            var m = s.ReadTlvMap(2);
+            var t = new List<byte>();
+
+            if (m.ContainsKey(0x103) && m.ContainsKey(0x16a) && m.ContainsKey(0x113) && m.ContainsKey(0x10c))
+            {
+                t.AddRange(m[0x106]);
+                t.AddRange(m[0x10c]);
+                return (t.ToArray(), m[0x16a]);
+            }
+
+            return (null, null);
         }
     }
 }
