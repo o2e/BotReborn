@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 using BotReborn.Jce;
 using BotReborn.Model;
+using BotReborn.Model.Entities;
 using BotReborn.Packets;
 using BotReborn.Protos;
 
@@ -254,13 +256,67 @@ namespace BotReborn
 
         private object DecodeGroupPttStoreResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+            var pkt = D388RespBody.Parser.ParseFrom(payload);
+            var rsp = pkt.MsgTryUpPttRsp[0];
 
+            if (rsp.Result != 0)
+            {
+                return new PttUploadResponse { ResultCode = rsp.Result, Message = rsp.FailMsg };
+            }
+
+            if (rsp.BoolFileExit)
+            {
+                return new PttUploadResponse { IsExists = true };
+            }
+
+            var ips = new List<string>();
+            foreach (var i in rsp.Uint32UpIp)
+            {
+                ips.Add(Utils.UInt32ToIPV4Address((uint)i));
+            }
+
+            return new PttUploadResponse
+            {
+                UploadKey = rsp.UpUkey.ToByteArray(),
+                UploadIp = ips.ToArray(),
+                UploadPort = rsp.Uint32UpPort.ToArray(),
+                FileKey = rsp.FileKey.ToByteArray(),
+                FileId = rsp.FileId
+            };
         }
 
         private object DecodeOffPicUpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+            var rsp = RspBody.Parser.ParseFrom(payload);
+            if (rsp.FailMsg is not null)
+            {
+                return new ImageUploadResponse { ResultCode = -1, Message = rsp.FailMsg.ToString() };
+            }
+
+            if (rsp.Subcmd != 1 || rsp.TryupImgRsp.Count != 0)
+            {
+                return new ImageUploadResponse { ResultCode = -2 };
+            }
+
+            var imgRsp = rsp.TryupImgRsp[0];
+
+            if (imgRsp.Result != 0)
+            {
+                return new ImageUploadResponse { ResultCode = (int)imgRsp.Result, Message = imgRsp.FailMsg.ToString() };
+            }
+
+            if (imgRsp.FileExit)
+            {
+                return new ImageUploadResponse { IsExists = true, ResourceId = imgRsp.UpResid.ToString() };
+            }
+
+            return new ImageUploadResponse
+            {
+                ResourceId = imgRsp.UpResid.ToString(),
+                UploadKey = imgRsp.UpUkey.ToByteArray(),
+                UploadIp = imgRsp.UpIp.ToArray(),
+                UploadPort = imgRsp.UpPort.ToArray()
+            };
         }
 
         private object DecodeSystemMsgGroupPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
