@@ -318,7 +318,7 @@ namespace BotReborn
                 var a = new byte[4];
                 BinaryPrimitives.WriteUInt32BigEndian(a, salt != 0 ? salt : uin);
                 var c = passwordMd5.Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).Concat(a);
-                var key = MD5.Create().ComputeHash(c.ToArray());
+                var key = Utils.Md5.ComputeHash(c.ToArray());
                 var s = new BinaryStream();
                 s.EncryptAndWrite(key, new Func<byte[]>(() =>
                  {
@@ -406,7 +406,7 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.Write(MD5.Create().ComputeHash(androidId));
+                s.Write(Utils.Md5.ComputeHash(androidId));
 
                 return s.ToArray();
             })());
@@ -643,7 +643,7 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.Write(MD5.Create().ComputeHash(macAddress));
+                s.Write(Utils.Md5.ComputeHash(macAddress));
 
                 return s.ToArray();
             })());
@@ -658,7 +658,7 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.Write(MD5.Create().ComputeHash(androidId));
+                s.Write(Utils.Md5.ComputeHash(androidId));
 
                 return s.ToArray();
             })());

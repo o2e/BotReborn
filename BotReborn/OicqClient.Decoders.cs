@@ -66,7 +66,7 @@ namespace BotReborn
             {
                 Dpwd = Encoding.UTF8.GetBytes(Utils.GetRandomString(16));
                 T402 = map[0x402];
-                var h = _md5.ComputeHash(DeviceInfo.Guid.Concat(Dpwd).Concat(T402).ToArray());
+                var h = Utils.Md5.ComputeHash(DeviceInfo.Guid.Concat(Dpwd).Concat(T402).ToArray());
                 G = h[..];
             }
 

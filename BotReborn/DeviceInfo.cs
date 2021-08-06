@@ -11,6 +11,8 @@ namespace BotReborn
     {
         static DeviceInfo()
         {
+            var buffer = new byte[16];
+            Utils.Random.NextBytes(buffer);
             Default = new DeviceInfo()
             {
                 Display = Encoding.UTF8.GetBytes("BotReborn.114514.810"),
@@ -37,6 +39,7 @@ namespace BotReborn
                 VendorOSName = Encoding.UTF8.GetBytes("mirai"),
                 Protocol = ClientProtocol.Ipad,
                 Guid = System.Guid.NewGuid().ToByteArray(),
+                TgtgtKey = Utils.Md5.ComputeHash(buffer),
                 Version = new Version()
                 {
                     Incremental = Encoding.UTF8.GetBytes("5891938"),

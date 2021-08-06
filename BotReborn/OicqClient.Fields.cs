@@ -13,7 +13,6 @@ namespace BotReborn
     {
         private EncryptEcdh _ecdh;
         private Random _random;
-        private MD5 _md5;
         private SemaphoreSlim _once = new(0, 1);
         private HttpClient _httpClient;
         private int _sequenceId;

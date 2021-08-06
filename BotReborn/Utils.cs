@@ -7,13 +7,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BotReborn
 {
     public static class Utils
     {
-        private static Random s_random = new Random();
+        public static Random Random = new Random();
+        public static MD5 Md5 = MD5.Create();
 
         public static string UInt32ToIPV4Address(uint i)
         {
@@ -61,7 +63,7 @@ namespace BotReborn
             var sb = new StringBuilder();
             for (int i = 0; i < len; i++)
             {
-                sb.Append(range[s_random.Next(range.Length)]);
+                sb.Append(range[Utils.Random.Next(range.Length)]);
             }
             return sb.ToString();
         }

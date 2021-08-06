@@ -25,7 +25,6 @@ namespace BotReborn
             };
             Uin = uin;
             _random = new Random(DateTime.Now.Second);
-            _md5 = MD5.Create();
             _groupSeq = _random.Next(20000);
             Ksid = Encoding.UTF8.GetBytes($"|{DeviceInfo.IMEI}|A8.2.7.27f6ea96");
             //eventHandlers:           &eventHandlers{},
@@ -81,7 +80,7 @@ namespace BotReborn
         public OicqClient(Uin uin, string password) : this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
-            PasswordMd5 = _md5.ComputeHash(bytes);
+            PasswordMd5 = Utils.Md5.ComputeHash(bytes);
         }
 
         public OicqClient(Uin uin, byte[] passwordMd5) : this(uin)
