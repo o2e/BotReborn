@@ -76,7 +76,7 @@ namespace BotReborn
             return packet;
         }
 
-        public byte[] BuildDeviceLockLoginPacket(out ushort seqOut)
+        public byte[] BuildDeviceLockLoginPacket(out ushort seqId)
         {
             var seq = NextSeq();
 
@@ -92,7 +92,7 @@ namespace BotReborn
             var sso = Packet.BuildSsoPacket(seq, Version.AppId, Version.SubAppId, "wtlogin.login", DeviceInfo.IMEI,
                 Array.Empty<byte>(), OutGoingPacketSessionId, req, Ksid);
             var packet = Packet.BuildLoginPacket(Uin, 2, new byte[16], sso, new byte[0]);
-            seqOut = seq;
+            seqId = seq;
             return packet;
         }
 

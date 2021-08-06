@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -74,7 +75,7 @@ namespace BotReborn
             TcpClient.Close();
         }
 
-        internal void SendAndWait(ushort seq, byte[] pkt)
+        internal object SendAndWait(byte[] pkt, ushort seq)
         {
             try
             {
@@ -86,6 +87,7 @@ namespace BotReborn
                 throw;
             }
 
+            throw new NotImplementedException();
         }
 
         private void StartNetLoop()

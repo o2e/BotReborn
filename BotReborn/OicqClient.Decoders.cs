@@ -170,8 +170,39 @@ namespace BotReborn
                 }
             }
 
+            if (t==162)
+            {
+                return new LoginResponse() { ErrorMessage = "TooManySMSRequestError" };
+            }
 
-            throw new NotImplementedException();
+            if (t==204)
+            {// drive lock
+                T104 = map[0x104];
+                RandSeed = map[0x403];
+                return SendAndWait(BuildDeviceLockLoginPacket(out var seq), seq);
+            }
+
+            if (map.TryGetValue(0x149,out var t149))
+            {
+                var s = new BinaryStream(t149);
+                s.ReadBytes(2);
+                s.ReadStringShort();//title
+                return new LoginResponse() { IsSuccessful = false, ErrorMessage = s.ReadStringShort() };
+            }
+
+            if (map.TryGetValue(0x146, out var t146))
+            {
+                var s = new BinaryStream(t146);
+                s.ReadBytes(4);
+                s.ReadStringShort();//title
+                return new LoginResponse() { IsSuccessful = false, ErrorMessage = s.ReadStringShort() };
+            }
+            Logger.LogDebug("Unknown login response:{0}", t);
+            foreach (var (k,v) in map)
+            {
+                Logger.LogDebug("Type: {0} Value: {1}",k.ToString("X16"),Utils.ConvertByteArrayToHexString(v));
+            }
+            throw new Exception($"Unknown login response:{t}");
         }
 
         private object DecodeExchangeEmpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
