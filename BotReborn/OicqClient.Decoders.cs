@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using BotReborn.Packets;
+using BotReborn.Protos;
+
+using Microsoft.Extensions.Logging;
 
 namespace BotReborn
 {
     public partial class OicqClient
     {
-        //private  Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], LoginResponse>> _decoders = new Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], LoginResponse>>()
+        //private  Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], object>> _decoders = new Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], object>>()
         //{
         //    ["wtlogin.login"] = DecodeLoginResponse,
         //    ["wtlogin.exchange_emp"] = DecodeExchangeEmpResponse,
@@ -38,7 +42,7 @@ namespace BotReborn
         //    ["LightAppSvc.mini_app_info.GetAppInfoById"] = DecodeAppInfoResponse
         //};
 
-        private LoginResponse DecodeLoginResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
+        private object DecodeLoginResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             var stream = new BinaryStream(payload);
             stream.ReadUInt16();
@@ -54,146 +58,157 @@ namespace BotReborn
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeExchangeEmpResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeExchangeEmpResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeTransEmpResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeTransEmpResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeClientRegisterResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeClientRegisterResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeMsfOfflinePacket(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeMsfOfflinePacket(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeSvcNotify(OicqClient client, IncomingPacketInfo packet, byte[] payload)
+        private object DecodeSvcNotify(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeOnlinePushReqPacket(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeOnlinePushReqPacket(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeOnlinePushTransPacket(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeOnlinePushTransPacket(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodePushReqPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
+        private object DecodePushReqPacket(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeMessageSvcPacket(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeMessageSvcPacket(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeForceOfflinePacket(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeForceOfflinePacket(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeMsgWithDrawResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeMsgWithDrawResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeFriendGroupListResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeFriendGroupListResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeFriendDeleteResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeFriendDeleteResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeGroupListResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeGroupListResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeGroupMemberListResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeGroupMemberListResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeGroupMemberInfoResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeGroupMemberInfoResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeGroupPttStoreResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeGroupPttStoreResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
 
         }
 
-        private  LoginResponse DecodeOffPicUpResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeOffPicUpResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeSystemMsgGroupPacket(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeSystemMsgGroupPacket(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeSystemMsgFriendPacket(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeSystemMsgFriendPacket(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeWordSegmentation(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeWordSegmentation(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeTranslateResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeTranslateResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeSummaryCardResponse(OicqClient client, IncomingPacketInfo packet,
+        private object DecodeSummaryCardResponse(OicqClient client, IncomingPacketInfo packet,
             byte[] payload)
         {
             throw new NotImplementedException();
         }
 
-        private  LoginResponse DecodeAppInfoResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
+        private object DecodeAppInfoResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+            var p = QWebRsp.Parser;
+            var q = GetAppInfoByIdRsp.Parser;
+            var pkg = p.ParseFrom(payload);
+
+            if (pkg.RetCode != 0)
+            {
+                Logger.LogError(pkg.ErrMsg);
+                return null;
+            }
+
+            var rsp = q.ParseFrom(pkg.BusiBuff);
+            return rsp.AppInfo;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 
+using Google.Protobuf;
+
 using Version = BotReborn.Model.Version;
 
 namespace BotReborn
@@ -78,7 +80,20 @@ namespace BotReborn
 
         public byte[] GetDeviceInfoData()
         {
-            throw new NotImplementedException();
+            var m = new Protos.DeviceInfo
+            {
+                Bootloader = Encoding.UTF8.GetString(Bootloader),
+                ProcVersion = Encoding.UTF8.GetString(ProcVersion),
+                Codename = Encoding.UTF8.GetString(Version.CodeName),
+                Incremental = Encoding.UTF8.GetString(Version.Incremental),
+                Fingerprint = Encoding.UTF8.GetString(FingerPrint),
+                BootId = Encoding.UTF8.GetString(BootId),
+                AndroidId = Encoding.UTF8.GetString(AndroidId),
+                BaseBand = Encoding.UTF8.GetString(BaseBand),
+                InnerVersion = Encoding.UTF8.GetString(Version.Incremental)
+            };
+
+            return m.ToByteArray();
         }
 
         public void GenerateRandomDeviceInfo()
@@ -86,6 +101,6 @@ namespace BotReborn
             throw new NotImplementedException();
         }
 
-        
+
     }
 }

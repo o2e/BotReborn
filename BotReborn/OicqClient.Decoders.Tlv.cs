@@ -101,10 +101,7 @@ namespace BotReborn
 
                 if (PasswordMd5.Length > 0)
                 {
-                    var key = new List<byte>();
-                    key.AddRange(PasswordMd5);
-                    key.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x00 });
-                    key.AddRange(new Func<byte[]>(() =>
+                    var key = PasswordMd5.Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).Concat(new Func<byte[]>(() =>
                     {
                         var b = new BinaryStream();
                         b.WriteUInt32(Uin);
