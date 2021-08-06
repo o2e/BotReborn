@@ -67,7 +67,10 @@ namespace BotReborn
         public byte[] IpAddress { get; set; }
         public byte[] WifiBSSID { get; set; }
         public byte[] WifiSSID { get; set; }
-        public byte[] IMSIMd5 { get; set; }
+        public byte[] IMSIMd5
+        {
+            get => Utils.Md5.ComputeHash(Encoding.UTF8.GetBytes(IMEI));
+        }
         public string IMEI { get; set; }
         public byte[] AndroidId { get; set; }
         public byte[] APN { get; set; }

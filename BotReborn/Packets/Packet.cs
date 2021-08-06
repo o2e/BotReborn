@@ -237,6 +237,7 @@ namespace BotReborn.Packets
         {
             var stream = new BinaryStream();
             bodyFunc.Invoke(stream);
+            ecdh.FetchPubKey(uin);
             var body = ecdh.DoEncrypt(stream.ToArray(), key);
             var result = new BinaryStream();
             result.WriteByte(0x02)

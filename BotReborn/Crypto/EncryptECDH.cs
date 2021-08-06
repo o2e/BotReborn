@@ -72,6 +72,7 @@ namespace BotReborn.Crypto
             var shareEcPoint = fixedPointCombMultiplier.Multiply(pubKeyPoint, privateKey.D);
             var x = shareEcPoint.XCoord.GetEncoded();
             var hash = md5!.ComputeHash(x.TakeLast(16).ToArray());
+            ShareKey = hash;
             return hash[..];
         }
 

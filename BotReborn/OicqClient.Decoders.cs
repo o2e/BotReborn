@@ -314,7 +314,7 @@ namespace BotReborn
             var ips = new List<string>();
             foreach (var i in rsp.Uint32UpIp)
             {
-                ips.Add(Utils.UInt32ToIPV4Address((uint)i));
+                ips.Add(Utils.UInt32ToIpv4Address((uint)i));
             }
 
             return new PttUploadResponse
