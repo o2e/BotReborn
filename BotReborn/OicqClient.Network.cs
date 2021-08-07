@@ -182,6 +182,40 @@ namespace BotReborn
                 Interlocked.Increment(ref Statistics.PacketReceived);
                 Task.Run(() =>
                 {
+                    var decoder = GetDecoderByName(pkt.CommandName);
+                    if (decoder is not null)
+                    {
+                        var ok = _handlers.Remove(pkt.SequenceId, out var info);
+                        Exception err = null;
+                        object rsp = null;
+                        try
+                        {
+                            rsp = decoder(this,
+                                new IncomingPacketInfo()
+                                {
+                                    SequenceId = pkt.SequenceId,
+                                    CommandName = pkt.CommandName,
+                                    Params = ok ? info.Param : null
+                                }, pkt.Payload);
+                        }
+                        catch (Exception e)
+                        {
+                            err = e;
+                        }
+
+                        if (ok)
+                        {
+                            info.Func(rsp, err);
+                        }
+                    }
+                    else if (_handlers.Remove(pkt.SequenceId, out var f))
+                    {
+                        f.Func(null, null);
+                    }
+                    else
+                    {
+                        Logger.LogDebug("Unhandled Command: {0}\nSeq: {1}\nThis message can be ignored.", pkt.CommandName, pkt.SequenceId);
+                    }
 
                     throw new NotImplementedException();
                 }).Wait();

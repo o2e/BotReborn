@@ -25,7 +25,7 @@ namespace BotReborn
                 "wtlogin.login" => DecodeLoginResponse,
                 "SummaryCard.ReqSummaryCard" => DecodeSummaryCardResponse,
                 "LightAppSvc.mini_app_info.GetAppInfoById" => DecodeAppInfoResponse,
-                _ => throw new Exception()
+                _ => null
             };
         }
         //private  Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], object>> _decoders = new Dictionary<string, Func<OicqClient, IncomingPacketInfo, byte[], object>>()
