@@ -9,10 +9,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+
 using BotReborn.Events;
 using BotReborn.Packets;
 
 using Microsoft.Extensions.Logging;
+
 using Polly;
 
 namespace BotReborn
@@ -88,8 +90,10 @@ namespace BotReborn
             var ch = Channel.CreateBounded<object>(1);
             _handlers[seq] = (s,  e) =>
             {
-                var args = e as LoginEventArgs;
-                ch.Writer.TryWrite(args?.Response);
+                if (e is LoginEventArgs args)
+                {
+                    ch.Writer.TryWrite(args.Response);
+                }
             };
             var policy = Policy.Handle<TimeoutException>().Retry(3,(e,i) =>{
                 if (i<3)
