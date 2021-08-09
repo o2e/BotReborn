@@ -25,7 +25,7 @@ namespace BotReborn
                 FingerPrint = Encoding.UTF8.GetBytes("BotReborn:10/BotReborn.114514.810/114514:user/release-keys"),
                 BootId = Encoding.UTF8.GetBytes("cb886ae2-00b6-4d68-a230-787f111d12c7"),
                 ProcVersion = Encoding.UTF8.GetBytes("Linux version 3.0.31-cb886ae2 (android-build@xxx.xxx.xxx.xxx.com)"),
-                BaseBand = System.Array.Empty<byte>(),
+                BaseBand = Array.Empty<byte>(),
                 SimInfo = Encoding.UTF8.GetBytes("T-Mobile"),
                 OSType = Encoding.UTF8.GetBytes("android"),
                 MacAddress = Encoding.UTF8.GetBytes("00:50:56:C0:00:08"),
@@ -40,6 +40,7 @@ namespace BotReborn
                 Protocol = ClientProtocol.Ipad,
                 Guid = System.Guid.NewGuid().ToByteArray(),
                 TgtgtKey = Utils.Md5.ComputeHash(buffer),
+                IMSIMd5 = Utils.Md5.ComputeHash(Encoding.UTF8.GetBytes("468356291846738")),
                 Version = new Version()
                 {
                     Incremental = Encoding.UTF8.GetBytes("5891938"),
@@ -67,10 +68,7 @@ namespace BotReborn
         public byte[] IpAddress { get; set; }
         public byte[] WifiBSSID { get; set; }
         public byte[] WifiSSID { get; set; }
-        public byte[] IMSIMd5
-        {
-            get => Utils.Md5.ComputeHash(Encoding.UTF8.GetBytes(IMEI));
-        }
+        public byte[] IMSIMd5 { get; set; }
         public string IMEI { get; set; }
         public byte[] AndroidId { get; set; }
         public byte[] APN { get; set; }
@@ -99,7 +97,6 @@ namespace BotReborn
                 BaseBand = Encoding.UTF8.GetString(BaseBand),
                 InnerVersion = Encoding.UTF8.GetString(Version.Incremental)
             };
-
             return m.ToByteArray();
         }
 

@@ -9,10 +9,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-
+using BotReborn.Events;
 using BotReborn.Packets;
 
 using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace BotReborn
 {
@@ -82,64 +83,18 @@ namespace BotReborn
             stream.Write(pkt);
         }
 
-        internal object SendAndWait(byte[] pkt, ushort seq, params Dictionary<string, object>[] param)
+        internal object SendAndWait(byte[] pkt, ushort seq)
         {
-            Dictionary<string, object> para;
-            var ch = Channel.CreateUnbounded<ChannelData>();
-
-            if (param.Length != 0)
+            var ch = Channel.CreateBounded<object>(1);
+            ch.Reader.
+            _handlers[seq] = (s,  e) =>
             {
-                para = param[0];
-            }
-            else
-            {
-                para = new Dictionary<string, object>();
-            }
-
-            _handlers.TryAdd(seq, new HandlerInfo()
-            {
-                Func = async (i, e) =>
-                {
-                    await ch.Writer.WriteAsync(new ChannelData()
-                    {
-                        Err = e,
-                        Response = i
-                    });
-                },
-                Param = para
-            });
-
-            try
-            {
-                Send(pkt);
-            }
-            catch (Exception e)
-            {
-                _handlers.Remove(seq, out _);
-                Logger.LogError(e, e.Message);
-                throw;
-            }
-
-            var retry = 0;
-
-            while (true)
-            {
-                if (ch.Reader.TryRead(out var rsp))
-                {
-                    return rsp.Response;
-                }
-
-                Thread.Sleep(new TimeSpan(0, 0, 0, 15));
-                retry++;
-                if (retry < 2)
-                {
-                    Send(pkt);
-                    continue;
-                }
-
-                _handlers.Remove(seq, out _);
-                return null;
-            }
+                var args = e as LoginEventArgs;
+                ch.Writer.TryWrite(args?.Response);
+            };
+            Policy.
+            var task = ch.Reader.WaitToReadAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(25)).ContinueWith().WaitAsync(TimeSpan.FromSeconds(15));
+            Task.WhenAll(task.AsTask()).;
         }
 
         private void StartNetLoop()
