@@ -86,15 +86,24 @@ namespace BotReborn
         internal object SendAndWait(byte[] pkt, ushort seq)
         {
             var ch = Channel.CreateBounded<object>(1);
-            ch.Reader.
             _handlers[seq] = (s,  e) =>
             {
                 var args = e as LoginEventArgs;
                 ch.Writer.TryWrite(args?.Response);
             };
-            Policy.
-            var task = ch.Reader.WaitToReadAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(25)).ContinueWith().WaitAsync(TimeSpan.FromSeconds(15));
-            Task.WhenAll(task.AsTask()).;
+            var policy = Policy.Handle<TimeoutException>().Retry(3,(e,i) =>{
+                if (i<3)
+                {
+                    Send(pkt);
+                }
+                else
+                {
+                    _handlers.Remove(seq, out _);
+                    throw new Exception("Packet timed out");
+                }
+            } );
+            var res = policy.Execute(async ()=> await ch.Reader.ReadAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(15)));
+            return res.Result;
         }
 
         private void StartNetLoop()
