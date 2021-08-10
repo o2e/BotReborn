@@ -21,6 +21,29 @@ namespace BotReborn
 
         }
 
+        public void DecodeT119R(byte[] data)
+        {
+            var t = new Tea(DeviceInfo.TgtgtKey);
+            var b = new BinaryStream(t.Decrypt(data));
+            b.ReadBytes(2);
+            var m = b.ReadTlvMap(2);
+            if (m.TryGetValue(0x120, out var t120))
+            {
+                SigInfo.SKey = t120;
+                SigInfo.SKeyExpiredTime = DateTimeOffset.UtcNow.Second + 21600;
+                Logger.LogDebug("Skey updated: {0}", t120);
+            }
+
+            if (m.TryGetValue(0x11a, out var t11a))
+            {
+                var c = ReadT11A(t11a);
+                NickName = c.nick;
+                Age = c.age;
+                Gender = c.gender;
+                Logger.LogDebug("account info updated: {0}", NickName);
+            }
+        }
+
         public void DecodeT119(byte[] data, byte[] ek)
         {
             var t = new Tea(ek);

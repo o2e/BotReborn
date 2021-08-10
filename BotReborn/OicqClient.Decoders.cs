@@ -218,7 +218,29 @@ namespace BotReborn
 
         private object DecodeExchangeEmpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            throw new NotImplementedException();
+            var b = new BinaryStream(payload);
+            var cmd = b.ReadUInt16();
+            var t = b.ReadByte();
+            b.ReadUInt16();
+            var m = b.ReadTlvMap(2);
+
+            if (t != 0)
+            {
+                Logger.LogError("Emp error.");
+                return null;
+            }
+
+            if (cmd == 15)
+            {
+                DecodeT119R(m[0x119]);
+            }
+
+            if (cmd == 11)
+            {
+                DecodeT119(m[0x119], Utils.Md5.ComputeHash(SigInfo.D2Key));
+            }
+
+            return null;
         }
 
         private object DecodeTransEmpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
