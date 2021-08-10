@@ -85,18 +85,19 @@ namespace BotReborn
             stream.Write(pkt);
         }
 
-        internal object SendAndWait(byte[] pkt, ushort seq)
+        internal object SendAndWait(byte[] pkt, ushort seq, params Dictionary<string, object>[] para)
         {
             var ch = Channel.CreateBounded<object>(1);
-            _handlers[seq] = (s,  e) =>
+            _handlers[seq] = (s, e) =>
             {
                 if (e is LoginEventArgs args)
                 {
                     ch.Writer.TryWrite(args.Response);
                 }
             };
-            var policy = Policy.Handle<TimeoutException>().Retry(3,(e,i) =>{
-                if (i<3)
+            var policy = Policy.Handle<TimeoutException>().Retry(3, (e, i) =>
+            {
+                if (i < 3)
                 {
                     Send(pkt);
                 }
@@ -105,35 +106,35 @@ namespace BotReborn
                     _handlers.Remove(seq, out _);
                     throw new Exception("Packet timed out");
                 }
-            } );
-            var res = policy.Execute(async ()=> await ch.Reader.ReadAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(15)));
+            });
+            var res = policy.Execute(async () => await ch.Reader.ReadAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(15)));
             return res.Result;
         }
 
         private void StartNetLoop()
         {
+            var errCount = 0;
             var stream = TcpClient.GetStream();
             while (true)
             {
                 var span = stream.ReadBytes(4);
                 var l = BinaryPrimitives.ReadInt32BigEndian(span);
                 var data = stream.ReadBytes(l - 4);
-                var pkt = Packet.ParseIncomingPacket(data.ToArray(), SigInfo.D2Key);
-                // if err != nil {
-                // 	c.Error("parse incoming packet error: %v", err)
-                // 	if errors.Is(err, packets.ErrSessionExpired) || errors.Is(err, packets.ErrPacketDropped) {
-                // 		c.Disconnect()
-                // 		go c.dispatchDisconnectEvent(&ClientDisconnectedEvent{Message: "session expired"})
-                // 		continue
-                // 	}
-                // 	errCount++
-                // 	if errCount > 2 {
-                // 		go c.quickReconnect()
-                // 		continue
-                // 	}
-                // 	continue
-                // }
-                var payload = pkt.Payload;
+                IncomingPacket pkt;
+                try
+                {
+                    pkt = Packet.ParseIncomingPacket(data.ToArray(), SigInfo.D2Key);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, "Parse incoming packet error: {0}", e.Message);
+                    errCount++;
+                    if (errCount > 2)
+                    {
+                        QuickReconnect();
+                    }
+                    continue;
+                }
                 if (pkt.Flag2 == 2)
                 {
                     try
@@ -153,39 +154,17 @@ namespace BotReborn
                     var decoder = GetDecoderByName(pkt.CommandName);
                     if (decoder is not null)
                     {
-                        var ok = _handlers.Remove(pkt.SequenceId, out var info);
-                        Exception err = null;
-                        object rsp = null;
-                        try
+                        if (_handlers.Remove(pkt.SequenceId, out var info))
                         {
-                            rsp = decoder(this,
+                            decoder(this,
                                 new IncomingPacketInfo()
                                 {
-                                    SequenceId = pkt.SequenceId,
                                     CommandName = pkt.CommandName,
-                                    Params = ok ? info.Param : null
+                                    SequenceId = pkt.SequenceId,
+                                    Params = null
                                 }, pkt.Payload);
                         }
-                        catch (Exception e)
-                        {
-                            err = e;
-                        }
-
-                        if (ok)
-                        {
-                            info.Func(rsp, err);
-                        }
                     }
-                    else if (_handlers.Remove(pkt.SequenceId, out var f))
-                    {
-                        f.Func(null, null);
-                    }
-                    else
-                    {
-                        Logger.LogDebug("Unhandled Command: {0}\nSeq: {1}\nThis message can be ignored.", pkt.CommandName, pkt.SequenceId);
-                    }
-
-                    throw new NotImplementedException();
                 }).Wait();
             }
         }
