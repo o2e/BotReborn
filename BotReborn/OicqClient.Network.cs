@@ -48,12 +48,8 @@ namespace BotReborn
                 }
             }
 
-            Task.Run(() =>
-            {
-                _once.Wait();//Use a Semaphore which will never be released to simulate a once.
-                // TODO event handlers
-                Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
-            });
+            //_once.Wait();
+            Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
             RetryTimes = 0;
             ConnectTime = DateTimeOffset.Now;
         }
@@ -148,9 +144,10 @@ namespace BotReborn
                     var decoder = GetDecoderByName(pkt.CommandName);
                     if (decoder is not null)
                     {
+                        LoginResponse rsp;
                         if (_handlers.Remove(pkt.SequenceId, out var info))
                         {
-                            decoder(this,
+                           rsp= (LoginResponse)decoder(this,
                                 new IncomingPacketInfo()
                                 {
                                     CommandName = pkt.CommandName,
@@ -160,7 +157,7 @@ namespace BotReborn
                         }
                         else
                         {
-                            decoder(this,
+                            rsp = (LoginResponse)decoder(this,
                                 new IncomingPacketInfo()
                                 {
                                     CommandName = pkt.CommandName,
@@ -168,6 +165,7 @@ namespace BotReborn
                                     Params = null
                                 }, pkt.Payload);
                         }
+                        info?.Func(rsp);
                     }
                 }).Wait();
             }
