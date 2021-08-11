@@ -16,7 +16,7 @@ namespace BotReborn
         private Random _random;
         private SemaphoreSlim _once = new(0, 1);
         private HttpClient _httpClient;
-        private ConcurrentDictionary<ushort, EventHandler> _handlers = new();
+        private ConcurrentDictionary<ushort, HandlerInfo> _handlers = new();
         private Channel<object> _channel =  Channel.CreateUnbounded<object>();
         private int _sequenceId;
         private int _requestPacketRequestId = 1921334513;
