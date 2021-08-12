@@ -32,7 +32,7 @@ namespace BotReborn.Packets
             }
             stream.ReadBytes(stream.ReadInt32() - 4);
             var commandName = stream.ReadString();
-            var sessionId = stream.ReadBytes(stream.ReadInt32());
+            var sessionId = stream.ReadBytes(stream.ReadInt32() - 4);
             if (commandName == "Heartbeat.Alive")
             {
                 return new IncomingPacket()
@@ -55,10 +55,8 @@ namespace BotReborn.Packets
                     {
                         return stream.ReadAvailable().ToArray();
                     }
-                    else
-                    {
-                        return stream.ReadAvailable().ToArray(); // some logic
-                    }
+
+                    return stream.ReadAvailable().ToArray(); // some logic
                 }
 
                 if (compressedFlag == 1)

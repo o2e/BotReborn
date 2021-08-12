@@ -19,7 +19,7 @@ namespace BotReborn
         public byte[] PasswordMd5 { get; set; }
         public bool AllowSlider { get; set; } = true;
         public ILogger<OicqClient> Logger { get; set; } = new NullLogger<OicqClient>();
-        public Statistics Statistics { get; set; }
+        public Statistics Statistics { get; set; } = new();
 
         public string NickName { get; set; }
         public ushort Age { get; set; }

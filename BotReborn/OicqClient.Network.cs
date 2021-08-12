@@ -78,13 +78,17 @@ namespace BotReborn
         internal void Send(byte[] pkt)
         {
             var stream = TcpClient.GetStream();
-            stream.Write(pkt);
+            if (stream.CanWrite)
+            {
+                stream.Write(pkt);
+            }
         }
 
-        internal object SendAndWait(byte[] pkt, ushort seq,Dictionary<string, object> para = null)
+        internal object SendAndWait(byte[] pkt, ushort seq, Dictionary<string, object> para = null)
         {
             var ch = Channel.CreateBounded<object>(1);
             _handlers[seq] = new HandlerInfo { Func = o => { ch.Writer.TryWrite(o); }, Params = para };
+            Send(pkt);
             var policy = Policy.Handle<TimeoutException>().Retry(3, (e, i) =>
             {
                 if (i < 3)
@@ -147,13 +151,13 @@ namespace BotReborn
                         LoginResponse rsp;
                         if (_handlers.Remove(pkt.SequenceId, out var info))
                         {
-                           rsp= (LoginResponse)decoder(this,
-                                new IncomingPacketInfo()
-                                {
-                                    CommandName = pkt.CommandName,
-                                    SequenceId = pkt.SequenceId,
-                                    Params = info.Params
-                                }, pkt.Payload);
+                            rsp = (LoginResponse)decoder(this,
+                                 new IncomingPacketInfo()
+                                 {
+                                     CommandName = pkt.CommandName,
+                                     SequenceId = pkt.SequenceId,
+                                     Params = info.Params
+                                 }, pkt.Payload);
                         }
                         else
                         {

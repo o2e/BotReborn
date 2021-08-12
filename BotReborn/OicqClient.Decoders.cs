@@ -23,6 +23,7 @@ namespace BotReborn
             return name switch
             {
                 "wtlogin.login" => DecodeLoginResponse,
+                "wtlogin.exchange_emp" => DecodeExchangeEmpResponse,
                 "SummaryCard.ReqSummaryCard" => DecodeSummaryCardResponse,
                 "LightAppSvc.mini_app_info.GetAppInfoById" => DecodeAppInfoResponse,
                 _ => null
