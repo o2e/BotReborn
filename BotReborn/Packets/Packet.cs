@@ -137,7 +137,7 @@ namespace BotReborn.Packets
             if (encryptType == 0)
             {
                 var d = stream.ReadBytes((int)(stream.Length - stream.Position - 1));
-                return new Tea(ecdh.ShareKey).Decrypt(d);
+                return new Tea(random).Decrypt(d);
             }
 
             if (encryptType == 3)

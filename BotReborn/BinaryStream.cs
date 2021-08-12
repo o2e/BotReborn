@@ -43,7 +43,7 @@ namespace BotReborn
 
         public int ReadInt32()
         {
-            return BinaryPrimitives.ReadInt32BigEndian(this.ReadBytes(4));
+            return (int)BinaryPrimitives.ReadUInt32BigEndian(this.ReadBytes(4));
         }
 
         public ushort ReadUInt16()

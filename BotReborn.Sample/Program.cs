@@ -17,6 +17,7 @@ namespace BotReborn.Sample
                 Logger = LoggerFactory.Create(builder =>
                 {
                     builder.AddConsole();
+                    builder.SetMinimumLevel(LogLevel.Debug);
                 }).CreateLogger<OicqClient>()
             };
             client.Login();
