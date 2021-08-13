@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
-    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

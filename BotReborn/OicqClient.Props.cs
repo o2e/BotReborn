@@ -39,7 +39,7 @@ namespace BotReborn
         public List<IPEndPoint> Servers { get; set; }
         public int CurrentServerIndex { get; set; }
         public int RetryTimes { get; set; }
-        public ClientProtocol Version { get; set; } = ClientProtocol.Ipad;
+        public ClientProtocol Protocol { get; set; } = ClientProtocol.Ipad;
 
         public byte[] Dpwd { get; set; }
         public byte[] SyncCookie { get; set; }

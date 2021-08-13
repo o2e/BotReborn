@@ -96,7 +96,7 @@ namespace BotReborn.Packets
             var flag2 = (byte)stream.ReadByte();
             if (stream.ReadByte() != 0)// flag3
             {
-                // return nil, errors.WithStack(ErrUnknownFlag)
+                
             }
 
             stream.ReadString();
@@ -137,7 +137,8 @@ namespace BotReborn.Packets
             if (encryptType == 0)
             {
                 var d = stream.ReadBytes((int)(stream.Length - stream.Position - 1));
-                return new Tea(random).Decrypt(d);
+                var decrypted=new Tea(ecdh.ShareKey).Decrypt(d);
+                return decrypted;
             }
 
             if (encryptType == 3)

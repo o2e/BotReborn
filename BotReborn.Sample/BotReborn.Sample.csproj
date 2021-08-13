@@ -3,8 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
-    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
