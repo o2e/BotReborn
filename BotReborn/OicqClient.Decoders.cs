@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using BotReborn.Crypto;
 using BotReborn.Jce;
 using BotReborn.Model;
 using BotReborn.Model.Entities;
@@ -60,6 +60,8 @@ namespace BotReborn
 
         private object DecodeLoginResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
+            var tea = new Tea(_ecdh.ShareKey);
+            payload = tea.Decrypt(payload[16..^1]);
             var stream = new BinaryStream(payload);
             stream.ReadUInt16();
             var t = (byte)stream.ReadByte();

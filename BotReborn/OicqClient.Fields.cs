@@ -12,7 +12,7 @@ namespace BotReborn
 {
     public partial class OicqClient
     {
-        private EncryptEcdh _ecdh;
+        private Ecdh _ecdh;
         private Random _random;
         private SemaphoreSlim _once = new(0, 1);
         private HttpClient _httpClient;

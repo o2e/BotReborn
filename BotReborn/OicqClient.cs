@@ -18,7 +18,7 @@ namespace BotReborn
     {
         private OicqClient(Uin uin)
         {
-            _ecdh = new EncryptEcdh();
+            _ecdh = new Ecdh();
             _httpClient = new HttpClient()
             {
                 DefaultRequestVersion = new Version(2, 0),      

@@ -119,41 +119,6 @@ namespace BotReborn.Packets
             return ParseSsoFrame(decrypted.ToArray(), flag2);
         }
 
-        public static byte[] DecryptPayload(EncryptEcdh ecdh, byte[] payload, byte[] random, byte[] sessionKey)
-        {
-            var stream = new BinaryStream(payload);
-            if (stream.ReadByte() != 2)
-            {
-                throw new Exception("Unknown flag.");
-            }
-
-            stream.ReadBytes(2);
-            stream.ReadBytes(2);
-            stream.ReadUInt16();
-            stream.ReadUInt16();
-            stream.ReadInt32();
-            var encryptType = stream.ReadUInt16();
-            stream.ReadByte();
-            if (encryptType == 0)
-            {
-                var d = stream.ReadBytes((int)(stream.Length - stream.Position - 1));
-                var decrypted=new Tea(ecdh.ShareKey).Decrypt(d);
-                return decrypted;
-            }
-
-            if (encryptType == 3)
-            {
-                var d = stream.ReadBytes((int)(stream.Length - stream.Position - 1));
-                return new Tea(sessionKey).Decrypt(d);
-            }
-
-            if (encryptType == 4)
-            {
-                throw new NotImplementedException();
-            }
-            throw new Exception("Unknown flag.");
-        }
-
         public static byte[] BuildSsoPacket(ushort seq, uint appID, uint subAppID, string commandName, string imei, byte[] extData, byte[] outPacketSessionId, byte[] body, byte[] ksid)
         {
             var binaryStream = new BinaryStream();
@@ -232,11 +197,10 @@ namespace BotReborn.Packets
             return binaryStream.ToArray();
         }
 
-        public static byte[] BuildOicqRequestPacket(long uin, ushort commandId, EncryptEcdh ecdh, byte[] key, Action<BinaryStream> bodyFunc)
+        public static byte[] BuildOicqRequestPacket(long uin, ushort commandId, Ecdh ecdh, byte[] key, Action<BinaryStream> bodyFunc)
         {
             var stream = new BinaryStream();
             bodyFunc.Invoke(stream);
-            ecdh.FetchPubKey(uin);
             var body = ecdh.DoEncrypt(stream.ToArray(), key);
             var result = new BinaryStream();
             result.WriteByte(0x02)

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <IsPackable>true</IsPackable>
     <LangVersion>preview</LangVersion>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
@@ -26,9 +26,5 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\*.proto" GrpcServices="Client" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BotReborn.SourceGen\BotReborn.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>
