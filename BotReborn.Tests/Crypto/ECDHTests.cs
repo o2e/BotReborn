@@ -13,5 +13,14 @@ namespace BotReborn.Tests.Crypto
 {
     public class ECDHTests
     {
+        [Fact]
+        public void EcdhTwoWayTest1()
+        {
+            var ecdh1 = new Ecdh();
+            var ecdh2 = new Ecdh();
+            var share1 = ecdh1.CalculateAgreement(ecdh2.PublicKey);
+            var share2 = ecdh2.CalculateAgreement(ecdh1.PublicKey);
+            Assert.Equal(share1,share2);
+        }
     }
 }

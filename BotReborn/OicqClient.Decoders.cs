@@ -60,7 +60,7 @@ namespace BotReborn
 
         private object DecodeLoginResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            var tea = new Tea(_ecdh.ShareKey);
+            var tea = new Tea(_ecdh.InitialShareKey);
             payload = tea.Decrypt(payload[16..^1]);
             var stream = new BinaryStream(payload);
             stream.ReadUInt16();
