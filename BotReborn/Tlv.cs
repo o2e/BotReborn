@@ -34,7 +34,7 @@ namespace BotReborn
                var stream = new BinaryStream();
                stream.WriteUInt16(1)
                     .WriteUInt32((uint)new Random().Next())
-                    .WriteUInt32((uint)uin)
+                    .WriteUInt32(uin)
                     .WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     .Write(ip)
                     .WriteUInt16(0);
@@ -338,7 +338,7 @@ namespace BotReborn
                          b.WriteUInt64(uin);
                      }
 
-                     b.WriteUInt32((uint)DateTimeOffset.UtcNow.Millisecond)
+                     b.WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                          .Write(new byte[] { 0x00, 0x00, 0x00, 0x00 }) // fake ip
                          .WriteByte(0x01)
                          .Write(passwordMd5)
@@ -762,7 +762,7 @@ namespace BotReborn
                         .Write(dpwd)
                         .WriteUInt32((uint)j2)
                         .WriteUInt32((uint)j3)
-                        .WriteUInt32((uint)DateTimeOffset.UtcNow.Second)
+                        .WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds())
                         .Write(randSeed);
 
                     return b.ToArray();

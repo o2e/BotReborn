@@ -28,7 +28,7 @@ namespace BotReborn
             try
             {
                 TcpClient.Connect(ip);
-                ConnectTime = DateTime.Now;
+                ConnectTime = DateTimeOffset.Now;
             }
             catch (Exception e)
             {

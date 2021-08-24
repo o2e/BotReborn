@@ -96,7 +96,7 @@ namespace BotReborn.Packets
             var flag2 = (byte)stream.ReadByte();
             if (stream.ReadByte() != 0)// flag3
             {
-                
+
             }
 
             stream.ReadString();
@@ -130,7 +130,7 @@ namespace BotReborn.Packets
                     .WriteUInt32(subAppID)
                     .Write(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 });
 
-                if (extData.Length == 0 || extData.Length == 4)
+                if (extData.Length is 0 or 4)
                 {
                     s.WriteUInt32(0x04);
                 }
