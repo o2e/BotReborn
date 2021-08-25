@@ -30,7 +30,7 @@ namespace BotReborn
             if (m.TryGetValue(0x120, out var t120))
             {
                 SigInfo.SKey = t120;
-                SigInfo.SKeyExpiredTime = DateTimeOffset.UtcNow.Second + 21600;
+                SigInfo.SKeyExpiredTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 21600;
                 Logger.LogDebug("Skey updated: {0}", t120);
             }
 
@@ -112,7 +112,7 @@ namespace BotReborn
                         UserStKey = m[0x10e],
                         UserStWebSig = m[0x103],
                         SKey = m[0x120],
-                        SKeyExpiredTime = DateTimeOffset.UtcNow.Second + 21600,
+                        SKeyExpiredTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 21600,
                         D2 = m[0x143],
                         D2Key = m[0x305],
                         WtSessionTicketKey = m[0x134] ?? SigInfo.WtSessionTicketKey,
@@ -149,7 +149,7 @@ namespace BotReborn
         {
             var s = new BinaryStream(data);
             s.ReadBytes(2);
-            TimeDiff = (long)s.ReadInt32() - DateTimeOffset.UtcNow.Second;
+            TimeDiff = (long)s.ReadInt32() - DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             T149 = s.ReadBytes(4).ToArray();
         }
 

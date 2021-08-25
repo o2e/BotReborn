@@ -1,5 +1,7 @@
 ﻿using System;
+
 using BotReborn.Protos;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
