@@ -14,6 +14,7 @@ namespace BotReborn.Sample
             var passwd = Environment.GetEnvironmentVariable("BotPassword", EnvironmentVariableTarget.User) ?? Environment.GetEnvironmentVariable("BotPassword");
             var client = new OicqClient(uin, passwd)
             {
+                AllowSlider = true,
                 Logger = LoggerFactory.Create(builder =>
                 {
                     builder.AddConsole();

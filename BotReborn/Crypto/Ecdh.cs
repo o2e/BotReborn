@@ -20,8 +20,7 @@ namespace BotReborn.Crypto
 
     public class Ecdh
     {
-        private readonly byte[] _remotePublicKey = Utils.ConvertHexStringToByteArray(
-            "04EBCA94D733E399B2DB96EACDD3F69A8BB0F74224E2B44E3357812211D2E62EFBC91BB553098E25E33A799ADC7F76FEB208DA7C6522CDB0719A305180CC54A82E");
+        private readonly byte[] _remotePublicKey = Convert.FromHexString("04EBCA94D733E399B2DB96EACDD3F69A8BB0F74224E2B44E3357812211D2E62EFBC91BB553098E25E33A799ADC7F76FEB208DA7C6522CDB0719A305180CC54A82E");
 
         private readonly ECPrivateKeyParameters _privateKey;
         public byte Id => 0x87;
@@ -47,7 +46,6 @@ namespace BotReborn.Crypto
 
         public byte[] CalculateAgreement(byte[] otherPartyPublicKey)
         {
-            using var md5 = MD5.Create();
             var p256 = NistNamedCurves.GetByName("P-256");
             ECDomainParameters ecDomain = new ECDomainParameters(p256);
             var otherPublickey = new ECPublicKeyParameters("ECDH", p256.Curve.DecodePoint(otherPartyPublicKey), ecDomain);
@@ -55,7 +53,7 @@ namespace BotReborn.Crypto
             aKeyAgree.Init(_privateKey);
             BigInteger sharedSecret = aKeyAgree.CalculateAgreement(otherPublickey);
             byte[] sharedSecretBytes = sharedSecret.ToByteArray();
-            return md5.ComputeHash(sharedSecretBytes[..16]);
+            return MD5.HashData(sharedSecretBytes[..16]);
         }
 
         public byte[] DoEncrypt(byte[] b1, byte[] b2)

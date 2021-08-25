@@ -37,8 +37,6 @@ namespace BotReborn
         public DateTimeOffset ConnectTime { get; set; }
         public Hashtable Waiters { get; set; }
         public List<IPEndPoint> Servers { get; set; }
-        public int CurrentServerIndex { get; set; }
-        public int RetryTimes { get; set; }
         public ClientProtocol Protocol { get; set; } = ClientProtocol.Ipad;
 
         public byte[] Dpwd { get; set; }

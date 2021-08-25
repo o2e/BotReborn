@@ -23,34 +23,21 @@ namespace BotReborn
     {
         public void Connect()
         {
-            var ip = Servers[CurrentServerIndex];
-            Logger.LogInformation("Connect to server: {0}", ip);
-            try
+            foreach (var ip in Servers)
             {
-                TcpClient.Connect(ip);
-                ConnectTime = DateTime.Now;
-            }
-            catch (Exception e)
-            {
-                Logger.LogError("connect server {0} error : {1}", ip, e);
-                RetryTimes++;
-                if (RetryTimes > Servers.Count)
+                if (!TcpClient.Connected)
                 {
-                    throw new Exception("All servers are unreachable.");
+                    Logger.LogInformation("Connecting to server: {0}", ip);
+                    TcpClient.Connect(ip);
                 }
             }
-            finally
+            if (!TcpClient.Connected)
             {
-                CurrentServerIndex++;
-                if (CurrentServerIndex >= Servers.Count)
-                {
-                    CurrentServerIndex = 0;
-                }
+                throw new Exception("All servers are unreachable.");
             }
-
-            //_once.Wait();
+            _once.Wait(TimeSpan.FromSeconds(30));
+            ConnectTime = DateTime.Now;
             Task.Factory.StartNew(StartNetLoop, TaskCreationOptions.LongRunning);
-            RetryTimes = 0;
             ConnectTime = DateTimeOffset.Now;
         }
 
@@ -112,7 +99,7 @@ namespace BotReborn
             while (true)
             {
                 var span = stream.ReadBytes(4);
-                var l = BinaryPrimitives.ReadInt32BigEndian(span);
+                var l = (int)BinaryPrimitives.ReadUInt32BigEndian(span);
                 var data = stream.ReadBytes(l - 4);
                 IncomingPacket pkt;
                 try

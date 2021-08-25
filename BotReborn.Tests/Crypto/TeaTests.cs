@@ -25,7 +25,7 @@ namespace BotReborn.Tests.Crypto
         public void TeaTwoWayTest2()
         {
             var tea = new Tea(Encoding.UTF8.GetBytes("0123456789ABCDEF"));
-            var bytes = Utils.ConvertHexStringToByteArray("b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf");
+            var bytes = (byte[])Convert.FromHexString("b7b2e52af7f5b1fbf37fc3d5546ac7569aecd01bbacf09bf");
             var dec1 = tea.Decrypt(bytes);
             var enc = tea.Encrypt(dec1);
             var dec2 = tea.Decrypt(enc);
@@ -41,7 +41,7 @@ namespace BotReborn.Tests.Crypto
         public void TeaDecryptTest1(string key, string str, string enc)
         {
             var tea = new Tea(Encoding.UTF8.GetBytes(key));
-            var dec = tea.Decrypt(Utils.ConvertHexStringToByteArray(enc));
+            var dec = tea.Decrypt((byte[])Convert.FromHexString(enc));
             var expected = Encoding.UTF8.GetBytes(str);
             Assert.Equal(expected, dec);
         }
@@ -69,7 +69,7 @@ namespace BotReborn.Tests.Crypto
             })]
         public void TeaDecryptTest2(string key, byte[] dec, byte[] enc)
         {
-            var tea = new Tea(Utils.ConvertHexStringToByteArray(key));
+            var tea = new Tea(Convert.FromHexString(key));
             var tmp = tea.Decrypt(enc);
             Assert.Equal(dec, tmp);
         }
@@ -87,7 +87,7 @@ namespace BotReborn.Tests.Crypto
             })]
         public void TeaDecryptTest3(string key, byte[] dec)
         {
-            var tea = new Tea(Utils.ConvertHexStringToByteArray(key));
+            var tea = new Tea(Convert.FromHexString(key));
             var tmp = tea.Encrypt(dec);
             var tmp1 = tea.Decrypt(tmp);
             Assert.Equal(dec, tmp1);

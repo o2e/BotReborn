@@ -83,7 +83,7 @@ namespace BotReborn
         {
             Logger.LogInformation("Fetching server list...");
             var protocol = DeviceInfo.Protocol;
-            var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
+            var key = (byte[])Convert.FromHexString("F0441F5FF42DA58FDCF7949ABA62D411");
             var payload = new JceStream()
                 .WriteInt64(0, 1)
                 .WriteInt64(0, 2)

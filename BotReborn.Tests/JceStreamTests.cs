@@ -14,7 +14,7 @@ namespace BotReborn.Tests
         [Fact]
         public void JceStreamReadTest1()
         {
-            var key = Utils.ConvertHexStringToByteArray("F0441F5FF42DA58FDCF7949ABA62D411");
+            var key = (byte[])Convert.FromHexString("F0441F5FF42DA58FDCF7949ABA62D411");
             var payload = new byte[]
             {
                 28, 44, 48, 1, 70, 5, 48, 48, 48, 48, 48, 80, 100, 98, 32, 2, 249, 11, 118, 15, 52, 54, 56, 51, 53,

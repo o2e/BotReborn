@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BotReborn": {
+      "commandName": "Project",
+      "remoteDebugEnabled": true
+    }
+  }
+}

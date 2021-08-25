@@ -26,18 +26,84 @@ namespace BotReborn.Tests.Crypto
 
         [Theory]
         [InlineData(new byte[]
-        {
-            4, 144, 231, 207, 89, 52, 57, 34, 0, 75, 19, 127, 181, 0, 140, 211, 229, 97, 52, 217, 160, 34, 205,
-            105, 56, 241, 130, 180, 94, 31, 59, 80, 136, 233, 118, 9, 147, 215, 226, 225, 83, 0, 76, 35, 35, 57,
-            90, 6, 37, 47, 27, 77, 86, 201, 138, 8, 159, 201, 219, 133, 176, 169, 164, 199, 224
-        }, new byte[]
-        {
-            180, 0, 39, 177, 136, 100, 197, 77, 62, 183, 55, 174, 219, 38, 213, 35, 153, 230, 119, 164, 200,
-            204, 63, 235, 78, 79, 92, 162, 55, 49, 46, 128
-        })]
+        { 4,32
+            ,188
+            ,141
+            ,244
+            ,45
+            ,154
+            ,212
+            ,47
+            ,200
+            ,100
+            ,37
+            ,254
+            ,131
+            ,87
+            ,39
+            ,162
+            ,86
+            ,243
+            ,88
+            ,189
+            ,18
+            ,244
+            ,39
+            ,156
+            ,181
+            ,17
+            ,124
+            ,169
+            ,237
+            ,130
+            ,162
+            ,47
+            ,88
+            ,133
+            ,13
+            ,142
+            ,178
+            ,248
+            ,56
+            ,205
+            ,176
+            ,82
+            ,48
+            ,87
+            ,5
+            ,65
+            ,190
+            ,7
+            ,120
+            ,71
+            ,97
+            ,151
+            ,242
+            ,93
+            ,79
+            ,246
+            ,31
+            ,219
+            ,181
+            ,195
+            ,16
+            ,29
+            ,199
+            ,154 }, new byte[]
+        { 94,34,109,78,29,237,205,196,121,253,14,21,15,234,181,28
+                ,178
+                ,111
+                ,250
+                ,120
+                ,131
+                ,171
+                ,6
+                ,15
+                ,65
+                ,71
+            ,243,138,238,180,31 ,219 })]
         public void EcdhTest1(byte[] pub, byte[] pri)
         {
-            using var md5 = MD5.Create();
             var ecdh = new Ecdh();
             var p256 = NistNamedCurves.GetByName("P-256");
             ECDomainParameters ecDomain = new ECDomainParameters(p256);
@@ -46,7 +112,7 @@ namespace BotReborn.Tests.Crypto
             var sharedSecret = aKeyAgree.CalculateAgreement(new ECPublicKeyParameters("ECDH", p256.Curve.DecodePoint(ecdh.PublicKey),
                 ecDomain));
             byte[] sharedSecretBytes = sharedSecret.ToByteArray();
-            var share1 =  md5.ComputeHash(sharedSecretBytes[..16]);
+            var share1 = MD5.HashData(sharedSecretBytes[..16]);
             var share2 = ecdh.CalculateAgreement(pub);
             Assert.Equal(share1, share2);
         }

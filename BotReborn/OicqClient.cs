@@ -80,7 +80,7 @@ namespace BotReborn
         public OicqClient(Uin uin, string password) : this(uin)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
-            PasswordMd5 = Utils.Md5.ComputeHash(bytes);
+            PasswordMd5 = MD5.HashData(bytes);
         }
 
         public OicqClient(Uin uin, byte[] passwordMd5) : this(uin)

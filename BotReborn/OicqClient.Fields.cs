@@ -14,7 +14,7 @@ namespace BotReborn
     {
         private Ecdh _ecdh;
         private Random _random;
-        private SemaphoreSlim _once = new(0, 1);
+        private SemaphoreSlim _once = new(1, 1);
         private HttpClient _httpClient;
         private ConcurrentDictionary<ushort, HandlerInfo> _handlers = new();
         private Channel<object> _channel =  Channel.CreateUnbounded<object>();

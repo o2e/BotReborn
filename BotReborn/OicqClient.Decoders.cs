@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using BotReborn.Crypto;
@@ -61,7 +62,7 @@ namespace BotReborn
         private object DecodeLoginResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
             var tea = new Tea(_ecdh.InitialShareKey);
-            payload = tea.Decrypt(payload[16..^1]);
+            payload = tea.Decrypt(payload.AsSpan()[16..^1]);
             var stream = new BinaryStream(payload);
             stream.ReadUInt16();
             var t = (byte)stream.ReadByte();
@@ -71,7 +72,7 @@ namespace BotReborn
             {
                 Dpwd = Encoding.UTF8.GetBytes(Utils.GetRandomString(16));
                 T402 = map[0x402];
-                var h = Utils.Md5.ComputeHash(DeviceInfo.Guid.Concat(Dpwd).Concat(T402).ToArray());
+                var h = MD5.HashData(DeviceInfo.Guid.Concat(Dpwd).Concat(T402).ToArray());
                 G = h[..];
             }
 
@@ -214,7 +215,7 @@ namespace BotReborn
             Logger.LogDebug("Unknown login response:{0}", t);
             foreach (var (k, v) in map)
             {
-                Logger.LogDebug("Type: {0} Value: {1}", k.ToString("X16"), Utils.ConvertByteArrayToHexString(v));
+                Logger.LogDebug("Type: {0} Value: {1}", k.ToString("X16"), Convert.ToHexString(v));
             }
             throw new Exception($"Unknown login response:{t}");
         }
@@ -240,7 +241,7 @@ namespace BotReborn
 
             if (cmd == 11)
             {
-                DecodeT119(m[0x119], Utils.Md5.ComputeHash(SigInfo.D2Key));
+                DecodeT119(m[0x119], MD5.HashData(SigInfo.D2Key));
             }
 
             return null;
@@ -423,7 +424,7 @@ namespace BotReborn
             request.ReadFrom(new JceStream(payload));
             var data = new JceStructs.RequestDataVersion2();
             data.ReadFrom(new JceStream(request.SBuffer));
-            JceStream rsp = new Func<JceStream>(() =>
+            var rsp = new Func<JceStream>(() =>
             {
                 if (data.Map.TryGetValue("RespSummaryCard", out var d1))
                 {

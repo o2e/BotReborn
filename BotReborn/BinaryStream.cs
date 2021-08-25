@@ -111,8 +111,7 @@ namespace BotReborn
 
         public BinaryStream WriteHexString(string s)
         {
-            var b = Utils.ConvertHexStringToByteArray(s);
-            Write(b);
+            Write(Convert.FromHexString(s));
             return this;
         }
 

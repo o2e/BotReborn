@@ -35,7 +35,7 @@ namespace BotReborn
                stream.WriteUInt16(1)
                     .WriteUInt32((uint)new Random().Next())
                     .WriteUInt32((uint)uin)
-                    .WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+                    .WriteUInt32((uint)DateTimeOffset.Now.ToUnixTimeMilliseconds())
                     .Write(ip)
                     .WriteUInt16(0);
                return stream.ToArray();
@@ -90,12 +90,12 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteByte(isRoot ? Convert.ToByte(1) : Convert.ToByte(0))
+                s.WriteByte(isRoot ? (byte)1 : (byte)0)
                     .WriteBytesShort(osName)
                     .WriteBytesShort(osVersion)
                     .WriteUInt16(networkType)
                     .WriteBytesShort(simOperatorName)
-                    .WriteBytesShort(new byte[0])
+                    .WriteBytesShort(Array.Empty<byte>())
                     .WriteBytesShort(apn);
                 return s.ToArray();
             })());
@@ -318,7 +318,7 @@ namespace BotReborn
                 var a = new byte[4];
                 BinaryPrimitives.WriteUInt32BigEndian(a, salt != 0 ? salt : uin);
                 var c = passwordMd5.Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).Concat(a);
-                var key = Utils.Md5.ComputeHash(c.ToArray());
+                var key = MD5.HashData(c.ToArray());
                 var s = new BinaryStream();
                 s.EncryptAndWrite(key, new Func<byte[]>(() =>
                  {
@@ -406,7 +406,7 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.Write(Utils.Md5.ComputeHash(androidId));
+                s.Write(MD5.HashData(androidId));
 
                 return s.ToArray();
             })());
@@ -643,7 +643,7 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.Write(Utils.Md5.ComputeHash(macAddress));
+                s.Write(MD5.HashData(macAddress));
 
                 return s.ToArray();
             })());
@@ -658,7 +658,7 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.Write(Utils.Md5.ComputeHash(androidId));
+                s.Write(MD5.HashData(androidId));
 
                 return s.ToArray();
             })());

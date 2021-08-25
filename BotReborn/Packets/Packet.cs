@@ -96,10 +96,10 @@ namespace BotReborn.Packets
             var flag2 = (byte)stream.ReadByte();
             if (stream.ReadByte() != 0)// flag3
             {
-                
+
             }
 
-            stream.ReadString();
+            var uin = stream.ReadString();
             var decrypted = flag2 switch
             {
                 0 => stream.ReadAvailable(),

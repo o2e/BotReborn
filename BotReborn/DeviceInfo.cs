@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 
 using Google.Protobuf;
@@ -39,8 +40,8 @@ namespace BotReborn
                 VendorOSName = Encoding.UTF8.GetBytes("mirai"),
                 Protocol = ClientProtocol.Ipad,
                 Guid = System.Guid.NewGuid().ToByteArray(),
-                TgtgtKey = Utils.Md5.ComputeHash(buffer),
-                IMSIMd5 = Utils.Md5.ComputeHash(Encoding.UTF8.GetBytes("468356291846738")),
+                TgtgtKey = MD5.HashData(buffer),
+                IMSIMd5 = MD5.HashData(Encoding.UTF8.GetBytes("468356291846738")),
                 Version = new Version()
                 {
                     Incremental = Encoding.UTF8.GetBytes("5891938"),
@@ -97,7 +98,8 @@ namespace BotReborn
                 BaseBand = Encoding.UTF8.GetString(BaseBand),
                 InnerVersion = Encoding.UTF8.GetString(Version.Incremental)
             };
-            return m.ToByteArray();
+            var b = m.ToByteArray();
+            return b;
         }
 
         public void GenerateRandomDeviceInfo()
