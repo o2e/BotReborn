@@ -62,8 +62,6 @@ namespace BotReborn
 
         private object DecodeLoginResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
         {
-            var tea = new Tea(_ecdh.InitialShareKey);
-            payload = tea.Decrypt(payload.AsSpan()[16..^1]);
             var stream = new BinaryStream(payload);
             stream.ReadUInt16();
             var t = (byte)stream.ReadByte();
@@ -211,7 +209,7 @@ namespace BotReborn
                 s.ReadStringShort();//title
                 return new LoginResponse() { IsSuccessful = false, ErrorMessage = s.ReadStringShort() };
             }
-            Logger.LogDebug("Unknown login response:{0}", t);
+            Logger.LogDebug("Unknown login response: {0}", t);
             foreach (var (k, v) in map)
             {
                 Logger.LogDebug("Type: {0} Value: {1}", k.ToString("X16"), Convert.ToHexString(v));
