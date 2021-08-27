@@ -131,9 +131,8 @@ namespace BotReborn.Packets
                 }
                 else
                 {
-                    s.WriteUInt32((uint)(extData.Length + 4))
-                        .Write(extData);
-
+                    s.WriteUInt32((uint)(extData.Length + 4));
+                    s.Write(extData);
                 }
 
                 s.WriteString(commandName);
@@ -145,10 +144,12 @@ namespace BotReborn.Packets
                     return b.ToArray();
                 })());
                 s.WriteString(imei)
-                    .WriteUInt32(0x04)
-                    .WriteUInt16((ushort)(ksid.Length + 2))
-                    .Write(ksid)
                     .WriteUInt32(0x04);
+                {
+                    s.WriteUInt16((ushort)(ksid.Length + 2));
+                    s.Write(ksid);
+                }
+                s.WriteUInt32(0x04);
                 return s.ToArray();
             })());
 
@@ -168,8 +169,8 @@ namespace BotReborn.Packets
             binaryStream.WriteIntLvPacket(4, new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt32(0x00_00_00_0A)
-                    .WriteByte(bodyType);
+                s.WriteUInt32(0x00_00_00_0A);
+                s.WriteByte(bodyType);
                 s.WriteIntLvPacket(4, new Func<byte[]>(() =>
                 {
                     var b = new BinaryStream();

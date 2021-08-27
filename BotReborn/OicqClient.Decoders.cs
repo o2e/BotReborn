@@ -181,8 +181,6 @@ namespace BotReborn
                         VerifyUrl = Encoding.UTF8.GetString(t204),
                         ErrorMessage = "UnsafeDeviceError"
                     };
-
-
                 }
             }
 
@@ -218,7 +216,7 @@ namespace BotReborn
             {
                 Logger.LogDebug("Type: {0} Value: {1}", k.ToString("X16"), Convert.ToHexString(v));
             }
-            throw new Exception($"Unknown login response:{t}");
+            throw new Exception($"Unknown login response: {t}");
         }
 
         private object DecodeExchangeEmpResponse(OicqClient client, IncomingPacketInfo packet, byte[] payload)
