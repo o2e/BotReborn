@@ -21,7 +21,7 @@ namespace BotReborn
             _ecdh = new Ecdh();
             _httpClient = new HttpClient()
             {
-                DefaultRequestVersion = new Version(2, 0),      
+                DefaultRequestVersion = new Version(2, 0),
             };
             Uin = uin;
             _random = new Random(DateTime.Now.Second);
@@ -74,6 +74,7 @@ namespace BotReborn
             }
             //cli.TCP.PlannedDisconnect(cli.plannedDisconnect)
             //cli.TCP.UnexpectedDisconnect(cli.unexpectedDisconnect)
+            RandomKey = new byte[16];
             _random.NextBytes(RandomKey);
         }
 

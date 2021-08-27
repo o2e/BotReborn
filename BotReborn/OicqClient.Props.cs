@@ -32,7 +32,7 @@ namespace BotReborn
         //public bool NetLooping { get; set; }
 
         public byte[] OutGoingPacketSessionId { get; set; } = { 0x02, 0xB0, 0x5B, 0x8B };
-        public byte[] RandomKey { get; set; } = new byte[16];
+        public byte[] RandomKey { get; set; }
         public TcpClient TcpClient { get; set; } = new TcpClient();
         public DateTimeOffset ConnectTime { get; set; }
         public Hashtable Waiters { get; set; }

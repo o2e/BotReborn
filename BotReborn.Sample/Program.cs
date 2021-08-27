@@ -21,6 +21,7 @@ namespace BotReborn.Sample
             var client = new OicqClient(uin, passwd)
             {
                 AllowSlider = true,
+                Protocol = ClientProtocol.AndroidPhone,
                 Logger = LoggerFactory.Create(builder =>
                 {
                     builder.AddSerilog(logger);
