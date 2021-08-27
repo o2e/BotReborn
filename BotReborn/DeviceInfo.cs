@@ -37,7 +37,7 @@ namespace BotReborn
                 AndroidId = Encoding.UTF8.GetBytes("MIRAI.123456.001"),
                 APN = Encoding.UTF8.GetBytes("wifi"),
                 VendorName = Encoding.UTF8.GetBytes("MIUI"),
-                VendorOSName = Encoding.UTF8.GetBytes("mirai"),
+                VendorOSName = Encoding.UTF8.GetBytes("bot"),
                 Protocol = ClientProtocol.Ipad,
                 Guid = System.Guid.NewGuid().ToByteArray(),
                 TgtgtKey = MD5.HashData(buffer),
