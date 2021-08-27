@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using BotReborn.Crypto;
 
@@ -15,7 +10,7 @@ namespace BotReborn.Packets
         private static IncomingPacket ParseSsoFrame(byte[] payload, byte flag2)
         {
             var stream = new BinaryStream(payload);
-            if (stream.ReadInt32() - 4 > (stream.Length - stream.Position))
+            if (stream.ReadInt32() - 4 > stream.Lave)
             {
                 throw new Exception("Packet dropped.");
             }
@@ -49,9 +44,9 @@ namespace BotReborn.Packets
             {
                 if (compressedFlag == 0)
                 {
-                    var pktSize = (stream.ReadInt32()) & 0xffffffff;
-                    if (pktSize == (stream.Length - stream.Position) ||
-                        pktSize == (stream.Length - stream.Position + 4))
+                    var pktSize = stream.ReadInt32() & 0xffffffff;
+                    if (pktSize == stream.Lave ||
+                        pktSize == stream.Lave + 4)
                     {
                         return stream.ReadAvailable().ToArray();
                     }
@@ -136,9 +131,8 @@ namespace BotReborn.Packets
                 }
                 else
                 {
-                    s.WriteUInt32((uint)(extData.Length + 4))
-                        .Write(extData);
-
+                    s.WriteUInt32((uint)(extData.Length + 4));
+                    s.Write(extData);
                 }
 
                 s.WriteString(commandName);
@@ -150,10 +144,12 @@ namespace BotReborn.Packets
                     return b.ToArray();
                 })());
                 s.WriteString(imei)
-                    .WriteUInt32(0x04)
-                    .WriteUInt16((ushort)(ksid.Length + 2))
-                    .Write(ksid)
                     .WriteUInt32(0x04);
+                {
+                    s.WriteUInt16((ushort)(ksid.Length + 2));
+                    s.Write(ksid);
+                }
+                s.WriteUInt32(0x04);
                 return s.ToArray();
             })());
 
@@ -173,8 +169,8 @@ namespace BotReborn.Packets
             binaryStream.WriteIntLvPacket(4, new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt32(0x00_00_00_0A)
-                    .WriteByte(bodyType);
+                s.WriteUInt32(0x00_00_00_0A);
+                s.WriteByte(bodyType);
                 s.WriteIntLvPacket(4, new Func<byte[]>(() =>
                 {
                     var b = new BinaryStream();
@@ -218,6 +214,61 @@ namespace BotReborn.Packets
                 .Write(body)
                 .WriteByte(0x03);
             return result.ToArray();
+        }
+
+        public static byte[] DecryptPayload(this IncomingPacket i, byte[] random, byte[] sessionKey)
+        {
+            var b = new BinaryStream(i.Payload);
+            if (b.ReadByte() != 2)
+            {
+                throw new Exception();
+            }
+
+            b.ReadBytes(2);
+            b.ReadBytes(2);
+            b.ReadUInt16();
+            b.ReadUInt16();
+            b.ReadInt32();
+
+            var encryptType = b.ReadUInt16();
+            b.ReadByte();
+
+            if (encryptType == 0)
+            {
+                var data = new Func<byte[]>(() =>
+                {
+                    byte[] de;
+                    try
+                    {
+                        var d = b.ReadBytes((int)b.Lave - 1);
+                        var tea = new Tea(new Ecdh().InitialShareKey);
+                        de = tea.Decrypt(d);
+                    }
+                    catch
+                    {
+                        var d = b.ReadBytes((int)b.Lave - 1);
+                        var tea = new Tea(random);
+                        de = tea.Decrypt(d);
+                    }
+                    return de;
+                })();
+
+                return data;
+            }
+
+            if (encryptType == 3)
+            {
+                var d = b.ReadBytes((int)b.Lave - 1);
+                var t = new Tea(sessionKey);
+                return t.Decrypt(d);
+            }
+
+            if (encryptType == 4)
+            {
+                throw new NotImplementedException();
+            }
+
+            throw new Exception();
         }
     }
 }

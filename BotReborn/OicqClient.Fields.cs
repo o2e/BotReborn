@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Channels;
+
 using BotReborn.Crypto;
 
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace BotReborn
         private SemaphoreSlim _once = new(1, 1);
         private HttpClient _httpClient;
         private ConcurrentDictionary<ushort, HandlerInfo> _handlers = new();
-        private Channel<object> _channel =  Channel.CreateUnbounded<object>();
+        private Channel<object> _channel = Channel.CreateUnbounded<object>();
         private int _sequenceId;
         private int _requestPacketRequestId = 1921334513;
         private int _groupSeq;

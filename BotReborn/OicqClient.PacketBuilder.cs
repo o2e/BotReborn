@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using BotReborn.Crypto;
 using BotReborn.Packets;
 
@@ -69,7 +70,7 @@ namespace BotReborn
                 w.Write(Tlv.T525(Tlv.T536(new byte[] { 0x01, 0x00 })));
             });
             var sso = Packet.BuildSsoPacket(seq, Protocol.AppId, Protocol.SubAppId, "wtlogin.login", DeviceInfo.IMEI, Array.Empty<byte>(), OutGoingPacketSessionId, req, Ksid);
-            var packet = Packet.BuildLoginPacket(0, 2, new byte[16], sso, Array.Empty<byte>());
+            var packet = Packet.BuildLoginPacket(Uin, 2, new byte[16], sso, Array.Empty<byte>());
 
             seqOut = seq;
             return packet;
