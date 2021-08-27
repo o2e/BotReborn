@@ -23,6 +23,8 @@ namespace BotReborn
         {
         }
 
+        public long Lave { get => Length - Position; }
+
         public new BinaryStream Write(byte[] buffer, int offset, int count)
         {
             base.Write(buffer, offset, count);
@@ -64,7 +66,7 @@ namespace BotReborn
 
         public Span<byte> ReadAvailable()
         {
-            return this.ReadBytes((int)(Length - Position));
+            return this.ReadBytes((int)Lave);
         }
 
         public Dictionary<ushort, byte[]> ReadTlvMap(int tagSize)
@@ -72,7 +74,7 @@ namespace BotReborn
             var map = new Dictionary<ushort, byte[]>();
             while (true)
             {
-                if (Length - Position < tagSize)
+                if (Lave < tagSize)
                 {
                     return map;
                 }

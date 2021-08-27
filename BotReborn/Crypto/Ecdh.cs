@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Linq;
-using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text.Json;
-using System.Threading;
-using Microsoft.Win32.SafeHandles;
+
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Math.EC.Multiplier;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
 
 namespace BotReborn.Crypto
 {
@@ -41,7 +35,7 @@ namespace BotReborn.Crypto
             IBasicAgreement aKeyAgree = AgreementUtilities.GetBasicAgreement("ECDH");
             aKeyAgree.Init(localKeyPair.Private);
             var otherPublickey = new ECPublicKeyParameters("ECDH", p256.Curve.DecodePoint(_remotePublicKey), ecDomain);
-            InitialShareKey= CalculateAgreement(_remotePublicKey);
+            InitialShareKey = CalculateAgreement(_remotePublicKey);
         }
 
         public byte[] CalculateAgreement(byte[] otherPartyPublicKey)

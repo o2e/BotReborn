@@ -116,6 +116,21 @@ namespace BotReborn
                     }
                     continue;
                 }
+
+                //if (pkt.Flag2 == 2)
+                //{
+                //    try
+                //    {
+                //        pkt.Payload = pkt.DecryptPayload(RandomKey, SigInfo.WtSessionTicketKey);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        Logger.LogError(e, e.Message);
+                //        continue;
+                //    }
+                //}
+
+                //errCount = 0;
                 Logger.LogDebug("Receive pkt: {0} seq: {1}", pkt.CommandName, pkt.SequenceId);
                 Interlocked.Increment(ref Statistics.PacketReceived);
                 Task.Run(() =>

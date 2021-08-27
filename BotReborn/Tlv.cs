@@ -34,7 +34,7 @@ namespace BotReborn
                var stream = new BinaryStream();
                stream.WriteUInt16(1)
                     .WriteUInt32((uint)new Random().Next())
-                    .WriteUInt32((uint)uin)
+                    .WriteUInt32(uin)
                     .WriteUInt32((uint)DateTimeOffset.Now.ToUnixTimeMilliseconds())
                     .Write(ip)
                     .WriteUInt16(0);
@@ -444,7 +444,7 @@ namespace BotReborn
                     .WriteTlvLimitedSize(osVersion, 16)
                     .WriteUInt16(2) // Network type wifi
                     .WriteTlvLimitedSize(simInfo, 16)
-                    .WriteTlvLimitedSize(new byte[0], 16)
+                    .WriteTlvLimitedSize(Array.Empty<byte>(), 16)
                     .WriteTlvLimitedSize(apn, 16);
 
                 return s.ToArray();
