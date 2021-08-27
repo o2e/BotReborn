@@ -240,13 +240,13 @@ namespace BotReborn.Packets
                     byte[] de;
                     try
                     {
-                        var d = b.ReadBytes((int)b.Lave);
+                        var d = b.ReadBytes((int)b.Lave - 1);
                         var tea = new Tea(new Ecdh().InitialShareKey);
                         de = tea.Decrypt(d);
                     }
                     catch
                     {
-                        var d = b.ReadBytes((int)b.Lave);
+                        var d = b.ReadBytes((int)b.Lave - 1);
                         var tea = new Tea(random);
                         de = tea.Decrypt(d);
                     }
@@ -258,7 +258,7 @@ namespace BotReborn.Packets
 
             if (encryptType == 3)
             {
-                var d = b.ReadBytes((int)b.Lave);
+                var d = b.ReadBytes((int)b.Lave - 1);
                 var t = new Tea(sessionKey);
                 return t.Decrypt(d);
             }
