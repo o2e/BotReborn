@@ -98,8 +98,7 @@ namespace BotReborn
             var stream = TcpClient.GetStream();
             while (true)
             {
-                var span = stream.ReadBytes(4);
-                var l = BinaryPrimitives.ReadInt32BigEndian(span);
+                var l = stream.ReadInt32();
                 var data = stream.ReadBytes(l - 4);
                 IncomingPacket pkt;
                 try

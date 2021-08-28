@@ -32,12 +32,12 @@ namespace BotReborn
             b.WriteBytesShort(new Func<byte[]>(() =>
            {
                var stream = new BinaryStream();
-               stream.WriteUInt16(1)
-                    .WriteUInt32((uint)new Random().Next())
-                    .WriteUInt32(uin)
-                    .WriteUInt32((uint)DateTimeOffset.Now.ToUnixTimeMilliseconds())
-                    .Write(ip)
-                    .WriteUInt16(0);
+               stream.WriteUInt16(1);
+               stream.WriteUInt32(new Random().NextUInt32());
+               stream.WriteUInt32(uin);
+               stream.WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+               stream.Write(ip);
+               stream.WriteUInt16(0);
                return stream.ToArray();
            })());
 
@@ -51,14 +51,14 @@ namespace BotReborn
             stream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var binaryStream = new BinaryStream();
-                binaryStream.WriteUInt32(micro)
-                    .WriteUInt32(version)
-                    .WriteUInt32(size)
-                    .WriteUInt32(margin)
-                    .WriteUInt32(dpi)
-                    .WriteUInt32(ecLevel)
-                    .WriteUInt32(hint)
-                    .WriteUInt16(0);
+                binaryStream.WriteUInt32(micro);
+                binaryStream.WriteUInt32(version);
+                binaryStream.WriteUInt32(size);
+                binaryStream.WriteUInt32(margin);
+                binaryStream.WriteUInt32(dpi);
+                binaryStream.WriteUInt32(ecLevel);
+                binaryStream.WriteUInt32(hint);
+                binaryStream.WriteUInt16(0);
                 return binaryStream.ToArray();
             })());
 
@@ -72,11 +72,11 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var stream = new BinaryStream();
-                stream.WriteByte(1)
-                    .WriteUInt32(miscBitmap)
-                    .WriteUInt32(0)
-                    .WriteByte(0)
-                    .WriteUInt32(0);
+                stream.WriteByte(1);
+                stream.WriteUInt32(miscBitmap);
+                stream.WriteUInt32(0);
+                stream.WriteByte(0);
+                stream.WriteUInt32(0);
                 return stream.ToArray();
             })());
 
@@ -90,13 +90,13 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteByte(isRoot ? (byte)1 : (byte)0)
-                    .WriteBytesShort(osName)
-                    .WriteBytesShort(osVersion)
-                    .WriteUInt16(networkType)
-                    .WriteBytesShort(simOperatorName)
-                    .WriteBytesShort(Array.Empty<byte>())
-                    .WriteBytesShort(apn);
+                s.WriteByte(isRoot ? (byte)1 : (byte)0);
+                s.WriteBytesShort(osName);
+                s.WriteBytesShort(osVersion);
+                s.WriteUInt16(networkType);
+                s.WriteBytesShort(simOperatorName);
+                s.WriteBytesShort(Array.Empty<byte>());
+                s.WriteBytesShort(apn);
                 return s.ToArray();
             })());
 
@@ -110,9 +110,9 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(0)
-                    .WriteStringShort(result)
-                    .WriteBytesShort(sign);
+                s.WriteUInt16(0);
+                s.WriteStringShort(result);
+                s.WriteBytesShort(sign);
                 return s.ToArray();
             })());
 
@@ -126,9 +126,9 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(0)
-                    .WriteUInt32(localId)
-                    .WriteUInt16(0);
+                s.WriteUInt16(0);
+                s.WriteUInt32(localId);
+                s.WriteUInt16(0);
 
                 return s.ToArray();
             })());
@@ -139,8 +139,8 @@ namespace BotReborn
         public static byte[] T10A(byte[] arr)
         {
             var binaryStream = new BinaryStream();
-            binaryStream.WriteUInt16(0x10A)
-                .WriteBytesShort(arr);
+            binaryStream.WriteUInt16(0x10A);
+            binaryStream.WriteBytesShort(arr);
 
             return binaryStream.ToArray();
         }
@@ -152,13 +152,13 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt32(ssoVersion)
-                    .WriteUInt32(appId)
-                    .WriteUInt32(subAppId)
-                    .Write(guid)
-                    .WriteBytesShort(apkId)
-                    .WriteBytesShort(apkVersionName)
-                    .WriteBytesShort(apkSign);
+                s.WriteUInt32(ssoVersion);
+                s.WriteUInt32(appId);
+                s.WriteUInt32(subAppId);
+                s.Write(guid);
+                s.WriteBytesShort(apkId);
+                s.WriteBytesShort(apkVersionName);
+                s.WriteBytesShort(apkSign);
 
                 return s.ToArray();
             })());
@@ -227,13 +227,13 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(1)
-                    .WriteUInt32(1536)
-                    .WriteUInt32(appId)
-                    .WriteUInt32(0)
-                    .WriteUInt32(uin)
-                    .WriteUInt16(0)
-                    .WriteUInt16(0);
+                s.WriteUInt16(1);
+                s.WriteUInt32(1536);
+                s.WriteUInt32(appId);
+                s.WriteUInt32(0);
+                s.WriteUInt32(uin);
+                s.WriteUInt16(0);
+                s.WriteUInt16(0);
 
                 return s.ToArray();
             })());
@@ -287,12 +287,12 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(1)
-                    .WriteUInt32(ssoVersion)
-                    .WriteUInt32(16)
-                    .WriteUInt32(protocol)
-                    .WriteUInt32(0)          // App client version
-                    .WriteUInt32(mainSigMap); // 34869472
+                s.WriteUInt16(1);
+                s.WriteUInt32(ssoVersion);
+                s.WriteUInt32(16);
+                s.WriteUInt32(protocol);
+                s.WriteUInt32(0);   // App client version
+                s.WriteUInt32(mainSigMap); // 34869472
 
                 return s.ToArray();
             })());
@@ -313,6 +313,51 @@ namespace BotReborn
         {
             var binaryStream = new BinaryStream();
             binaryStream.WriteUInt16(0x106);
+            var body = new Func<byte[]>(() =>
+            {
+                var b = new BinaryStream();
+                b.WriteUInt16(4);
+                b.WriteUInt32(new Random().NextUInt32());
+                b.WriteUInt32(ssoVer);
+                b.WriteUInt32(16);// appId
+                b.WriteUInt32(0);  // app client version
+
+                if (uin == 0)
+                {
+                    b.WriteUInt64(salt);
+                }
+                else
+                {
+                    b.WriteUInt64(uin);
+                }
+
+                b.WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+                b.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 }); // fake ip
+                b.WriteByte(0x01);
+                b.Write(passwordMd5);
+                b.Write(tgtgtKey);
+                b.WriteUInt32(wtf);
+                b.WriteBool(guidAvailable);
+
+                if (guid.Length == 0)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        b.WriteUInt32(new Random().NextUInt32());
+                    }
+                }
+                else
+                {
+                    b.Write(guid);
+                }
+
+                b.WriteUInt32(appId);
+                b.WriteUInt32(1); // password login
+
+                b.WriteBytesShort(Encoding.UTF8.GetBytes(uin.ToString()));
+                b.WriteUInt16(0);
+                return b.ToArray();
+            })();
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var a = new byte[4];
@@ -320,51 +365,7 @@ namespace BotReborn
                 var c = passwordMd5.Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).Concat(a);
                 var key = MD5.HashData(c.ToArray());
                 var s = new BinaryStream();
-                s.EncryptAndWrite(key, new Func<byte[]>(() =>
-                 {
-                     var b = new BinaryStream();
-                     b.WriteUInt16(4)
-                         .WriteUInt32((uint)new Random().Next())
-                         .WriteUInt32(ssoVer)
-                         .WriteUInt32(16) // appId
-                         .WriteUInt32(0);  // app client version
-
-                     if (uin == 0)
-                     {
-                         b.WriteUInt64(salt);
-                     }
-                     else
-                     {
-                         b.WriteUInt64(uin);
-                     }
-
-                     b.WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
-                         .Write(new byte[] { 0x00, 0x00, 0x00, 0x00 }) // fake ip
-                         .WriteByte(0x01)
-                         .Write(passwordMd5)
-                         .Write(tgtgtKey)
-                         .WriteUInt32(wtf)
-                         .WriteBool(guidAvailable);
-
-                     if (guid.Length == 0)
-                     {
-                         for (int i = 0; i < 4; i++)
-                         {
-                             b.WriteUInt32((uint)new Random().Next());
-                         }
-                     }
-                     else
-                     {
-                         b.Write(guid);
-                     }
-
-                     b.WriteUInt32(appId)
-                         .WriteUInt32(1); // password login
-
-                     b.WriteBytesShort(Encoding.UTF8.GetBytes(uin.ToString()))
-                         .WriteUInt16(0);
-                     return b.ToArray();
-                 })());
+                s.EncryptAndWrite(key, body);
 
                 return s.ToArray();
             })());
@@ -379,10 +380,10 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(picType)
-                    .WriteByte(0x00)
-                    .WriteUInt16(0)
-                    .WriteByte(0x01);
+                s.WriteUInt16(picType);
+                s.WriteByte(0x00);
+                s.WriteUInt16(0);
+                s.WriteByte(0x01);
 
                 return s.ToArray();
             })());
@@ -421,11 +422,11 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteByte(0x00)
-                    .WriteUInt32(miscBitmap)
-                    .WriteUInt32(subSigMap)
-                    .WriteByte(0x01)
-                    .WriteUInt32(1600000226); // app id list
+                s.WriteByte(0x00);
+                s.WriteUInt32(miscBitmap);
+                s.WriteUInt32(subSigMap);
+                s.WriteByte(0x01);
+                s.WriteUInt32(1600000226); // app id list
 
                 return s.ToArray();
             })());
@@ -440,12 +441,12 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteTlvLimitedSize(osType, 16)
-                    .WriteTlvLimitedSize(osVersion, 16)
-                    .WriteUInt16(2) // Network type wifi
-                    .WriteTlvLimitedSize(simInfo, 16)
-                    .WriteTlvLimitedSize(Array.Empty<byte>(), 16)
-                    .WriteTlvLimitedSize(apn, 16);
+                s.WriteTlvLimitedSize(osType, 16);
+                s.WriteTlvLimitedSize(osVersion, 16);
+                s.WriteUInt16(2); // Network type wifi
+                s.WriteTlvLimitedSize(simInfo, 16);
+                s.WriteTlvLimitedSize(Array.Empty<byte>(), 16);
+                s.WriteTlvLimitedSize(apn, 16);
 
                 return s.ToArray();
             })());
@@ -460,14 +461,14 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(0)
-                    .WriteBool(isGuidFromFileNull)
-                    .WriteBool(isGuidAvailable)
-                    .WriteBool(isGuidChanged)
-                    .WriteUInt32(guidFlag)
-                    .WriteTlvLimitedSize(buildModel, 32)
-                    .WriteTlvLimitedSize(guid, 16)
-                    .WriteTlvLimitedSize(buildBrand, 16);
+                s.WriteUInt16(0);
+                s.WriteBool(isGuidFromFileNull);
+                s.WriteBool(isGuidAvailable);
+                s.WriteBool(isGuidChanged);
+                s.WriteUInt32(guidFlag);
+                s.WriteTlvLimitedSize(buildModel, 32);
+                s.WriteTlvLimitedSize(guid, 16);
+                s.WriteTlvLimitedSize(buildBrand, 16);
 
                 return s.ToArray();
             })());
@@ -482,10 +483,10 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(1)
-                    .WriteBytesShort(simInfo)
-                    .WriteUInt16(2) // network type wifi
-                    .WriteBytesShort(apn);
+                s.WriteUInt16(1);
+                s.WriteBytesShort(simInfo);
+                s.WriteUInt16(2); // network type wifi
+                s.WriteBytesShort(apn);
 
                 return s.ToArray();
             })());
@@ -500,8 +501,8 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt32(0)
-                    .WriteTlvLimitedSize(Encoding.UTF8.GetBytes(apkId), 32);
+                s.WriteUInt32(0);
+                s.WriteTlvLimitedSize(Encoding.UTF8.GetBytes(apkId), 32);
 
                 return s.ToArray();
             })());
@@ -531,13 +532,13 @@ namespace BotReborn
                 s.EncryptAndWrite(tgtgtKey, new Func<byte[]>(() =>
                  {
                      var b = new BinaryStream();
-                     b.WriteUInt16(5)
-                         .Write(T109(imei))
-                         .Write(T52D(devInfo))
-                         .Write(T124(osType, osVersion, simInfo, apn))
-                         .Write(T128(isGuidFromFileNull, isGuidAvailable, isGuidChanged, guidFlag, buildModel, guid,
-                             buildBrand))
-                         .Write(T16E(buildModel));
+                     b.WriteUInt16(5);
+                     b.Write(T109(imei));
+                     b.Write(T52D(devInfo));
+                     b.Write(T124(osType, osVersion, simInfo, apn));
+                     b.Write(T128(isGuidFromFileNull, isGuidAvailable, isGuidChanged, guidFlag, buildModel, guid,
+                         buildBrand));
+                     b.Write(T16E(buildModel));
 
                      return b.ToArray();
                  })());
@@ -570,9 +571,9 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt32(appId)
-                    .WriteTlvLimitedSize(apkVersionName, 32)
-                    .WriteTlvLimitedSize(apkSignatureMd5, 32);
+                s.WriteUInt32(appId);
+                s.WriteTlvLimitedSize(apkVersionName, 32);
+                s.WriteTlvLimitedSize(apkSignatureMd5, 32);
 
                 return s.ToArray();
             })());
@@ -626,9 +627,9 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteByte(0x01)
-                    .WriteUInt32(buildTime)
-                    .WriteStringShort(sdkVersion);
+                s.WriteByte(0x01);
+                s.WriteUInt32(buildTime);
+                s.WriteStringShort(sdkVersion);
 
                 return s.ToArray();
             })());
@@ -736,8 +737,8 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteTlvLimitedSize(wifiBssid, 16)
-                    .WriteTlvLimitedSize(wifiSsid, 32);
+                s.WriteTlvLimitedSize(wifiBssid, 16);
+                s.WriteTlvLimitedSize(wifiSsid, 32);
 
                 return s.ToArray();
             })());
@@ -756,14 +757,14 @@ namespace BotReborn
                 s.WriteBytesShort(new Func<byte[]>(() =>
                 {
                     var b = new BinaryStream();
-                    b.WriteUInt16(1) // version
-                        .WriteUInt64(uin)
-                        .Write(guid)
-                        .Write(dpwd)
-                        .WriteUInt32((uint)j2)
-                        .WriteUInt32((uint)j3)
-                        .WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds())
-                        .Write(randSeed);
+                    b.WriteUInt16(1); // version
+                    b.WriteUInt64(uin);
+                    b.Write(guid);
+                    b.Write(dpwd);
+                    b.WriteUInt32((uint)j2);
+                    b.WriteUInt32((uint)j3);
+                    b.WriteUInt32((uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                    b.Write(randSeed);
 
                     return b.ToArray();
                 })());
@@ -800,8 +801,8 @@ namespace BotReborn
 
                     if (index1 != 0 || index2 <= 0)
                     {
-                        s.WriteByte(0x01)
-                            .WriteStringShort(str);
+                        s.WriteByte(0x01);
+                        s.WriteStringShort(str);
                     }
                     else
                     {
@@ -847,8 +848,8 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt32(i)
-                    .WriteUInt16(0);
+                s.WriteUInt32(i);
+                s.WriteUInt16(0);
 
                 return s.ToArray();
             })());
@@ -863,8 +864,8 @@ namespace BotReborn
             binaryStream.WriteBytesShort(new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt16(1)
-                    .Write(t536);
+                s.WriteUInt16(1);
+                s.Write(t536);
 
                 return s.ToArray();
             })());

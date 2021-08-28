@@ -33,7 +33,7 @@ namespace BotReborn
 
         public byte[] OutGoingPacketSessionId { get; set; } = { 0x02, 0xB0, 0x5B, 0x8B };
         public byte[] RandomKey { get; set; }
-        public TcpClient TcpClient { get; set; } = new TcpClient();
+        public TcpClient TcpClient { get; set; } = new();
         public DateTimeOffset ConnectTime { get; set; }
         public Hashtable Waiters { get; set; }
         public List<IPEndPoint> Servers { get; set; }
@@ -55,7 +55,7 @@ namespace BotReborn
         public byte[] RollbackSig { get; set; }
         public byte[] RandSeed { get; set; }
         public long TimeDiff { get; set; }
-        public LogInSigInfo SigInfo { get; set; } = new LogInSigInfo();
+        public LogInSigInfo SigInfo { get; set; } = new();
         public BigDataSessionInfo BigDataSession { get; set; }
         public string[] SrvSsoAddresses { get; set; }
         public string[] OtherSrvAddresses { get; set; }

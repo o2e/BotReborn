@@ -91,7 +91,7 @@ namespace BotReborn.Packets
             var flag2 = (byte)stream.ReadByte();
             if (stream.ReadByte() != 0)// flag3
             {
-
+                throw new Exception();
             }
 
             var uin = stream.ReadString();
@@ -114,16 +114,16 @@ namespace BotReborn.Packets
             return ParseSsoFrame(decrypted.ToArray(), flag2);
         }
 
-        public static byte[] BuildSsoPacket(ushort seq, uint appID, uint subAppID, string commandName, string imei, byte[] extData, byte[] outPacketSessionId, byte[] body, byte[] ksid)
+        public static byte[] BuildSsoPacket(ushort seq, uint appId, uint subAppId, string commandName, string imei, byte[] extData, byte[] outPacketSessionId, byte[] body, byte[] ksid)
         {
             var binaryStream = new BinaryStream();
             binaryStream.WriteIntLvPacket(4, new Func<byte[]>(() =>
             {
                 var s = new BinaryStream();
-                s.WriteUInt32(seq)
-                    .WriteUInt32(appID)
-                    .WriteUInt32(subAppID)
-                    .Write(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 });
+                s.WriteUInt32(seq);
+                s.WriteUInt32(appId);
+                s.WriteUInt32(subAppId);
+                s.Write(new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 });
 
                 if (extData.Length is 0 or 4)
                 {
@@ -143,8 +143,8 @@ namespace BotReborn.Packets
                     b.Write(outPacketSessionId);
                     return b.ToArray();
                 })());
-                s.WriteString(imei)
-                    .WriteUInt32(0x04);
+                s.WriteString(imei);
+                s.WriteUInt32(0x04);
                 {
                     s.WriteUInt16((ushort)(ksid.Length + 2));
                     s.Write(ksid);
@@ -199,20 +199,20 @@ namespace BotReborn.Packets
             bodyFunc.Invoke(stream);
             var body = ecdh.DoEncrypt(stream.ToArray(), key);
             var result = new BinaryStream();
-            result.WriteByte(0x02)
-                .WriteUInt16((ushort)(27 + 2 + body.Length))
-                .WriteUInt16(8001)
-                .WriteUInt16(commandId)
-                .WriteUInt16(1)
-                .WriteUInt32((uint)uin)
-                .WriteByte(3)
-                .WriteByte(ecdh.Id)
-                .WriteByte(0)
-                .WriteUInt32(2)
-                .WriteUInt32(0)
-                .WriteUInt32(0)
-                .Write(body)
-                .WriteByte(0x03);
+            result.WriteByte(0x02);
+            result.WriteUInt16((ushort)(27 + 2 + body.Length));
+            result.WriteUInt16(8001);
+            result.WriteUInt16(commandId);
+            result.WriteUInt16(1);
+            result.WriteUInt32((uint)uin);
+            result.WriteByte(3);
+            result.WriteByte(ecdh.Id);
+            result.WriteByte(0);
+            result.WriteUInt32(2);
+            result.WriteUInt32(0);
+            result.WriteUInt32(0);
+            result.Write(body);
+            result.WriteByte(0x03);
             return result.ToArray();
         }
 
