@@ -802,7 +802,7 @@ namespace BotReborn
                     if (index1 != 0 || index2 <= 0)
                     {
                         s.WriteByte(0x01);
-                        s.WriteStringShort(str);
+                        s.WriteBytesShort(Encoding.UTF8.GetBytes(str));
                     }
                     else
                     {
@@ -816,7 +816,7 @@ namespace BotReborn
                                 b |= 2;
                             }
                             s.WriteByte(b);
-                            s.WriteStringShort(str[(index2 + 1)..]);
+                            s.WriteBytesShort(Encoding.UTF8.GetBytes(str[(index2 + 1)..]));
                         }
                     }
                 });

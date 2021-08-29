@@ -237,17 +237,16 @@ namespace BotReborn.Packets
             {
                 var data = new Func<byte[]>(() =>
                 {
+                    var len = (int)(b.Lave - 1);
+                    var d = b.ReadBytes(len);
                     byte[] de;
                     try
                     {
-                        var d = b.ReadBytes((int)(b.Lave - 1));
                         var tea = new Tea(new Ecdh().InitialShareKey);
                         de = tea.Decrypt(d);
                     }
                     catch
                     {
-                        Console.WriteLine("use random");
-                        var d = b.ReadBytes((int)(b.Lave - 1));
                         var tea = new Tea(random);
                         de = tea.Decrypt(d);
                     }

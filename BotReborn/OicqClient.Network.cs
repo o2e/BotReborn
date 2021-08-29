@@ -105,6 +105,7 @@ namespace BotReborn
             {
                 var l = stream.ReadInt32();
                 var data = stream.ReadBytes(l - 4);
+
                 IncomingPacket pkt;
                 try
                 {
@@ -125,6 +126,7 @@ namespace BotReborn
                 {
                     try
                     {
+                        //RandomKey = new byte[] { 143, 37, 208, 160, 45, 119, 30, 253, 134, 50, 75, 15, 175, 10, 198, 83 };
                         pkt.Payload = pkt.DecryptPayload(RandomKey, SigInfo.WtSessionTicketKey);
                     }
                     catch (Exception e)

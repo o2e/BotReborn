@@ -14,7 +14,7 @@ namespace BotReborn
         public byte[] BuildLoginPacket(out ushort seqOut)
         {
             var seq = NextSeq();
-            var req = Packet.BuildOicqRequestPacket(Uin, 0x0810, _ecdh, RandomKey, w =>
+            var req = Packet.BuildOicqRequestPacket(Uin, 0x0810, new Ecdh(), RandomKey, w =>
             {
                 w.WriteUInt16(9);
                 w.WriteUInt16(AllowSlider ? (ushort)0x17 : (ushort)0x16);
