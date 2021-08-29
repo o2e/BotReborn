@@ -65,9 +65,14 @@ namespace BotReborn
         internal void Send(byte[] pkt)
         {
             var stream = TcpClient.GetStream();
-            if (stream.CanWrite)
+            try
             {
                 stream.Write(pkt);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, e.Message);
+                Interlocked.Increment(ref Statistics.PacketLost);
             }
         }
 
@@ -115,7 +120,7 @@ namespace BotReborn
                     }
                     continue;
                 }
-
+                Logger.LogDebug("Original payload: [{0}]", string.Join(",", pkt.Payload));
                 if (pkt.Flag2 == 2)
                 {
                     try
@@ -128,7 +133,7 @@ namespace BotReborn
                         continue;
                     }
                 }
-
+                Logger.LogDebug("Decrypted payload: [{0}]", string.Join(",", pkt.Payload));
                 errCount = 0;
                 Logger.LogDebug("Receive pkt: {0} seq: {1}", pkt.CommandName, pkt.SequenceId);
                 Interlocked.Increment(ref Statistics.PacketReceived);

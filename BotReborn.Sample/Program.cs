@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 
 using Microsoft.Extensions.Logging;
 
@@ -27,6 +29,7 @@ namespace BotReborn.Sample
                     builder.AddSerilog(logger);
                 }).CreateLogger<OicqClient>()
             };
+            //Extension.DebugInput();
             client.Login();
         }
     }

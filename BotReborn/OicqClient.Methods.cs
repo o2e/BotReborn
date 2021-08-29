@@ -45,7 +45,10 @@ namespace BotReborn
             LoginResponse rsp;
             try
             {
-                rsp = (LoginResponse)SendAndWait(BuildLoginPacket(out var seq), seq);
+                var b = BuildLoginPacket(out var seq);
+                //Console.ReadLine();
+                var s = Extension.DebugInput();
+                rsp = (LoginResponse)SendAndWait(s, seq);
             }
             catch (Exception e)
             {
@@ -56,7 +59,7 @@ namespace BotReborn
 
             if (rsp.IsSuccessful)
             {
-                
+
             }
 
             throw new LoginException("Unknown exception!");

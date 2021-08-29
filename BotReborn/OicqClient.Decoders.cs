@@ -91,6 +91,7 @@ namespace BotReborn
                     RandSeed = map[0x403];
                 }
                 DecodeT119(map[0x119], DeviceInfo.TgtgtKey);
+                Logger.LogInformation("Success Login.");
                 return new LoginResponse() { IsSuccessful = true };
             }
 

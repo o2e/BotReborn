@@ -19,14 +19,16 @@ namespace BotReborn
         private OicqClient(Uin uin)
         {
             _ecdh = new Ecdh();
-            _httpClient = new HttpClient();
-            //{
-            //    DefaultRequestVersion = new Version(2, 0),
-            //};
+            _httpClient = new HttpClient
+            {
+                DefaultRequestVersion = new Version(2, 0),
+                DefaultRequestHeaders = { }
+            };
             Uin = uin;
             _random = new Random();//DateTime.Now.Second
             _groupSeq = _random.Next(20000);
             Ksid = Encoding.UTF8.GetBytes($"|{DeviceInfo.IMEI}|A8.2.7.27f6ea96");
+            _sequenceId = 0x3635;
             //eventHandlers:           &eventHandlers{},
             //msgSvcCache: utils.NewCache(time.Second * 15),
             //transCache: utils.NewCache(time.Second * 15),
