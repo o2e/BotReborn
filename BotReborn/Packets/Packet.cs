@@ -95,6 +95,7 @@ namespace BotReborn.Packets
             }
 
             var uin = stream.ReadString();
+            Console.WriteLine(uin);
             var decrypted = flag2 switch
             {
                 0 => stream.ReadAvailable(),
@@ -216,7 +217,7 @@ namespace BotReborn.Packets
             return result.ToArray();
         }
 
-        public static byte[] DecryptPayload(this IncomingPacket i, byte[] random, byte[] sessionKey)
+        public static void DecryptPayload(this IncomingPacket i, byte[] random, byte[] sessionKey)
         {
             var b = new BinaryStream(i.Payload);
             if (b.ReadByte() != 2)
@@ -237,7 +238,7 @@ namespace BotReborn.Packets
             {
                 var data = new Func<byte[]>(() =>
                 {
-                    var len = (int)(b.Lave - 1);
+                    var len = (int)b.Lave - 1;
                     var d = b.ReadBytes(len);
                     byte[] de;
                     try
@@ -253,14 +254,16 @@ namespace BotReborn.Packets
                     return de;
                 })();
 
-                return data;
+                i.Payload = data;
+                return;
             }
 
             if (encryptType == 3)
             {
                 var d = b.ReadBytes((int)b.Lave - 1);
                 var t = new Tea(sessionKey);
-                return t.Decrypt(d);
+                i.Payload = t.Decrypt(d);
+                return;
             }
 
             if (encryptType == 4)

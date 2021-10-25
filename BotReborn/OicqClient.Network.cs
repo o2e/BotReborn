@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using BotReborn.Events;
 using BotReborn.Packets;
 
 using Microsoft.Extensions.Logging;
@@ -127,7 +121,7 @@ namespace BotReborn
                     try
                     {
                         //RandomKey = new byte[] { 143, 37, 208, 160, 45, 119, 30, 253, 134, 50, 75, 15, 175, 10, 198, 83 };
-                        pkt.Payload = pkt.DecryptPayload(RandomKey, SigInfo.WtSessionTicketKey);
+                        pkt.DecryptPayload(RandomKey, SigInfo.WtSessionTicketKey);
                     }
                     catch (Exception e)
                     {
@@ -169,6 +163,7 @@ namespace BotReborn
                     }
                 }).Wait();
             }
+            // ReSharper disable once FunctionNeverReturns
         }
     }
 }
